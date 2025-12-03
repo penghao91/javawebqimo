@@ -135,5 +135,11 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 清除登录标记，确保从登录页面访问不会显示退出提示
+        document.addEventListener('DOMContentLoaded', function() {
+            localStorage.removeItem('hasLoggedIn');
+        });
+    </script>
 </body>
 </html>

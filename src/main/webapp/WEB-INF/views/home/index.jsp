@@ -676,7 +676,11 @@
         // 检查URL参数，如果是从退出登录过来的，显示Toast
         window.addEventListener('load', function() {
             const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('logout') === 'success') {
+            // 只有用户之前登录过（localStorage中有标记）才显示退出提示
+            const hasLoggedIn = localStorage.getItem('hasLoggedIn');
+            if (urlParams.get('logout') === 'success' && hasLoggedIn === 'true') {
+                // 清除登录标记
+                localStorage.removeItem('hasLoggedIn');
                 // 稍微延迟显示，让页面先加载完成
                 setTimeout(() => {
                     showLogoutToast();

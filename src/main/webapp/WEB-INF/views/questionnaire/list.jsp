@@ -15,79 +15,441 @@
             --bs-body-bg: #f8f9fc;
             --bs-body-color: #5a5c69;
             --border-color: #e3e6f0;
+            --sidebar-width: 250px;
         }
         body {
             background-color: var(--bs-body-bg);
             color: var(--bs-body-color);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
-        .navbar {
-            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        
+        /* 顶部导航栏 */
+        .top-navbar {
+            background: linear-gradient(135deg, rgba(var(--bs-primary-rgb), 1), rgba(var(--bs-primary-rgb), 0.8));
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: 70px;
         }
-        .navbar-brand {
+        .top-navbar .navbar-brand {
             font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
         }
+        .top-nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-left: 2rem;
+        }
+        .top-nav-item {
+            color: rgba(255,255,255,0.9) !important;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .top-nav-item:hover, .top-nav-item.active {
+            background-color: rgba(255,255,255,0.15);
+            color: white !important;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+        }
+        .user-phone {
+            font-weight: 500;
+        }
+        
+        /* 主体布局 */
         .main-container {
-            margin-top: 1.5rem;
+            display: flex;
+            min-height: calc(100vh - 70px);
+            margin-top: 70px;
         }
+        
+        /* 左侧边栏 */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            border-right: 1px solid var(--border-color);
+            padding: 1.5rem 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+        }
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar-menu-item {
+            margin: 0.25rem 0;
+        }
+        .sidebar-menu-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: var(--bs-body-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        .sidebar-menu-link:hover {
+            background-color: #f8f9fc;
+            color: rgba(var(--bs-primary-rgb), 1);
+        }
+        .sidebar-menu-link.active {
+            background-color: rgba(var(--bs-primary-rgb), 0.1);
+            color: rgba(var(--bs-primary-rgb), 1);
+            border-left-color: rgba(var(--bs-primary-rgb), 1);
+        }
+        .sidebar-menu-link i {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* 内容区域 */
+        .content-area {
+            flex: 1;
+            padding: 2rem;
+            background-color: var(--bs-body-bg);
+        }
+        
+        /* 微信绑定提示 */
+        .wechat-bind-alert {
+            background: linear-gradient(135deg, #07c160, #06ae56);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+        .wechat-bind-alert .btn-outline-light {
+            border-color: rgba(255,255,255,0.5);
+            color: white;
+        }
+        .wechat-bind-alert .btn-outline-light:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+        
+        /* 页面头部 */
         .page-header {
-            margin-bottom: 1.5rem;
+            background: white;
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
-        .page-header h1 {
+        .page-title {
             font-size: 1.75rem;
-            font-weight: 400;
-            color: #5a5c69;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
         }
-        .card {
+        .create-btn {
+            background: linear-gradient(135deg, rgba(var(--bs-primary-rgb), 1), rgba(var(--bs-primary-rgb), 0.8));
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .create-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(var(--bs-primary-rgb), 0.3);
+        }
+        
+        /* 筛选栏 */
+        .filter-bar {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .filter-select {
             border: 1px solid var(--border-color);
-            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
-        }
-        .table {
+            border-radius: 6px;
+            padding: 0.5rem 1rem;
+            background: white;
             color: var(--bs-body-color);
         }
-        .table thead th {
-            background-color: #f8f9fc;
-            border-bottom: 2px solid #e3e6f0;
+        
+        /* 问卷卡片 */
+        .questionnaire-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 1rem;
+            padding: 1.5rem 2rem;
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+        .questionnaire-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .questionnaire-card.status-published {
+            border-left-color: #28a745;
+        }
+        .questionnaire-card.status-draft {
+            border-left-color: #6c757d;
+        }
+        
+        .questionnaire-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+        .questionnaire-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 0;
+        }
+        .questionnaire-id {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        .questionnaire-stats {
+            display: flex;
+            gap: 2rem;
+            margin: 1rem 0;
+        }
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6c757d;
+        }
+        .stat-value {
             font-weight: 600;
             color: rgba(var(--bs-primary-rgb), 1);
         }
-        .table tbody tr:hover {
-            background-color: #f8f9fc;
+        
+        .questionnaire-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
         }
-        .table td, .table th {
-            vertical-align: middle;
-        }
-        .btn-group-sm > .btn {
-            padding: 0.25rem 0.6rem;
-        }
-        .alert-icon {
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: white;
+            color: var(--bs-body-color);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
+            gap: 0.25rem;
         }
-        .alert-icon .bi {
-            margin-right: 0.75rem;
-            font-size: 1.2rem;
+        .action-btn:hover {
+            background-color: #f8f9fc;
+            color: rgba(var(--bs-primary-rgb), 1);
+            border-color: rgba(var(--bs-primary-rgb), 1);
         }
+        .action-btn.primary {
+            background: rgba(var(--bs-primary-rgb), 1);
+            color: white;
+            border-color: rgba(var(--bs-primary-rgb), 1);
+        }
+        .action-btn.primary:hover {
+            background: rgba(var(--bs-primary-rgb), 0.9);
+        }
+        .action-btn.danger {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+        .action-btn.danger:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        /* 状态标签 */
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .status-published {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-draft {
+            background-color: #e2e3e5;
+            color: #6c757d;
+        }
+        
+        /* 空状态 */
         .empty-state {
-            padding: 4rem 1rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 4rem 2rem;
             text-align: center;
-            color: #858796;
+            color: #6c757d;
         }
         .empty-state .icon {
             font-size: 4rem;
-            color: #dddfeb;
+            color: #dee2e6;
+            margin-bottom: 1rem;
+        }
+        
+        /* 样本服务推广模块 */
+        .sample-service-promo {
+            margin-top: 3rem;
+        }
+        .promo-card {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 16px;
+            padding: 2.5rem;
+            border: 1px solid #90caf9;
+            position: relative;
+            overflow: hidden;
+        }
+        .promo-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+        }
+        .promo-icon {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            font-size: 3rem;
+            color: #1976d2;
+            opacity: 0.3;
+        }
+        .promo-content {
+            position: relative;
+            z-index: 1;
+        }
+        .promo-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1565c0;
+            margin-bottom: 0.5rem;
+        }
+        .promo-desc {
+            color: #424242;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+        .promo-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .promo-stats .stat-item {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        .promo-stats .stat-number {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1565c0;
+        }
+        .promo-stats .stat-label {
+            font-size: 0.9rem;
+            color: #546e7a;
+            font-weight: 500;
+        }
+        .promo-btn {
+            background: linear-gradient(135deg, #1976d2, #0d47a1);
+            border: none;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .promo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(25, 118, 210, 0.4);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .content-area {
+                padding: 1rem;
+            }
+            .page-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            .questionnaire-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .questionnaire-actions {
+                justify-content: center;
+            }
+            .promo-stats {
+                justify-content: center;
+            }
+            .promo-card {
+                padding: 1.5rem;
+            }
+            .promo-title {
+                font-size: 1.2rem;
+            }
+            .promo-icon {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(var(--bs-primary-rgb), 1);">
-        <div class="container">
+    <!-- 顶部导航栏 -->
+    <nav class="navbar navbar-expand-lg top-navbar fixed-top">
+        <div class="container-fluid">
             <a class="navbar-brand" href="<c:url value='/questionnaire/list'/>">
                 <i class="bi bi-card-checklist"></i>
-                问卷系统
+                问卷星
             </a>
-            <div class="d-flex align-items-center">
-                <span class="navbar-text text-white me-3">欢迎, ${user.username}</span>
+            <div class="top-nav-menu">
+                <a href="<c:url value='/questionnaire/list'/>" class="top-nav-item active">
+                    <i class="bi bi-journal-text"></i> 我的问卷
+                </a>
+                <a href="#" class="top-nav-item">
+                    <i class="bi bi-people"></i> 通讯录
+                </a>
+                <a href="#" class="top-nav-item">
+                    <i class="bi bi-grid-3x3-gap"></i> 应用
+                </a>
+            </div>
+            <div class="user-info ms-auto">
+                <span class="user-phone">${user.username}</span>
                 <a class="btn btn-outline-light btn-sm" href="<c:url value='/user/logout'/>">
                     <i class="bi bi-box-arrow-right"></i> 退出
                 </a>
@@ -95,91 +457,303 @@
         </div>
     </nav>
 
-    <div class="container main-container">
-        <div class="row page-header">
-            <div class="col-8">
-                <h1>我的问卷</h1>
+    <div class="main-container">
+        <!-- 左侧边栏 -->
+        <div class="sidebar">
+            <ul class="sidebar-menu">
+                <li class="sidebar-menu-item">
+                    <a href="<c:url value='/questionnaire/create'/>" class="sidebar-menu-link">
+                        <i class="bi bi-plus-circle"></i>
+                        创建问卷
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="<c:url value='/questionnaire/list'/>" class="sidebar-menu-link active">
+                        <i class="bi bi-list-ul"></i>
+                        全部问卷
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="#" class="sidebar-menu-link">
+                        <i class="bi bi-star"></i>
+                        星标问卷
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="#" class="sidebar-menu-link">
+                        <i class="bi bi-trash"></i>
+                        回收站
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="#" class="sidebar-menu-link">
+                        <i class="bi bi-folder"></i>
+                        文件夹
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="content-area">
+            <!-- 微信绑定提示 -->
+            <div class="alert wechat-bind-alert alert-dismissible fade show" role="alert">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-wechat me-3" style="font-size: 2rem;"></i>
+                        <div>
+                            <h6 class="mb-1">绑定微信，随时随地管理问卷</h6>
+                            <p class="mb-0 small">绑定微信后，可在手机同步编辑、管理问卷，实时掌握数据动态</p>
+                        </div>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-outline-light btn-sm me-2">绑定微信</button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+                    </div>
+                </div>
             </div>
-            <div class="col-4 text-end">
-                <a href="<c:url value='/questionnaire/create'/>" class="btn btn-primary">
+
+            <!-- 页面头部 -->
+            <div class="page-header">
+                <h1 class="page-title">问卷列表</h1>
+                <a href="<c:url value='/questionnaire/create'/>" class="btn btn-primary create-btn">
                     <i class="bi bi-plus-lg"></i> 创建问卷
                 </a>
             </div>
-        </div>
 
-        <c:if test="${not empty message}">
-            <div class="alert alert-success alert-icon d-flex alert-dismissible fade show" role="alert">
-                <i class="bi bi-check-circle-fill"></i>
-                <div>${message}</div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <!-- 筛选栏 -->
+            <div class="filter-bar">
+                <div class="filter-group">
+                    <label class="form-label mb-0">状态：</label>
+                    <select class="filter-select">
+                        <option value="">全部状态</option>
+                        <option value="draft">未发布</option>
+                        <option value="published">已发布</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label class="form-label mb-0">排序：</label>
+                    <select class="filter-select">
+                        <option value="time-desc">时间倒序</option>
+                        <option value="time-asc">时间正序</option>
+                        <option value="title">标题排序</option>
+                    </select>
+                </div>
             </div>
-        </c:if>
 
-        <c:if test="${not empty error}">
-            <div class="alert alert-danger alert-icon d-flex alert-dismissible fade show" role="alert">
-                <i class="bi bi-exclamation-triangle-fill"></i>
-                <div>${error}</div>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </c:if>
+            <!-- 消息提示 -->
+            <c:if test="${not empty message}">
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </c:if>
 
-        <div class="card">
-            <div class="card-body p-0">
-                <c:choose>
-                    <c:when test="${not empty questionnaires}">
-                        <div class="table-responsive">
-                            <table class="table table-hover mb-0">
-                                <thead>
-                                    <tr>
-                                        <th class="ps-4">ID</th>
-                                        <th>标题</th>
-                                        <th>状态</th>
-                                        <th>创建时间</th>
-                                        <th class="text-center">操作</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <c:forEach items="${questionnaires}" var="q">
-                                        <tr>
-                                            <td class="ps-4">${q.id}</td>
-                                            <td>${q.title}</td>
-                                            <td>
-                                                <span class="badge rounded-pill bg-${q.status == 2 ? 'success' : (q.status == 1 ? 'warning' : 'secondary')}">
-                                                    ${q.statusDesc}
-                                                </span>
-                                            </td>
-                                            <td><fmt:formatDate value="${q.createTime}" pattern="yyyy-MM-dd HH:mm"/></td>
-                                            <td class="text-center">
-                                                <div class="btn-group btn-group-sm">
-                                                    <c:if test="${q.status == 2}">
-                                                        <a href="<c:url value='/answer/fill/${q.id}'/>" class="btn btn-outline-primary" title="填写问卷" target="_blank"><i class="bi bi-pencil-square"></i></a>
-                                                    </c:if>
-                                                    <a href="<c:url value='/questionnaire/design/${q.id}'/>" class="btn btn-outline-info" title="设计问卷"><i class="bi bi-gear"></i></a>
-                                                    <a href="<c:url value='/statistics/view/${q.id}'/>" class="btn btn-outline-warning" title="查看统计"><i class="bi bi-pie-chart"></i></a>
-                                                    <c:if test="${q.createdBy == user.id || user.role == 'admin' || user.role == 'administrator'}">
-                                                        <a href="<c:url value='/questionnaire/edit/${q.id}'/>" class="btn btn-outline-secondary" title="编辑"><i class="bi bi-pencil"></i></a>
-                                                        <a href="<c:url value='/questionnaire/delete/${q.id}'/>" class="btn btn-outline-danger" onclick="return confirm('确定要删除此问卷吗？')" title="删除"><i class="bi bi-trash"></i></a>
-                                                    </c:if>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </c:forEach>
-                                </tbody>
-                            </table>
+            <c:if test="${not empty error}">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>${error}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </c:if>
+
+            <!-- 问卷列表 -->
+            <c:choose>
+                <c:when test="${not empty questionnaires}">
+                    <c:forEach items="${questionnaires}" var="q">
+                        <div class="questionnaire-card ${q.status == 2 ? 'status-published' : 'status-draft'}">
+                            <div class="questionnaire-header">
+                                <div>
+                                    <h3 class="questionnaire-title">${q.title}</h3>
+                                    <div class="questionnaire-id">ID: ${q.id}</div>
+                                </div>
+                                <div class="status-badge ${q.status == 2 ? 'status-published' : 'status-draft'}">
+                                    ${q.statusDesc}
+                                </div>
+                            </div>
+                            
+                            <div class="questionnaire-stats">
+                                <div class="stat-item">
+                                    <i class="bi bi-calendar3"></i>
+                                    <span>创建时间：<fmt:formatDate value="${q.createTime}" pattern="MM月dd日 HH:mm"/></span>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="bi bi-file-text"></i>
+                                    <span>答卷：<span class="stat-value">0</span></span>
+                                </div>
+                                <div class="stat-item">
+                                    <i class="bi bi-eye"></i>
+                                    <span>浏览：<span class="stat-value">0</span></span>
+                                </div>
+                            </div>
+                            
+                            <div class="questionnaire-actions">
+                                <c:if test="${q.status == 2}">
+                                    <a href="<c:url value='/answer/fill/${q.id}'/>" class="action-btn" target="_blank">
+                                        <i class="bi bi-pencil-square"></i> 填写问卷
+                                    </a>
+                                    <a href="#" class="action-btn" onclick="sendQuestionnaire(${q.id})">
+                                        <i class="bi bi-send"></i> 发送问卷
+                                    </a>
+                                </c:if>
+                                <c:if test="${q.status == 1}">
+                                    <a href="<c:url value='/questionnaire/publish/${q.id}'/>" class="action-btn primary">
+                                        <i class="bi bi-send"></i> 发布
+                                    </a>
+                                </c:if>
+                                <a href="<c:url value='/questionnaire/design/${q.id}'/>" class="action-btn">
+                                    <i class="bi bi-gear"></i> 设计问卷
+                                </a>
+                                <a href="<c:url value='/statistics/view/${q.id}'/>" class="action-btn">
+                                    <i class="bi bi-pie-chart"></i> 分析&下载
+                                </a>
+                                <c:if test="${q.createdBy == user.id || user.role == 'admin' || user.role == 'administrator'}">
+                                    <a href="<c:url value='/questionnaire/edit/${q.id}'/>" class="action-btn">
+                                        <i class="bi bi-pencil"></i> 编辑
+                                    </a>
+                                    <a href="#" class="action-btn" onclick="copyQuestionnaire(${q.id})">
+                                        <i class="bi bi-files"></i> 复制
+                                    </a>
+                                    <a href="#" class="action-btn" onclick="setReminder(${q.id})">
+                                        <i class="bi bi-bell"></i> 提醒
+                                    </a>
+                                    <a href="#" class="action-btn" onclick="moveToFolder(${q.id})">
+                                        <i class="bi bi-folder"></i> 文件夹
+                                    </a>
+                                    <a href="<c:url value='/questionnaire/delete/${q.id}'/>" class="action-btn danger" onclick="return confirm('确定要删除此问卷吗？')">
+                                        <i class="bi bi-trash"></i> 删除
+                                    </a>
+                                </c:if>
+                            </div>
                         </div>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="empty-state">
-                            <div class="icon"><i class="bi bi-journal-x"></i></div>
-                            <h4 class="mt-4">暂无问卷</h4>
-                            <p class="text-muted">点击右上角的“创建问卷”按钮，开始你的第一次创建吧！</p>
+                    </c:forEach>
+                </c:when>
+                <c:otherwise>
+                    <div class="empty-state">
+                        <div class="icon"><i class="bi bi-journal-x"></i></div>
+                        <h4>暂无问卷</h4>
+                        <p class="text-muted">点击上方的"创建问卷"按钮，开始你的第一次创建吧！</p>
+                        <a href="<c:url value='/questionnaire/create'/>" class="btn btn-primary mt-3">
+                            <i class="bi bi-plus-lg"></i> 创建问卷
+                        </a>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+
+            <!-- 样本服务推广模块 -->
+            <div class="sample-service-promo mt-5">
+                <div class="promo-card">
+                    <div class="promo-icon">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div class="promo-content">
+                        <h5 class="promo-title">使用问卷星样本服务，快速回收高质量答卷</h5>
+                        <p class="promo-desc">已精准收集超过 5800 万样本，登记人群需求，助您快速完成调研目标</p>
+                        <div class="promo-stats">
+                            <div class="stat-item">
+                                <span class="stat-number">5800万+</span>
+                                <span class="stat-label">精准样本</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">95%</span>
+                                <span class="stat-label">有效回收率</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">24小时</span>
+                                <span class="stat-label">快速回收</span>
+                            </div>
                         </div>
-                    </c:otherwise>
-                </c:choose>
+                        <button class="btn btn-primary promo-btn">
+                            <i class="bi bi-clipboard-data"></i> 登记人群需求
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 设置登录标记，表示用户已经登录过
+        document.addEventListener('DOMContentLoaded', function() {
+            localStorage.setItem('hasLoggedIn', 'true');
+        });
+        
+        // 状态筛选功能
+        document.querySelector('.filter-bar select').addEventListener('change', function() {
+            // 这里可以添加筛选逻辑
+            console.log('筛选条件改变:', this.value);
+        });
+        
+        // 时间格式化函数
+        function formatTime(timeStr) {
+            const date = new Date(timeStr);
+            const now = new Date();
+            const diff = now - date;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            
+            if (days === 0) {
+                return '今天 ' + date.toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'});
+            } else if (days === 1) {
+                return '昨天 ' + date.toLocaleTimeString('zh-CN', {hour: '2-digit', minute: '2-digit'});
+            } else if (days < 7) {
+                return days + '天前';
+            } else {
+                return date.toLocaleDateString('zh-CN', {month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit'});
+            }
+        }
+        
+        // 更新所有时间显示
+        document.querySelectorAll('.questionnaire-stats .stat-item span').forEach(function(span) {
+            const text = span.textContent;
+            if (text.includes('创建时间：')) {
+                const timeStr = text.replace('创建时间：', '');
+                span.textContent = '创建时间：' + formatTime(timeStr);
+            }
+        });
+        
+        // 发送问卷功能
+        function sendQuestionnaire(id) {
+            alert('发送问卷功能开发中，问卷ID: ' + id);
+            // 这里可以添加发送问卷的逻辑，比如打开邮件发送窗口或生成分享链接
+        }
+        
+        // 复制问卷功能
+        function copyQuestionnaire(id) {
+            if (confirm('确定要复制这份问卷吗？')) {
+                alert('复制问卷功能开发中，问卷ID: ' + id);
+                // 这里可以添加复制问卷的逻辑
+            }
+        }
+        
+        // 设置提醒功能
+        function setReminder(id) {
+            alert('提醒功能开发中，问卷ID: ' + id);
+            // 这里可以添加设置提醒的逻辑
+        }
+        
+        // 移动到文件夹功能
+        function moveToFolder(id) {
+            alert('文件夹功能开发中，问卷ID: ' + id);
+            // 这里可以添加移动到文件夹的逻辑
+        }
+        
+        // 绑定微信功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const bindWechatBtn = document.querySelector('.wechat-bind-alert .btn-outline-light');
+            if (bindWechatBtn) {
+                bindWechatBtn.addEventListener('click', function() {
+                    alert('微信绑定功能开发中，敬请期待！');
+                });
+            }
+            
+            // 样本服务推广按钮
+            const promoBtn = document.querySelector('.promo-btn');
+            if (promoBtn) {
+                promoBtn.addEventListener('click', function() {
+                    alert('样本服务登记功能开发中，敬请期待！');
+                });
+            }
+        });
+    </script>
 </body>
 </html>
