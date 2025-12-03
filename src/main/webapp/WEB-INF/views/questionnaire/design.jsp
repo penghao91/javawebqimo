@@ -6,138 +6,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>设计问卷 - ${questionnaire.title} - 问卷系统</title>
+    <title>设计问卷: ${questionnaire.title}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --bs-primary-rgb: 78, 115, 223;
+            --bs-body-bg: #f8f9fc;
+            --bs-body-color: #5a5c69;
+            --border-color: #e3e6f0;
+        }
+        body {
+            background-color: var(--bs-body-bg);
+            color: var(--bs-body-color);
+        }
+        .navbar {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        .main-container {
+            margin-top: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        .page-header {
+            margin-bottom: 1.5rem;
+        }
+        .page-header h1 {
+            font-size: 1.75rem;
+            font-weight: 400;
+        }
+        .page-header .text-muted {
+            font-size: 1rem;
+        }
+        .card {
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        }
+        .card-header {
+            background-color: #f8f9fc;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            color: rgba(var(--bs-primary-rgb), 1);
+        }
+        .question-card {
+            transition: box-shadow 0.2s;
+        }
+        .question-card:hover {
+            box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
+        }
+        .btn-primary {
+            background-color: rgba(var(--bs-primary-rgb), 1);
+            border-color: rgba(var(--bs-primary-rgb), 1);
+        }
+        .empty-state {
+            padding: 3rem 1rem;
+            text-align: center;
+            color: #858796;
+            border: 2px dashed var(--border-color);
+            border-radius: 0.5rem;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgba(var(--bs-primary-rgb), 1);">
         <div class="container">
-            <a class="navbar-brand" href="<c:url value='/questionnaire/list'/>">问卷系统</a>
-            <div class="navbar-nav ms-auto">
+            <a class="navbar-brand" href="<c:url value='/questionnaire/list'/>"><i class="bi bi-card-checklist"></i> 问卷系统</a>
+            <div class="d-flex align-items-center">
                 <span class="navbar-text text-white me-3">欢迎, ${user.username}</span>
-                <a class="btn btn-outline-light btn-sm" href="<c:url value='/user/logout'/>">退出</a>
+                <a class="btn btn-outline-light btn-sm" href="<c:url value='/user/logout'/>"><i class="bi bi-box-arrow-right"></i> 退出</a>
             </div>
         </div>
     </nav>
 
-    <div class="container mt-4">
-        <div class="row mb-4">
-            <div class="col-md-8">
-                <h3>设计问卷：${questionnaire.title}</h3>
-                <p class="text-muted">${questionnaire.description}</p>
-            </div>
-            <div class="col-md-4 text-end">
-                <a href="<c:url value='/questionnaire/list'/>" class="btn btn-secondary">返回列表</a>
+    <div class="container main-container">
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1>设计问卷</h1>
+                    <p class="text-muted mb-0">${questionnaire.title}</p>
+                </div>
+                <a href="<c:url value='/questionnaire/list'/>" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> 返回列表</a>
             </div>
         </div>
 
-        <c:if test="${not empty message}">
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                ${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        </c:if>
+        <c:if test="${not empty message}"><div class="alert alert-success">${message}</div></c:if>
+        <c:if test="${not empty error}"><div class="alert alert-danger">${error}</div></c:if>
 
-        <c:if test="${not empty error}">
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                ${error}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            </div>
-        </c:if>
-
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>添加问题</h5>
-                    </div>
+        <div class="row g-4">
+            <!-- Add Question Form -->
+            <div class="col-lg-4">
+                <div class="card position-sticky" style="top: 1.5rem;">
+                    <div class="card-header"><i class="bi bi-plus-circle-dotted me-2"></i>添加新问题</div>
                     <div class="card-body">
                         <form action="<c:url value='/question/add'/>" method="post">
                             <input type="hidden" name="questionnaireId" value="${questionnaire.id}"/>
                             
                             <div class="mb-3">
-                                <label class="form-label">问题内容 <span class="text-danger">*</span></label>
-                                <textarea name="questionText" class="form-control" rows="3" required></textarea>
+                                <label for="questionText" class="form-label">问题内容<span class="text-danger">*</span></label>
+                                <textarea id="questionText" name="questionText" class="form-control" rows="3" required></textarea>
                             </div>
                             
                             <div class="mb-3">
-                                <label class="form-label">题型 <span class="text-danger">*</span></label>
-                                <select name="questionType" class="form-select" required onchange="toggleOptions(this)">
-                                    <option value="">请选择题型</option>
+                                <label for="questionType" class="form-label">题型<span class="text-danger">*</span></label>
+                                <select id="questionType" name="questionType" class="form-select" required onchange="toggleOptions(this)">
+                                    <option value="" disabled selected>请选择题型</option>
                                     <option value="1">单选题</option>
                                     <option value="2">多选题</option>
                                     <option value="3">简答题</option>
                                 </select>
                             </div>
                             
-                            <div class="mb-3">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" name="isRequired" value="1" checked>
-                                    <label class="form-check-label">是否必填</label>
-                                </div>
+                            <div class="mb-3" id="optionsContainer" style="display:none;">
+                                <label for="options" class="form-label">选项 (每行一个)</label>
+                                <textarea id="options" name="options" class="form-control" rows="4" placeholder="选项1&#10;选项2&#10;选项3"></textarea>
+                            </div>
+
+                            <div class="form-check form-switch mb-4">
+                                <input type="checkbox" class="form-check-input" id="isRequired" name="isRequired" value="1" checked>
+                                <label class="form-check-label" for="isRequired">是否必填</label>
                             </div>
                             
-                            <div id="optionsContainer" style="display:none;">
-                                <label class="form-label">选项（每行一个）</label>
-                                <textarea name="options" class="form-control" rows="4" 
-                                          placeholder="选项1&#10;选项2&#10;选项3"></textarea>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary"><i class="bi bi-plus-lg"></i> 添加问题</button>
                             </div>
-                            
-                            <button type="submit" class="btn btn-primary w-100">添加问题</button>
                         </form>
                     </div>
                 </div>
             </div>
             
-            <div class="col-md-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h5>问题列表</h5>
-                    </div>
+            <!-- Question List -->
+            <div class="col-lg-8">
+                 <div class="card">
+                    <div class="card-header"><i class="bi bi-list-ul me-2"></i>问题列表</div>
                     <div class="card-body">
                         <c:choose>
                             <c:when test="${not empty questions}">
                                 <c:forEach items="${questions}" var="question" varStatus="status">
-                                    <div class="card mb-3">
+                                    <div class="card question-card mb-3">
                                         <div class="card-body">
-                                            <div class="d-flex justify-content-between align-items-start">
-                                                <div class="flex-grow-1">
-                                                    <h6 class="card-title">
-                                                        ${status.index + 1}. ${question.questionText}
-                                                        <span class="badge bg-${question.isRequired == 1 ? 'danger' : 'secondary'} ms-2">
-                                                            ${question.requiredDesc}
-                                                        </span>
-                                                        <span class="badge bg-info ms-2">${question.typeDesc}</span>
+                                            <div class="d-flex justify-content-between">
+                                                <div class="pe-3">
+                                                    <h6 class="mb-1">
+                                                        ${status.count}. ${question.questionText}
                                                     </h6>
-                                                    
-                                                    <c:if test="${question.questionType != 3 && not empty question.options}">
-                                                        <div class="mt-2">
-                                                            <small class="text-muted">选项：</small>
-                                                            <c:forEach items="${question.options}" var="option" varStatus="optStatus">
-                                                                <span class="badge bg-light text-dark me-1">${option.optionText}</span>
-                                                            </c:forEach>
-                                                        </div>
-                                                    </c:if>
+                                                     <div>
+                                                        <span class="badge bg-info fw-normal">${question.typeDesc}</span>
+                                                        <c:if test="${question.isRequired == 1}">
+                                                            <span class="badge bg-danger fw-normal">必填</span>
+                                                        </c:if>
+                                                    </div>
                                                 </div>
-                                                
-                                                <div class="btn-group btn-group-sm ms-3">
+                                                <div class="btn-group-vertical">
                                                     <a href="<c:url value='/question/delete/${question.id}'/>" 
-                                                       class="btn btn-outline-danger" 
+                                                       class="btn btn-sm btn-outline-danger" 
                                                        onclick="return confirm('确定要删除此问题吗？')"
-                                                       title="删除">
-                                                        <i class="bi bi-trash"></i>
+                                                       title="删除"><i class="bi bi-trash"></i>
                                                     </a>
                                                 </div>
                                             </div>
+                                            <c:if test="${question.questionType != 3 && not empty question.options}">
+                                                <hr>
+                                                <div class="d-flex flex-wrap gap-2">
+                                                    <c:forEach items="${question.options}" var="option">
+                                                        <span class="badge rounded-pill bg-light text-dark border">${option.optionText}</span>
+                                                    </c:forEach>
+                                                </div>
+                                            </c:if>
                                         </div>
                                     </div>
                                 </c:forEach>
                             </c:when>
                             <c:otherwise>
-                                <div class="text-center py-5">
-                                    <i class="bi bi-inbox" style="font-size: 2rem; color: #ccc;"></i>
-                                    <p class="mt-3 text-muted">暂无问题，请添加问题</p>
+                                <div class="empty-state">
+                                     <i class="bi bi-question-circle" style="font-size: 3rem;"></i>
+                                     <p class="mt-3 mb-0">暂无问题</p>
+                                     <small class="text-muted">请在左侧添加问题来丰富您的问卷。</small>
                                 </div>
                             </c:otherwise>
                         </c:choose>

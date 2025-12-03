@@ -8,97 +8,157 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>用户注册 - 问卷系统</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
     <style>
+        :root {
+            --bs-primary-rgb: 78, 115, 223;
+            --bs-body-bg: #f8f9fc;
+        }
         body {
-            background-color: #f5f5f5;
-            height: 100vh;
+            background-color: var(--bs-body-bg);
+        }
+        .main-container {
             display: flex;
+            min-height: 100vh;
             align-items: center;
             justify-content: center;
+            padding: 2rem 0;
+            background: linear-gradient(135deg, rgba(var(--bs-primary-rgb), 0.1), rgba(var(--bs-primary-rgb), 0));
         }
-        .register-container {
+        .register-card {
             width: 100%;
-            max-width: 450px;
-            padding: 15px;
-            margin: auto;
+            max-width: 500px;
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
-        .form-signup {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .form-signup h1 {
-            margin-bottom: 20px;
+        .register-card .card-header {
+            background-color: #fff;
+            border-bottom: none;
+            padding: 2rem 1.5rem 1.5rem;
             text-align: center;
         }
-        .alert {
-            margin-bottom: 20px;
+        .register-card .icon {
+            font-size: 3rem;
+            color: rgba(var(--bs-primary-rgb), 1);
+        }
+        .register-card .card-title {
+            font-weight: 300;
+            color: #6e707e;
+        }
+        .btn-primary {
+            background-color: rgba(var(--bs-primary-rgb), 1);
+            border-color: rgba(var(--bs-primary-rgb), 1);
+            transition: background-color 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: rgba(var(--bs-primary-rgb), 0.9);
+        }
+        .footer-text {
+            font-size: 0.8rem;
+        }
+        .form-control.is-invalid {
+             background-image: none; /* Hide default BS icon to prevent overlap */
         }
     </style>
 </head>
 <body>
-    <div class="register-container">
-        <form:form class="form-signup" modelAttribute="user" action="${pageContext.request.contextPath}/user/register" method="post">
-            <h1 class="h3 mb-3 fw-normal">用户注册</h1>
-            
-            <c:if test="${error != null}">
-                <div class="alert alert-danger" role="alert">
-                    ${error}
-                </div>
-            </c:if>
+    <div class="main-container">
+        <div class="register-card">
+            <div class="card-header">
+                <i class="bi bi-person-plus-fill icon"></i>
+                <h1 class="card-title h4 mt-2">创建新账户</h1>
+            </div>
+            <div class="card-body p-4 p-md-5">
 
-            <div class="form-floating mb-3">
-                <form:input type="text" class="form-control" path="username" placeholder="用户名" required="true" autofocus="true"/>
-                <label for="username">用户名</label>
-                <form:errors path="username" cssClass="text-danger"/>
+                <form:form id="registerForm" modelAttribute="user" action="${pageContext.request.contextPath}/user/register" method="post" class="needs-validation" novalidate="true">
+                    
+                    <c:if test="${error != null}">
+                        <div class="alert alert-danger d-flex align-items-center" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            <div>${error}</div>
+                        </div>
+                    </c:if>
+
+                    <div class="form-floating mb-3">
+                        <form:input type="text" path="username" class="form-control" id="username" placeholder="用户名" required="true" autofocus="true"/>
+                        <label for="username">用户名</label>
+                        <div class="invalid-feedback">请输入一个用户名。</div>
+                        <form:errors path="username" cssClass="text-danger small mt-1"/>
+                    </div>
+                    
+                    <div class="form-floating mb-3">
+                        <form:input type="email" path="email" class="form-control" id="email" placeholder="邮箱地址"/>
+                        <label for="email">邮箱地址（可选）</label>
+                         <form:errors path="email" cssClass="text-danger small mt-1"/>
+                    </div>
+                    
+                    <div class="form-floating mb-3">
+                        <form:input type="password" path="password" class="form-control" id="password" placeholder="密码" required="true"/>
+                        <label for="password">密码</label>
+                        <div class="invalid-feedback">请输入密码（至少6位）。</div>
+                        <form:errors path="password" cssClass="text-danger small mt-1"/>
+                    </div>
+                    
+                    <div class="form-floating mb-4">
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="确认密码" required>
+                        <label for="confirmPassword">确认密码</label>
+                        <div class="invalid-feedback">两次输入的密码不一致。</div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button class="btn btn-primary btn-lg" type="submit">注 册</button>
+                    </div>
+
+                </form:form>
+                
+                <hr class="my-4">
+
+                <div class="text-center">
+                    <a href="<c:url value='/user/login'/>" class="text-decoration-none">已有账号？立即登录</a>
+                </div>
             </div>
-            
-            <div class="form-floating mb-3">
-                <form:input type="email" class="form-control" path="email" placeholder="邮箱地址"/>
-                <label for="email">邮箱地址（可选）</label>
-                <form:errors path="email" cssClass="text-danger"/>
+             <div class="card-footer text-center py-3 bg-light">
+                 <p class="mb-0 text-muted footer-text">&copy; 2025 问卷系统</p>
             </div>
-            
-            <div class="form-floating mb-3">
-                <form:input type="password" class="form-control" path="password" placeholder="密码" required="true"/>
-                <label for="password">密码</label>
-                <form:errors path="password" cssClass="text-danger"/>
-            </div>
-            
-            <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="确认密码" required>
-                <label for="confirmPassword">确认密码</label>
-            </div>
-            
-            <button class="w-100 btn btn-lg btn-primary" type="submit">注册</button>
-            
-            <div class="text-center mt-3">
-                <p>已有账号？<a href="<c:url value='/user/login'/>">立即登录</a></p>
-            </div>
-            
-            <p class="mt-3 mb-0 text-muted text-center">&copy; 2025 问卷系统</p>
-        </form:form>
+        </div>
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.querySelector('form').addEventListener('submit', function(e) {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (password !== confirmPassword) {
-                e.preventDefault();
-                alert('两次输入的密码不一致！');
-                return false;
-            }
-            
-            if (password.length < 6) {
-                e.preventDefault();
-                alert('密码长度至少为6位！');
-                return false;
-            }
-        });
+        (function () {
+            'use strict';
+
+            const form = document.getElementById('registerForm');
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('confirmPassword');
+
+            form.addEventListener('submit', function (event) {
+                // Reset custom validity
+                password.classList.remove('is-invalid');
+                confirmPassword.classList.remove('is-invalid');
+                
+                let customValidationFailed = false;
+
+                if (password.value.length < 6) {
+                    password.classList.add('is-invalid');
+                    customValidationFailed = true;
+                }
+                
+                if (password.value !== confirmPassword.value) {
+                    confirmPassword.classList.add('is-invalid');
+                    customValidationFailed = true;
+                }
+
+                if (!form.checkValidity() || customValidationFailed) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+
+                form.classList.add('was-validated');
+            }, false);
+        })();
     </script>
 </body>
 </html>

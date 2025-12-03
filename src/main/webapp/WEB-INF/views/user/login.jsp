@@ -7,85 +7,127 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>用户登录 - 问卷系统</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
     <style>
+        :root {
+            --bs-primary-rgb: 78, 115, 223;
+            --bs-body-bg: #f8f9fc;
+        }
         body {
-            background-color: #f5f5f5;
-            height: 100vh;
+            background-color: var(--bs-body-bg);
+        }
+        .main-container {
             display: flex;
+            min-height: 100vh;
             align-items: center;
             justify-content: center;
+            background: linear-gradient(135deg, rgba(var(--bs-primary-rgb), 0.1), rgba(var(--bs-primary-rgb), 0));
         }
-        .login-container {
+        .login-card {
             width: 100%;
-            max-width: 400px;
-            padding: 15px;
-            margin: auto;
+            max-width: 450px;
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
-        .form-signin {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .form-signin h1 {
-            margin-bottom: 20px;
+        .login-card .card-header {
+            background-color: #fff;
+            border-bottom: none;
+            padding: 2rem 1.5rem 1.5rem;
             text-align: center;
         }
-        .alert {
-            margin-bottom: 20px;
+        .login-card .icon {
+            font-size: 3rem;
+            color: rgba(var(--bs-primary-rgb), 1);
+        }
+        .login-card .card-title {
+            font-weight: 300;
+            color: #6e707e;
+        }
+        .alert-icon {
+            display: flex;
+            align-items: center;
+        }
+        .alert-icon .bi {
+            margin-right: 0.75rem;
+            font-size: 1.2rem;
+        }
+        .btn-primary {
+            background-color: rgba(var(--bs-primary-rgb), 1);
+            border-color: rgba(var(--bs-primary-rgb), 1);
+            transition: background-color 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: rgba(var(--bs-primary-rgb), 0.9);
+        }
+        .footer-text {
+            font-size: 0.8rem;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <form class="form-signin" action="<c:url value='/user/login'/>" method="post">
-            <h1 class="h3 mb-3 fw-normal">用户登录</h1>
-            
-            <c:if test="${param.error != null}">
-                <div class="alert alert-danger" role="alert">
-                    用户名或密码错误！
-                </div>
-            </c:if>
-            
-            <c:if test="${param.logout != null}">
-                <div class="alert alert-success" role="alert">
-                    已成功退出登录！
-                </div>
-            </c:if>
-            
-            <c:if test="${message != null}">
-                <div class="alert alert-success" role="alert">
-                    ${message}
-                </div>
-            </c:if>
+    <div class="main-container">
+        <div class="login-card">
+            <div class="card-header">
+                <i class="bi bi-box-arrow-in-right icon"></i>
+                <h1 class="card-title h4 mt-2">欢迎回来！</h1>
+            </div>
+            <div class="card-body p-4 p-md-5">
 
-            <div class="form-floating mb-3">
-                <input type="text" class="form-control" id="username" name="username" placeholder="用户名" required autofocus>
-                <label for="username">用户名</label>
+                <c:if test="${param.error != null}">
+                    <div class="alert alert-danger alert-icon d-flex" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <div>用户名或密码错误！</div>
+                    </div>
+                </c:if>
+                
+                <c:if test="${param.logout != null}">
+                    <div class="alert alert-success alert-icon d-flex" role="alert">
+                        <i class="bi bi-check-circle-fill"></i>
+                        <div>已成功退出登录！</div>
+                    </div>
+                </c:if>
+                
+                <c:if test="${message != null}">
+                    <div class="alert alert-success alert-icon d-flex" role="alert">
+                         <i class="bi bi-check-circle-fill"></i>
+                        <div>${message}</div>
+                    </div>
+                </c:if>
+
+                <form action="<c:url value='/user/login'/>" method="post">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="用户名" required autofocus>
+                        <label for="username">用户名</label>
+                    </div>
+                    
+                    <div class="form-floating mb-4">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="密码" required>
+                        <label for="password">密码</label>
+                    </div>
+                    
+                    <div class="form-check mb-4">
+                        <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
+                        <label class="form-check-label" for="remember-me">记住我</label>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button class="btn btn-primary btn-lg" type="submit">登 录</button>
+                    </div>
+                </form>
+                
+                <hr class="my-4">
+
+                <div class="text-center">
+                    <a href="<c:url value='/user/register'/>" class="text-decoration-none">还没有账号？立即注册</a>
+                </div>
             </div>
-            
-            <div class="form-floating mb-3">
-                <input type="password" class="form-control" id="password" name="password" placeholder="密码" required>
-                <label for="password">密码</label>
+            <div class="card-footer text-center py-3 bg-light">
+                 <p class="mb-0 text-muted footer-text">&copy; 2025 问卷系统</p>
             </div>
-            
-            <div class="form-check mb-3">
-                <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
-                <label class="form-check-label" for="remember-me">
-                    记住我
-                </label>
-            </div>
-            
-            <button class="w-100 btn btn-lg btn-primary" type="submit">登录</button>
-            
-            <div class="text-center mt-3">
-                <p>还没有账号？<a href="<c:url value='/user/register'/>">立即注册</a></p>
-            </div>
-            
-            <p class="mt-3 mb-0 text-muted text-center">&copy; 2025 问卷系统</p>
-        </form>
+        </div>
     </div>
-    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
