@@ -1,7 +1,7 @@
-# 问卷系统 - 用户模块完成
+# 问卷系统 - 完整功能版
 
 ## 项目概述
-基于Spring Boot + MyBatis + JSP的问卷管理系统，已完成用户模块开发。
+基于Spring Boot + MyBatis + JSP的专业问卷管理系统，功能完整，界面美观。系统参考问卷星设计理念，提供从问卷创建、发布、收集到数据分析的全流程解决方案。
 
 ## 技术栈
 - **后端**：Spring Boot 2.0.2 + MyBatis 1.3.1 + Spring Security
@@ -18,6 +18,29 @@
 ✅ 权限控制（管理员/普通用户）
 ✅ 记住我功能
 ✅ 登录/注册页面美化（Bootstrap）
+
+### 首页模块
+✅ **专业首页设计** - 参考问卷星风格
+✅ **系统介绍** - 清晰展示产品价值
+✅ **功能特色** - 6大核心功能展示
+✅ **统计数据** - 动态数字展示
+✅ **响应式设计** - 完美适配移动端
+
+### 问卷管理模块
+✅ 问卷创建与编辑
+✅ 问卷设计与题目管理
+✅ 问卷发布与状态管理
+✅ 问卷列表展示
+
+### 答题功能
+✅ 在线填写问卷
+✅ 多种题型支持（单选、多选、简答）
+✅ 答题数据收集
+
+### 数据统计
+✅ 实时数据统计
+✅ 多维度图表展示
+✅ 可视化分析结果
 
 ### 数据库表
 ✅ user（用户表）- 已创建SQL脚本
@@ -69,9 +92,16 @@ java -jar target/questionnaire-1.0-SNAPSHOT.war
 
 ### 4. 访问系统
 
+- **首页**：http://localhost:8080/ （系统介绍页面）
 - 登录页面：http://localhost:8080/user/login
 - 注册页面：http://localhost:8080/user/register
 - 问卷列表（需登录）：http://localhost:8080/questionnaire/list
+
+### 5. 用户体验特色
+
+- **优雅退出流程**：用户退出登录后会显示3秒倒计时页面，然后自动跳转到首页
+- **专业首页设计**：参考问卷星风格，清晰展示产品价值和功能特色
+- **响应式布局**：完美适配各种设备，提供一致的用户体验
 
 ## 项目结构
 
@@ -83,11 +113,18 @@ questionnaire
 │   │   └── WebSecurityConfig.java    # Spring Security配置
 │   ├── controller
 │   │   ├── user/UserController.java  # 用户控制器
-│   │   └── QuestionnaireController.java
+│   │   ├── HomeController.java       # 首页控制器
+│   │   ├── QuestionnaireController.java
+│   │   ├── QuestionController.java
+│   │   ├── AnswerController.java
+│   │   └── StatisticsController.java
 │   ├── dao
 │   │   └── UserMapper.java           # 用户DAO
 │   ├── model
-│   │   └── User.java                 # 用户实体
+│   │   ├── User.java                 # 用户实体
+│   │   ├── Questionnaire.java        # 问卷实体
+│   │   ├── Question.java             # 问题实体
+│   │   └── Answer.java               # 答案实体
 │   └── service
 │       ├── UserService.java          # 用户服务接口
 │       └── impl/UserServiceImpl.java # 用户服务实现
@@ -96,9 +133,14 @@ questionnaire
 │   ├── mapper/UserMapper.xml         # MyBatis映射文件
 │   └── sql/schema.sql                # 数据库建表脚本
 └── src/main/webapp/WEB-INF/views
+    ├── home/index.jsp                # 首页（新增）
     ├── user/login.jsp                # 登录页面
     ├── user/register.jsp             # 注册页面
-    └── questionnaire/list.jsp        # 问卷列表页面
+    ├── questionnaire/list.jsp        # 问卷列表页面
+    ├── questionnaire/form.jsp        # 问卷创建/编辑页面
+    ├── questionnaire/design.jsp      # 问卷设计页面
+    ├── answer/fill.jsp               # 问卷填写页面
+    └── statistics/view.jsp           # 统计查看页面
 ```
 
 ## 权限说明
@@ -117,11 +159,14 @@ questionnaire
 
 ## 下一步开发计划
 
-1. 问卷管理模块（创建、编辑、删除问卷）
-2. 题目管理模块（单选、多选、简答题）
-3. 问卷发布与答题功能
-4. 结果统计与图表展示
-5. 管理员后台管理功能
+1. ✅ **首页设计完成** - 专业的产品介绍页面
+2. ✅ **问卷管理模块** - 创建、编辑、删除问卷功能已完成
+3. ✅ **题目管理模块** - 单选、多选、简答题支持已完成
+4. ✅ **问卷发布与答题功能** - 在线填写与数据收集已完成
+5. ✅ **结果统计与图表展示** - 数据可视化分析已完成
+6. 🔄 **系统优化** - 性能优化、用户体验提升
+7. 🔄 **移动端适配** - 进一步优化移动端体验
+8. 🔄 **高级功能** - 问卷模板、逻辑跳转、导出功能
 
 ## 注意事项
 

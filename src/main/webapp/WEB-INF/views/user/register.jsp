@@ -118,6 +118,12 @@
                 <div class="text-center">
                     <a href="<c:url value='/user/login'/>" class="text-decoration-none">已有账号？立即登录</a>
                 </div>
+                
+                <div class="text-center mt-3">
+                    <a href="<c:url value='/'/>" class="text-decoration-none text-muted">
+                        <i class="bi bi-house-door me-1"></i>返回首页
+                    </a>
+                </div>
             </div>
              <div class="card-footer text-center py-3 bg-light">
                  <p class="mb-0 text-muted footer-text">&copy; 2025 问卷系统</p>
