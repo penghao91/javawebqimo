@@ -1,6 +1,5 @@
 package com.questionnaire.config;
 
-import com.questionnaire.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,22 +16,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserService userService;
+    private UserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    @Override
-    public UserDetailsService userDetailsService() {
-        return username -> userService.findByUsername(username);
-    }
-
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService())
+        auth.userDetailsService(userDetailsService)
             .passwordEncoder(passwordEncoder());
     }
 
@@ -41,7 +34,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
                 .antMatchers("/user/login", "/user/register", "/css/**", "/js/**", "/images/**").permitAll()
-                .antMatchers("/admin/**").hasAnyRole("ADMIN", "ADMINISTRATOR")
                 .anyRequest().authenticated()
                 .and()
             .formLogin()
@@ -56,8 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/user/login?logout")
                 .permitAll()
                 .and()
-            .csrf()
-                .and()
+            .csrf().disable()
             .rememberMe()
                 .key("questionnaire-remember-me")
                 .tokenValiditySeconds(86400);
