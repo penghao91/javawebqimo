@@ -3,7 +3,7 @@ USE questionnaire;
 
 -- 123456 的 BCrypt 加密结果
 UPDATE user SET 
-    password = '$2a$10$8UnKEMQZ3jJ9L3jJCLlR6e8tN5J5J5J5J5J5J5J5J5J5J5J5J5J5J5',
+    password = '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBa3B6nOGAHFWG',
     update_time = NOW()
 WHERE username = 'admin';
 

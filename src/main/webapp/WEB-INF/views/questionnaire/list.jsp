@@ -108,7 +108,7 @@
                                                         <i class="bi bi-bar-chart"></i>
                                                     </a>
                                                     
-                                                    <c:if test="${q.createdBy == user.id || user.role == 'admin' || user.role == 'administrator')}">
+                                                    <c:if test="${q.createdBy == user.id || user.role == 'admin' || user.role == 'administrator'}">
                                                         <a href="<c:url value='/questionnaire/edit/${q.id}'/>" 
                                                            class="btn btn-outline-secondary" 
                                                            title="编辑">
