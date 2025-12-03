@@ -312,6 +312,50 @@
             margin-bottom: 1rem;
         }
         
+        /* 简单欢迎提示 */
+        .welcome-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            border: none;
+            overflow: hidden;
+            min-width: 350px;
+            max-width: 500px;
+            animation: slideInRight 0.3s ease-out;
+            z-index: 9999;
+            display: none;
+        }
+        .welcome-toast.show {
+            display: block;
+        }
+        .welcome-toast-header {
+            background: linear-gradient(135deg, #4e73df, #224abe);
+            color: white;
+            border-bottom: none;
+            padding: 1rem 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        .welcome-toast-body {
+            padding: 1.25rem;
+            color: #5a5c69;
+            font-size: 0.95rem;
+        }
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
         /* 样本服务推广模块 */
         .sample-service-promo {
             margin-top: 3rem;
@@ -676,7 +720,37 @@
         // 设置登录标记，表示用户已经登录过
         document.addEventListener('DOMContentLoaded', function() {
             localStorage.setItem('hasLoggedIn', 'true');
+            
+            // 检查是否是刚登录进来的
+            const justLoggedIn = sessionStorage.getItem('justLoggedIn');
+            if (justLoggedIn === 'true') {
+                // 显示简单欢迎提示
+                showWelcomeToast();
+                sessionStorage.removeItem('justLoggedIn');
+            }
         });
+        
+        // 简单欢迎提示函数
+        function showWelcomeToast() {
+            const welcomeToast = document.createElement('div');
+            welcomeToast.className = 'welcome-toast show';
+            welcomeToast.innerHTML = `
+                <div class="welcome-toast-header">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    <strong>登录成功</strong>
+                </div>
+                <div class="welcome-toast-body">
+                    欢迎回来！正在为您加载问卷管理后台...
+                </div>
+            `;
+            
+            document.body.appendChild(welcomeToast);
+            
+            // 3秒后自动隐藏
+            setTimeout(() => {
+                welcomeToast.remove();
+            }, 3000);
+        }
         
         // 状态筛选功能
         document.querySelector('.filter-bar select').addEventListener('change', function() {
