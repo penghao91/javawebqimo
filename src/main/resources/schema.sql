@@ -17,6 +17,10 @@ CREATE TABLE IF NOT EXISTS questionnaire (
     description TEXT COMMENT '问卷描述',
     created_by INT NOT NULL COMMENT '创建用户ID',
     status TINYINT DEFAULT 1 COMMENT '状态：1-草稿，2-已发布',
+    is_starred TINYINT DEFAULT 0 COMMENT '是否星标：0-否，1-是',
+    is_deleted TINYINT DEFAULT 0 COMMENT '是否删除：0-否，1-是',
+    deleted_time DATETIME DEFAULT NULL COMMENT '删除时间',
+    folder_id INT DEFAULT NULL COMMENT '文件夹ID',
     create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
     update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (created_by) REFERENCES user(id)
@@ -65,6 +69,18 @@ CREATE TABLE IF NOT EXISTS answer_detail (
     FOREIGN KEY (answer_id) REFERENCES answer(id) ON DELETE CASCADE,
     FOREIGN KEY (question_id) REFERENCES question(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='答题详情表';
+
+-- 文件夹表
+CREATE TABLE IF NOT EXISTS folder (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100) NOT NULL COMMENT '文件夹名称',
+    user_id INT NOT NULL COMMENT '用户ID',
+    parent_id INT DEFAULT NULL COMMENT '父文件夹ID',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES user(id),
+    FOREIGN KEY (parent_id) REFERENCES folder(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='文件夹表';
 
 -- 插入默认管理员账号（密码：admin123）
 INSERT IGNORE INTO user (username, password, email, role, create_time, update_time) 

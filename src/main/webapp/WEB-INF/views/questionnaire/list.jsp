@@ -28,6 +28,11 @@
             background: linear-gradient(135deg, rgba(var(--bs-primary-rgb), 1), rgba(var(--bs-primary-rgb), 0.8));
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             height: 70px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1030; /* Bootstrap's default for fixed-top */
         }
         .top-navbar .navbar-brand {
             font-weight: 700;
@@ -67,6 +72,8 @@
             display: flex;
             min-height: calc(100vh - 70px);
             margin-top: 70px;
+            position: relative;
+            z-index: 1;
         }
         
         /* 左侧边栏 */
@@ -76,6 +83,8 @@
             border-right: 1px solid var(--border-color);
             padding: 1.5rem 0;
             box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 100;
         }
         .sidebar-menu {
             list-style: none;
@@ -512,25 +521,25 @@
                     </a>
                 </li>
                 <li class="sidebar-menu-item">
-                    <a href="<c:url value='/questionnaire/list'/>" class="sidebar-menu-link active">
+                    <a href="<c:url value='/questionnaire/list'/>" class="sidebar-menu-link ${empty pageTitle || pageTitle == '问卷列表' ? 'active' : ''}">
                         <i class="bi bi-list-ul"></i>
                         全部问卷
                     </a>
                 </li>
                 <li class="sidebar-menu-item">
-                    <a href="#" class="sidebar-menu-link">
+                    <a href="<c:url value='/questionnaire/starred'/>" class="sidebar-menu-link ${pageTitle == '星标问卷' ? 'active' : ''}">
                         <i class="bi bi-star"></i>
                         星标问卷
                     </a>
                 </li>
                 <li class="sidebar-menu-item">
-                    <a href="#" class="sidebar-menu-link">
+                    <a href="<c:url value='/questionnaire/recycle'/>" class="sidebar-menu-link ${pageTitle == '回收站' ? 'active' : ''}">
                         <i class="bi bi-trash"></i>
                         回收站
                     </a>
                 </li>
                 <li class="sidebar-menu-item">
-                    <a href="#" class="sidebar-menu-link">
+                    <a href="<c:url value='/questionnaire/folders'/>" class="sidebar-menu-link">
                         <i class="bi bi-folder"></i>
                         文件夹
                     </a>
@@ -651,21 +660,42 @@
                                     <i class="bi bi-pie-chart"></i> 分析&下载
                                 </a>
                                 <c:if test="${q.createdBy == user.id || user.role == 'admin' || user.role == 'administrator'}">
-                                    <a href="<c:url value='/questionnaire/edit/${q.id}'/>" class="action-btn">
-                                        <i class="bi bi-pencil"></i> 编辑
-                                    </a>
-                                    <a href="#" class="action-btn" onclick="copyQuestionnaire(${q.id})">
-                                        <i class="bi bi-files"></i> 复制
-                                    </a>
-                                    <a href="#" class="action-btn" onclick="setReminder(${q.id})">
-                                        <i class="bi bi-bell"></i> 提醒
-                                    </a>
-                                    <a href="#" class="action-btn" onclick="moveToFolder(${q.id})">
-                                        <i class="bi bi-folder"></i> 文件夹
-                                    </a>
-                                    <a href="<c:url value='/questionnaire/delete/${q.id}'/>" class="action-btn danger" onclick="return confirm('确定要删除此问卷吗？')">
-                                        <i class="bi bi-trash"></i> 删除
-                                    </a>
+                                    <c:choose>
+                                        <c:when test="${pageTitle == '回收站'}">
+                                            <a href="<c:url value='/questionnaire/restore/${q.id}'/>" class="action-btn">
+                                                <i class="bi bi-arrow-counterclockwise"></i> 恢复
+                                            </a>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:choose>
+                                                <c:when test="${q.isStarred == 0}">
+                                                    <a href="<c:url value='/questionnaire/star/${q.id}'/>" class="action-btn">
+                                                        <i class="bi bi-star"></i> 星标
+                                                    </a>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <a href="<c:url value='/questionnaire/unstar/${q.id}'/>" class="action-btn">
+                                                        <i class="bi bi-star-fill" style="color: #ffc107;"></i> 取消星标
+                                                    </a>
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <a href="<c:url value='/questionnaire/edit/${q.id}'/>" class="action-btn">
+                                                <i class="bi bi-pencil"></i> 编辑
+                                            </a>
+                                            <a href="#" class="action-btn" onclick="copyQuestionnaire(${q.id})">
+                                                <i class="bi bi-files"></i> 复制
+                                            </a>
+                                            <a href="#" class="action-btn" onclick="setReminder(${q.id})">
+                                                <i class="bi bi-bell"></i> 提醒
+                                            </a>
+                                            <a href="#" class="action-btn" onclick="moveToFolder(${q.id})">
+                                                <i class="bi bi-folder"></i> 文件夹
+                                            </a>
+                                            <a href="<c:url value='/questionnaire/softdelete/${q.id}'/>" class="action-btn danger" onclick="return confirm('确定要删除此问卷吗？删除后可在回收站恢复。')">
+                                                <i class="bi bi-trash"></i> 删除
+                                            </a>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </c:if>
                             </div>
                         </div>

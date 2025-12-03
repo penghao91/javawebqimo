@@ -31,11 +31,34 @@ public class QuestionnaireController {
         if (user.getRole().equals("admin") || user.getRole().equals("administrator")) {
             questionnaires = questionnaireService.findAll();
         } else {
-            questionnaires = questionnaireService.findByUserId(user.getId());
+            questionnaires = questionnaireService.findActiveByUserId(user.getId());
         }
         
         model.addAttribute("questionnaires", questionnaires);
+        model.addAttribute("pageTitle", "问卷列表");
         return "questionnaire/list";
+    }
+    
+    @GetMapping("/starred")
+    public String starred(@AuthenticationPrincipal User user, Model model) {
+        List<Questionnaire> questionnaires = questionnaireService.findStarredByUserId(user.getId());
+        model.addAttribute("questionnaires", questionnaires);
+        model.addAttribute("pageTitle", "星标问卷");
+        return "questionnaire/list";
+    }
+    
+    @GetMapping("/recycle")
+    public String recycle(@AuthenticationPrincipal User user, Model model) {
+        List<Questionnaire> questionnaires = questionnaireService.findDeletedByUserId(user.getId());
+        model.addAttribute("questionnaires", questionnaires);
+        model.addAttribute("pageTitle", "回收站");
+        return "questionnaire/list";
+    }
+    
+    @GetMapping("/folders")
+    public String folders(@AuthenticationPrincipal User user, Model model) {
+        model.addAttribute("pageTitle", "文件夹管理");
+        return "questionnaire/folders";
     }
     
     @GetMapping("/create")
@@ -174,5 +197,89 @@ public class QuestionnaireController {
         model.addAttribute("questions", questions);
         
         return "questionnaire/design";
+    }
+    
+    @GetMapping("/star/{id}")
+    public String star(@PathVariable Integer id,
+                      @AuthenticationPrincipal User user,
+                      RedirectAttributes redirectAttributes) {
+        
+        if (!questionnaireService.isOwner(id, user.getId()) && 
+            !user.getRole().equals("admin") && 
+            !user.getRole().equals("administrator")) {
+            redirectAttributes.addFlashAttribute("error", "无权操作此问卷！");
+            return "redirect:/questionnaire/list";
+        }
+        
+        if (questionnaireService.star(id, user.getId())) {
+            redirectAttributes.addFlashAttribute("message", "问卷已添加到星标！");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "操作失败！");
+        }
+        
+        return "redirect:/questionnaire/list";
+    }
+    
+    @GetMapping("/unstar/{id}")
+    public String unstar(@PathVariable Integer id,
+                        @AuthenticationPrincipal User user,
+                        RedirectAttributes redirectAttributes) {
+        
+        if (!questionnaireService.isOwner(id, user.getId()) && 
+            !user.getRole().equals("admin") && 
+            !user.getRole().equals("administrator")) {
+            redirectAttributes.addFlashAttribute("error", "无权操作此问卷！");
+            return "redirect:/questionnaire/list";
+        }
+        
+        if (questionnaireService.unstar(id, user.getId())) {
+            redirectAttributes.addFlashAttribute("message", "问卷已取消星标！");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "操作失败！");
+        }
+        
+        return "redirect:/questionnaire/list";
+    }
+    
+    @GetMapping("/softdelete/{id}")
+    public String softDelete(@PathVariable Integer id,
+                            @AuthenticationPrincipal User user,
+                            RedirectAttributes redirectAttributes) {
+        
+        if (!questionnaireService.isOwner(id, user.getId()) && 
+            !user.getRole().equals("admin") && 
+            !user.getRole().equals("administrator")) {
+            redirectAttributes.addFlashAttribute("error", "无权删除此问卷！");
+            return "redirect:/questionnaire/list";
+        }
+        
+        if (questionnaireService.softDelete(id, user.getId())) {
+            redirectAttributes.addFlashAttribute("message", "问卷已移动到回收站！");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "删除失败！");
+        }
+        
+        return "redirect:/questionnaire/list";
+    }
+    
+    @GetMapping("/restore/{id}")
+    public String restore(@PathVariable Integer id,
+                         @AuthenticationPrincipal User user,
+                         RedirectAttributes redirectAttributes) {
+        
+        if (!questionnaireService.isOwner(id, user.getId()) && 
+            !user.getRole().equals("admin") && 
+            !user.getRole().equals("administrator")) {
+            redirectAttributes.addFlashAttribute("error", "无权恢复此问卷！");
+            return "redirect:/questionnaire/recycle";
+        }
+        
+        if (questionnaireService.restore(id, user.getId())) {
+            redirectAttributes.addFlashAttribute("message", "问卷已恢复！");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "恢复失败！");
+        }
+        
+        return "redirect:/questionnaire/recycle";
     }
 }

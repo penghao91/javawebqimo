@@ -1,12 +1,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${empty questionnaire.id ? '创建问卷' : '编辑问卷'} - 问卷星</title>
+    <title>文件夹管理 - 问卷星</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -156,32 +155,95 @@
             box-shadow: 0 5px 15px rgba(var(--bs-primary-rgb), 0.3);
         }
         
-        /* 表单样式 */
-        .form-card {
+        /* 文件夹卡片 */
+        .folder-card {
             background: white;
             border-radius: 12px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            border: none;
-        }
-        .form-header {
+            margin-bottom: 1rem;
             padding: 1.5rem 2rem;
-            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
         }
-        .form-header h5 {
-            margin: 0;
+        .folder-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        .folder-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .folder-title {
+            font-size: 1.2rem;
             font-weight: 600;
             color: #2c3e50;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
-        .form-body {
-            padding: 2rem;
+        .folder-stats {
+            display: flex;
+            gap: 2rem;
+            margin: 1rem 0;
         }
-        .form-label {
-            font-weight: 500;
-            color: #5a5c69;
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6c757d;
         }
-        .form-control:focus {
-            border-color: rgba(var(--bs-primary-rgb), 0.5);
-            box-shadow: 0 0 0 0.2rem rgba(var(--bs-primary-rgb), 0.25);
+        .stat-value {
+            font-weight: 600;
+            color: rgba(var(--bs-primary-rgb), 1);
+        }
+        .folder-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            background: white;
+            color: var(--bs-body-color);
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .action-btn:hover {
+            background-color: #f8f9fc;
+            color: rgba(var(--bs-primary-rgb), 1);
+            border-color: rgba(var(--bs-primary-rgb), 1);
+        }
+        .action-btn.danger {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+        .action-btn.danger:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        /* 空状态 */
+        .empty-state {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 4rem 2rem;
+            text-align: center;
+            color: #6c757d;
+        }
+        .empty-state .icon {
+            font-size: 4rem;
+            color: #dee2e6;
+            margin-bottom: 1rem;
         }
         
         /* 响应式设计 */
@@ -197,6 +259,13 @@
                 gap: 1rem;
                 text-align: center;
             }
+            .folder-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .folder-actions {
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -209,7 +278,7 @@
                 问卷星
             </a>
             <div class="top-nav-menu">
-                <a href="<c:url value='/questionnaire/list'/>" class="top-nav-item active">
+                <a href="<c:url value='/questionnaire/list'/>" class="top-nav-item">
                     <i class="bi bi-journal-text"></i> 我的问卷
                 </a>
                 <a href="#" class="top-nav-item">
@@ -233,7 +302,7 @@
         <div class="sidebar">
             <ul class="sidebar-menu">
                 <li class="sidebar-menu-item">
-                    <a href="<c:url value='/questionnaire/create'/>" class="sidebar-menu-link active">
+                    <a href="<c:url value='/questionnaire/create'/>" class="sidebar-menu-link">
                         <i class="bi bi-plus-circle"></i>
                         创建问卷
                     </a>
@@ -257,7 +326,7 @@
                     </a>
                 </li>
                 <li class="sidebar-menu-item">
-                    <a href="<c:url value='/questionnaire/folders'/>" class="sidebar-menu-link">
+                    <a href="<c:url value='/questionnaire/folders'/>" class="sidebar-menu-link active">
                         <i class="bi bi-folder"></i>
                         文件夹
                     </a>
@@ -269,10 +338,10 @@
         <div class="content-area">
             <!-- 页面头部 -->
             <div class="page-header">
-                <h1 class="page-title">${empty questionnaire.id ? '创建新问卷' : '编辑问卷'}</h1>
-                <a href="<c:url value='/questionnaire/list'/>" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> 返回列表
-                </a>
+                <h1 class="page-title">文件夹管理</h1>
+                <button class="btn btn-primary create-btn" onclick="createFolder()">
+                    <i class="bi bi-plus-lg"></i> 新建文件夹
+                </button>
             </div>
 
             <!-- 消息提示 -->
@@ -290,43 +359,102 @@
                 </div>
             </c:if>
 
-            <!-- 表单卡片 -->
-            <div class="form-card">
-                <div class="form-header">
-                    <h5>问卷信息</h5>
+            <!-- 文件夹列表 -->
+            <div class="folder-list">
+                <div class="folder-card">
+                    <div class="folder-header">
+                        <h3 class="folder-title">
+                            <i class="bi bi-folder2" style="color: #ffc107;"></i>
+                            默认文件夹
+                        </h3>
+                    </div>
+                    <div class="folder-stats">
+                        <div class="stat-item">
+                            <i class="bi bi-file-text"></i>
+                            <span>问卷数量：<span class="stat-value">0</span></span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="bi bi-calendar3"></i>
+                            <span>创建时间：2025-12-03</span>
+                        </div>
+                    </div>
+                    <div class="folder-actions">
+                        <a href="<c:url value='/questionnaire/list'/>" class="action-btn">
+                            <i class="bi bi-eye"></i> 查看问卷
+                        </a>
+                        <button class="action-btn" onclick="editFolder(0)">
+                            <i class="bi bi-pencil"></i> 重命名
+                        </button>
+                    </div>
                 </div>
-                <div class="form-body">
-                    <c:url value='/questionnaire/${empty questionnaire.id ? "create" : "edit/"}${questionnaire.id}' var="formAction"/>
-                    
-                    <form:form modelAttribute="questionnaire" action="${formAction}" method="post">
-                        <div class="mb-3">
-                            <form:label path="title" class="form-label">问卷标题 <span class="text-danger">*</span></form:label>
-                            <form:input path="title" class="form-control form-control-lg" required="true" maxlength="200" placeholder="请输入问卷标题"/>
-                            <form:errors path="title" cssClass="text-danger small mt-1"/>
-                            <div class="form-text">建议标题简洁明了，不超过50个字</div>
+                
+                <div class="folder-card">
+                    <div class="folder-header">
+                        <h3 class="folder-title">
+                            <i class="bi bi-folder2" style="color: #4e73df;"></i>
+                            工作项目
+                        </h3>
+                    </div>
+                    <div class="folder-stats">
+                        <div class="stat-item">
+                            <i class="bi bi-file-text"></i>
+                            <span>问卷数量：<span class="stat-value">0</span></span>
                         </div>
-                        
-                        <div class="mb-4">
-                            <form:label path="description" class="form-label">问卷描述</form:label>
-                            <form:textarea path="description" class="form-control" rows="4" maxlength="1000" placeholder="请输入问卷描述，帮助填写者了解问卷目的"/>
-                            <form:errors path="description" cssClass="text-danger small mt-1"/>
-                            <div class="form-text">描述问卷的目的、填写说明等，选填项</div>
+                        <div class="stat-item">
+                            <i class="bi bi-calendar3"></i>
+                            <span>创建时间：2025-12-03</span>
                         </div>
-                        
-                        <div class="d-flex justify-content-end gap-2">
-                            <a href="<c:url value='/questionnaire/list'/>" class="btn btn-secondary btn-lg">
-                                <i class="bi bi-x-lg"></i> 取消
-                            </a>
-                            <button type="submit" class="btn btn-primary btn-lg">
-                                <i class="bi bi-check-lg"></i> ${empty questionnaire.id ? '创建问卷' : '保存修改'}
-                            </button>
-                        </div>
-                    </form:form>
+                    </div>
+                    <div class="folder-actions">
+                        <a href="#" class="action-btn">
+                            <i class="bi bi-eye"></i> 查看问卷
+                        </a>
+                        <button class="action-btn" onclick="editFolder(1)">
+                            <i class="bi bi-pencil"></i> 重命名
+                        </button>
+                        <button class="action-btn danger" onclick="deleteFolder(1)">
+                            <i class="bi bi-trash"></i> 删除
+                        </button>
+                    </div>
                 </div>
+            </div>
+            
+            <!-- 空状态 -->
+            <div class="empty-state" style="display: none;">
+                <div class="icon"><i class="bi bi-folder2"></i></div>
+                <h4>暂无文件夹</h4>
+                <p class="text-muted">点击上方的"新建文件夹"按钮创建您的第一个文件夹</p>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 创建文件夹
+        function createFolder() {
+            const folderName = prompt('请输入文件夹名称：');
+            if (folderName && folderName.trim()) {
+                alert('创建文件夹功能开发中，名称：' + folderName.trim());
+                // 这里可以添加创建文件夹的API调用
+            }
+        }
+        
+        // 编辑文件夹
+        function editFolder(folderId) {
+            const newName = prompt('请输入新的文件夹名称：');
+            if (newName && newName.trim()) {
+                alert('重命名文件夹功能开发中，ID：' + folderId + '，新名称：' + newName.trim());
+                // 这里可以添加重命名文件夹的API调用
+            }
+        }
+        
+        // 删除文件夹
+        function deleteFolder(folderId) {
+            if (confirm('确定要删除这个文件夹吗？文件夹内的问卷将被移动到默认文件夹。')) {
+                alert('删除文件夹功能开发中，ID：' + folderId);
+                // 这里可以添加删除文件夹的API调用
+            }
+        }
+    </script>
 </body>
 </html>
