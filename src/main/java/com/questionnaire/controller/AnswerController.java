@@ -4,13 +4,13 @@ import com.questionnaire.model.*;
 import com.questionnaire.service.AnswerService;
 import com.questionnaire.service.QuestionService;
 import com.questionnaire.service.QuestionnaireService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
@@ -18,13 +18,13 @@ import java.util.List;
 @RequestMapping("/answer")
 public class AnswerController {
 
-    @Autowired
+    @Resource
     private QuestionnaireService questionnaireService;
     
-    @Autowired
+    @Resource
     private QuestionService questionService;
     
-    @Autowired
+    @Resource
     private AnswerService answerService;
 
     @GetMapping("/fill/{questionnaireId}")

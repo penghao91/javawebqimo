@@ -1,40 +1,73 @@
 package com.questionnaire.service;
 
+import com.questionnaire.dao.UserMapper;
 import com.questionnaire.model.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-/**
- * User service interface that integrates with Spring Security by extending UserDetailsService.
- */
-public interface UserService extends UserDetailsService {
+import javax.annotation.Resource;
 
-    /**
-     * Finds a user by their unique ID.
-     * @param id The user's ID.
-     * @return The User object or null if not found.
-     */
-    User findById(Integer id);
+@Service
+@Transactional
+public class UserService {
 
-    /**
-     * Registers a new user in the system.
-     * The implementation should handle password encoding.
-     * @param user The user object with plaintext password.
-     * @return true if registration is successful, false otherwise.
-     */
-    boolean register(User user);
+    @Resource
+    private UserMapper userMapper;
+
+    @Resource
+    private PasswordEncoder passwordEncoder;
 
     /**
-     * Checks if a username already exists.
-     * @param username The username to check.
-     * @return true if the username exists, false otherwise.
+     * 加载用户信息（Spring Security 登录验证）
      */
-    boolean usernameExists(String username);
-    
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userMapper.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("用户名不存在：" + username);
+        }
+        return user;
+    }
+
     /**
-     * Finds a user by their username.
-     * This is a convenience method, while loadUserByUsername is used by Spring Security.
-     * @param username The username to find.
-     * @return The User object or null if not found.
+     * 根据用户名查询用户
      */
-    User findByUsername(String username);
+    public User findByUsername(String username) {
+        return userMapper.findByUsername(username);
+    }
+
+    /**
+     * 根据ID查询用户
+     */
+    public User findById(Integer id) {
+        return userMapper.findById(id);
+    }
+
+    /**
+     * 注册新用户（自动加密密码、设置默认角色）
+     */
+    public boolean register(User user) {
+        if (usernameExists(user.getUsername())) {
+            return false;
+        }
+
+        // 加密密码
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        // 设置默认角色
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("user");
+        }
+
+        return userMapper.insert(user) > 0;
+    }
+
+    /**
+     * 判断用户名是否已存在
+     */
+    public boolean usernameExists(String username) {
+        return userMapper.countByUsername(username) > 0;
+    }
 }
