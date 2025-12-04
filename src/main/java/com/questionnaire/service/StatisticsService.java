@@ -1,9 +1,9 @@
 package com.questionnaire.service;
 
-import com.questionnaire.dao.AnswerDetailMapper;
-import com.questionnaire.dao.AnswerMapper;
-import com.questionnaire.dao.QuestionMapper;
-import com.questionnaire.dao.QuestionOptionMapper;
+import com.questionnaire.dao.AnswerDetailDao;
+import com.questionnaire.dao.AnswerDao;
+import com.questionnaire.dao.QuestionDao;
+import com.questionnaire.dao.QuestionOptionDao;
 import com.questionnaire.model.Question;
 import com.questionnaire.model.QuestionOption;
 import org.springframework.stereotype.Service;
@@ -15,26 +15,26 @@ import java.util.*;
 public class StatisticsService {
 
     @Resource
-    private AnswerMapper answerMapper;
+    private AnswerDao answerDao;
     
     @Resource
-    private AnswerDetailMapper answerDetailMapper;
+    private AnswerDetailDao answerDetailDao;
     
     @Resource
-    private QuestionMapper questionMapper;
+    private QuestionDao questionDao;
     
     @Resource
-    private QuestionOptionMapper optionMapper;
+    private QuestionOptionDao optionDao;
 
     public Map<String, Object> getQuestionnaireStatistics(Integer questionnaireId) {
         Map<String, Object> result = new HashMap<>();
         
         // 总提交数量
-        int totalSubmissions = answerMapper.countByQuestionnaireId(questionnaireId);
+        int totalSubmissions = answerDao.countByQuestionnaireId(questionnaireId);
         result.put("totalSubmissions", totalSubmissions);
         
         // 获取所有问题
-        List<Question> questions = questionMapper.findByQuestionnaireId(questionnaireId);
+        List<Question> questions = questionDao.findByQuestionnaireId(questionnaireId);
         List<Map<String, Object>> questionStats = new ArrayList<>();
         
         for (Question question : questions) {
@@ -58,7 +58,7 @@ public class StatisticsService {
     public List<Map<String, Object>> getQuestionStatistics(Integer questionId) {
         List<Map<String, Object>> result = new ArrayList<>();
         
-        Question question = questionMapper.findById(questionId);
+        Question question = questionDao.findById(questionId);
         if (question == null) {
             return result;
         }
@@ -74,14 +74,14 @@ public class StatisticsService {
         }
         
         // 选择题：统计每个选项的选择次数
-        List<QuestionOption> options = optionMapper.findByQuestionId(questionId);
+        List<QuestionOption> options = optionDao.findByQuestionId(questionId);
         
         for (QuestionOption option : options) {
             Map<String, Object> optionStat = new HashMap<>();
             optionStat.put("optionText", option.getOptionText());
             
             // 统计选择该选项的次数
-            int count = answerDetailMapper.countByQuestionAndAnswer(questionId, option.getOptionText());
+            int count = answerDetailDao.countByQuestionAndAnswer(questionId, option.getOptionText());
             optionStat.put("count", count);
             
             result.add(optionStat);

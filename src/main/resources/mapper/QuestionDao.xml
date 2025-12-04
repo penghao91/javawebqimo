@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.questionnaire.dao.QuestionDao">
+
+    <resultMap id="QuestionResultMap" type="com.questionnaire.model.Question">
+        <id property="id" column="id"/>
+        <result property="questionnaireId" column="questionnaire_id"/>
+        <result property="questionText" column="question_text"/>
+        <result property="questionType" column="question_type"/>
+        <result property="questionOrder" column="question_order"/>
+        <result property="isRequired" column="is_required"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <collection property="options" column="id" javaType="java.util.List" ofType="com.questionnaire.model.QuestionOption" select="com.questionnaire.dao.QuestionOptionDao.findByQuestionId"/>
+    </resultMap>
+
+    <select id="findById" parameterType="int" resultMap="QuestionResultMap">
+        SELECT * FROM question WHERE id = #{id}
+    </select>
+
+    <select id="findByQuestionnaireId" parameterType="int" resultMap="QuestionResultMap">
+        SELECT * FROM question WHERE questionnaire_id = #{questionnaireId} ORDER BY question_order ASC, id ASC
+    </select>
+
+    <insert id="insert" parameterType="com.questionnaire.model.Question" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO question (questionnaire_id, question_text, question_type, question_order, is_required) 
+        VALUES (#{questionnaireId}, #{questionText}, #{questionType}, #{questionOrder}, #{isRequired})
+    </insert>
+
+    <update id="update" parameterType="com.questionnaire.model.Question">
+        UPDATE question SET question_text = #{questionText}, question_type = #{questionType}, 
+        question_order = #{questionOrder}, is_required = #{isRequired} WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM question WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByQuestionnaireId" parameterType="int">
+        DELETE FROM question WHERE questionnaire_id = #{questionnaireId}
+    </delete>
+
+</mapper>

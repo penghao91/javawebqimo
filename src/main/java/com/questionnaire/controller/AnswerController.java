@@ -4,7 +4,6 @@ import com.questionnaire.model.*;
 import com.questionnaire.service.AnswerService;
 import com.questionnaire.service.QuestionService;
 import com.questionnaire.service.QuestionnaireService;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -54,7 +53,6 @@ public class AnswerController {
     
     @PostMapping("/submit/{questionnaireId}")
     public String submitAnswer(@PathVariable Integer questionnaireId,
-                              @AuthenticationPrincipal User user,
                               HttpServletRequest request,
                               RedirectAttributes redirectAttributes) {
         

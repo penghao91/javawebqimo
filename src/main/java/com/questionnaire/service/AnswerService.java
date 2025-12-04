@@ -1,8 +1,8 @@
 package com.questionnaire.service;
 
-import com.questionnaire.dao.AnswerMapper;
-import com.questionnaire.dao.AnswerDetailMapper;
-import com.questionnaire.dao.QuestionMapper;
+import com.questionnaire.dao.AnswerDao;
+import com.questionnaire.dao.AnswerDetailDao;
+import com.questionnaire.dao.QuestionDao;
 import com.questionnaire.model.Answer;
 import com.questionnaire.model.AnswerDetail;
 import com.questionnaire.model.Question;
@@ -18,24 +18,24 @@ import java.util.List;
 public class AnswerService {
 
     @Resource
-    private AnswerMapper answerMapper;
+    private AnswerDao answerDao;
     
     @Resource
-    private AnswerDetailMapper answerDetailMapper;
+    private AnswerDetailDao answerDetailDao;
     
     @Resource
-    private QuestionMapper questionMapper;
+    private QuestionDao questionDao;
 
     public Answer findById(Integer id) {
-        return answerMapper.findById(id);
+        return answerDao.findById(id);
     }
 
     public List<Answer> findByQuestionnaireId(Integer questionnaireId) {
-        return answerMapper.findByQuestionnaireId(questionnaireId);
+        return answerDao.findByQuestionnaireId(questionnaireId);
     }
 
     public int countByQuestionnaireId(Integer questionnaireId) {
-        return answerMapper.countByQuestionnaireId(questionnaireId);
+        return answerDao.countByQuestionnaireId(questionnaireId);
     }
 
     @Transactional
@@ -49,10 +49,10 @@ public class AnswerService {
             // TODO: 如果用户已登录，设置userId
             // answer.setUserId(userId);
             
-            answerMapper.insert(answer);
+            answerDao.insert(answer);
             
             // 获取所有问题
-            List<Question> questions = questionMapper.findByQuestionnaireId(questionnaireId);
+            List<Question> questions = questionDao.findByQuestionnaireId(questionnaireId);
             
             // 处理每个问题的答案
             for (Question question : questions) {
@@ -67,7 +67,7 @@ public class AnswerService {
                     detail.setQuestionId(question.getId());
                     detail.setAnswerText(answerText);
                     
-                    answerDetailMapper.insert(detail);
+                    answerDetailDao.insert(detail);
                 }
             }
             

@@ -6,12 +6,12 @@ import com.questionnaire.model.User;
 import com.questionnaire.service.QuestionOptionService;
 import com.questionnaire.service.QuestionService;
 import com.questionnaire.service.QuestionnaireService;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,14 +28,23 @@ public class QuestionController {
     @Resource
     private QuestionnaireService questionnaireService;
 
+    private User getCurrentUser(HttpServletRequest request) {
+        return (User) request.getSession().getAttribute("user");
+    }
+
     @PostMapping("/add")
-    public String addQuestion(@AuthenticationPrincipal User user,
+    public String addQuestion(HttpServletRequest request,
                              @RequestParam Integer questionnaireId,
                              @RequestParam String questionText,
                              @RequestParam Integer questionType,
                              @RequestParam(required = false, defaultValue = "1") Integer isRequired,
                              @RequestParam(required = false) String[] options,
                              RedirectAttributes redirectAttributes) {
+        
+        User user = getCurrentUser(request);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
         
         if (!questionnaireService.isOwner(questionnaireId, user.getId()) && 
             !user.getRole().equals("admin") && 
@@ -78,9 +87,14 @@ public class QuestionController {
     }
     
     @GetMapping("/delete/{id}")
-    public String deleteQuestion(@AuthenticationPrincipal User user,
+    public String deleteQuestion(HttpServletRequest request,
                                 @PathVariable Integer id,
                                 RedirectAttributes redirectAttributes) {
+        
+        User user = getCurrentUser(request);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
         
         Question question = questionService.findById(id);
         if (question == null) {

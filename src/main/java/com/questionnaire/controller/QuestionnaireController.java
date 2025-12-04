@@ -5,13 +5,13 @@ import com.questionnaire.model.Questionnaire;
 import com.questionnaire.model.User;
 import com.questionnaire.service.QuestionService;
 import com.questionnaire.service.QuestionnaireService;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -24,8 +24,17 @@ public class QuestionnaireController {
     @Resource
     private QuestionService questionService;
 
+    private User getCurrentUser(HttpServletRequest request) {
+        return (User) request.getSession().getAttribute("user");
+    }
+
     @GetMapping("/list")
-    public String list(@AuthenticationPrincipal User user, Model model) {
+    public String list(HttpServletRequest request, Model model) {
+        User user = getCurrentUser(request);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+        
         List<Questionnaire> questionnaires;
         
         if (user.getRole().equals("admin") || user.getRole().equals("administrator")) {
@@ -40,7 +49,12 @@ public class QuestionnaireController {
     }
     
     @GetMapping("/starred")
-    public String starred(@AuthenticationPrincipal User user, Model model) {
+    public String starred(HttpServletRequest request, Model model) {
+        User user = getCurrentUser(request);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+        
         List<Questionnaire> questionnaires = questionnaireService.findStarredByUserId(user.getId());
         model.addAttribute("questionnaires", questionnaires);
         model.addAttribute("pageTitle", "星标问卷");
@@ -48,7 +62,12 @@ public class QuestionnaireController {
     }
     
     @GetMapping("/recycle")
-    public String recycle(@AuthenticationPrincipal User user, Model model) {
+    public String recycle(HttpServletRequest request, Model model) {
+        User user = getCurrentUser(request);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+        
         List<Questionnaire> questionnaires = questionnaireService.findDeletedByUserId(user.getId());
         model.addAttribute("questionnaires", questionnaires);
         model.addAttribute("pageTitle", "回收站");
@@ -56,7 +75,12 @@ public class QuestionnaireController {
     }
     
     @GetMapping("/folders")
-    public String folders(@AuthenticationPrincipal User user, Model model) {
+    public String folders(HttpServletRequest request, Model model) {
+        User user = getCurrentUser(request);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+        
         model.addAttribute("pageTitle", "文件夹管理");
         return "questionnaire/folders";
     }
@@ -68,9 +92,14 @@ public class QuestionnaireController {
     }
     
     @PostMapping("/create")
-    public String create(@AuthenticationPrincipal User user, 
+    public String create(HttpServletRequest request, 
                         @ModelAttribute Questionnaire questionnaire,
                         RedirectAttributes redirectAttributes) {
+        User user = getCurrentUser(request);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+        
         questionnaire.setCreatedBy(user.getId());
         questionnaire.setStatus(1); // 草稿状态
         
@@ -85,9 +114,14 @@ public class QuestionnaireController {
     
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Integer id, 
-                          @AuthenticationPrincipal User user,
+                          HttpServletRequest request,
                           Model model,
                           RedirectAttributes redirectAttributes) {
+        User user = getCurrentUser(request);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+        
         Questionnaire questionnaire = questionnaireService.findById(id);
         
         if (questionnaire == null) {
@@ -108,9 +142,13 @@ public class QuestionnaireController {
     
     @PostMapping("/edit/{id}")
     public String edit(@PathVariable Integer id,
-                      @AuthenticationPrincipal User user,
+                      HttpServletRequest request,
                       @ModelAttribute Questionnaire questionnaire,
                       RedirectAttributes redirectAttributes) {
+        User user = getCurrentUser(request);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
         
         if (!questionnaireService.isOwner(id, user.getId()) && 
             !user.getRole().equals("admin") && 
@@ -131,8 +169,12 @@ public class QuestionnaireController {
     
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Integer id,
-                        @AuthenticationPrincipal User user,
+                        HttpServletRequest request,
                         RedirectAttributes redirectAttributes) {
+        User user = getCurrentUser(request);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
         
         if (!questionnaireService.isOwner(id, user.getId()) && 
             !user.getRole().equals("admin") && 
@@ -152,8 +194,12 @@ public class QuestionnaireController {
     
     @GetMapping("/publish/{id}")
     public String publish(@PathVariable Integer id,
-                         @AuthenticationPrincipal User user,
+                         HttpServletRequest request,
                          RedirectAttributes redirectAttributes) {
+        User user = getCurrentUser(request);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
         
         if (!questionnaireService.isOwner(id, user.getId()) && 
             !user.getRole().equals("admin") && 
@@ -173,9 +219,13 @@ public class QuestionnaireController {
     
     @GetMapping("/design/{id}")
     public String design(@PathVariable Integer id,
-                        @AuthenticationPrincipal User user,
+                        HttpServletRequest request,
                         Model model,
                         RedirectAttributes redirectAttributes) {
+        User user = getCurrentUser(request);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
         
         Questionnaire questionnaire = questionnaireService.findById(id);
         
@@ -201,8 +251,12 @@ public class QuestionnaireController {
     
     @GetMapping("/star/{id}")
     public String star(@PathVariable Integer id,
-                      @AuthenticationPrincipal User user,
+                      HttpServletRequest request,
                       RedirectAttributes redirectAttributes) {
+        User user = getCurrentUser(request);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
         
         if (!questionnaireService.isOwner(id, user.getId()) && 
             !user.getRole().equals("admin") && 
@@ -222,8 +276,12 @@ public class QuestionnaireController {
     
     @GetMapping("/unstar/{id}")
     public String unstar(@PathVariable Integer id,
-                        @AuthenticationPrincipal User user,
+                        HttpServletRequest request,
                         RedirectAttributes redirectAttributes) {
+        User user = getCurrentUser(request);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
         
         if (!questionnaireService.isOwner(id, user.getId()) && 
             !user.getRole().equals("admin") && 
@@ -243,8 +301,12 @@ public class QuestionnaireController {
     
     @GetMapping("/softdelete/{id}")
     public String softDelete(@PathVariable Integer id,
-                            @AuthenticationPrincipal User user,
+                            HttpServletRequest request,
                             RedirectAttributes redirectAttributes) {
+        User user = getCurrentUser(request);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
         
         if (!questionnaireService.isOwner(id, user.getId()) && 
             !user.getRole().equals("admin") && 
@@ -264,8 +326,12 @@ public class QuestionnaireController {
     
     @GetMapping("/restore/{id}")
     public String restore(@PathVariable Integer id,
-                         @AuthenticationPrincipal User user,
+                         HttpServletRequest request,
                          RedirectAttributes redirectAttributes) {
+        User user = getCurrentUser(request);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
         
         if (!questionnaireService.isOwner(id, user.getId()) && 
             !user.getRole().equals("admin") && 

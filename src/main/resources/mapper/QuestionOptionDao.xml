@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.questionnaire.dao.QuestionOptionDao">
+
+    <resultMap id="QuestionOptionResultMap" type="com.questionnaire.model.QuestionOption">
+        <id property="id" column="id"/>
+        <result property="questionId" column="question_id"/>
+        <result property="optionText" column="option_text"/>
+        <result property="optionOrder" column="option_order"/>
+    </resultMap>
+
+    <select id="findById" parameterType="int" resultMap="QuestionOptionResultMap">
+        SELECT * FROM question_option WHERE id = #{id}
+    </select>
+
+    <select id="findByQuestionId" parameterType="int" resultMap="QuestionOptionResultMap">
+        SELECT * FROM question_option WHERE question_id = #{questionId} ORDER BY option_order ASC, id ASC
+    </select>
+
+    <insert id="insert" parameterType="com.questionnaire.model.QuestionOption" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO question_option (question_id, option_text, option_order) 
+        VALUES (#{questionId}, #{optionText}, #{optionOrder})
+    </insert>
+
+    <update id="update" parameterType="com.questionnaire.model.QuestionOption">
+        UPDATE question_option SET option_text = #{optionText}, option_order = #{optionOrder} WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM question_option WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteByQuestionId" parameterType="int">
+        DELETE FROM question_option WHERE question_id = #{questionId}
+    </delete>
+
+</mapper>

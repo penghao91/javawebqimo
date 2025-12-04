@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.questionnaire.dao.AnswerDao">
+
+    <resultMap id="AnswerResultMap" type="com.questionnaire.model.Answer">
+        <id property="id" column="id"/>
+        <result property="questionnaireId" column="questionnaire_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="ipAddress" column="ip_address"/>
+        <result property="submitTime" column="submit_time"/>
+    </resultMap>
+
+    <select id="findById" parameterType="int" resultMap="AnswerResultMap">
+        SELECT * FROM answer WHERE id = #{id}
+    </select>
+
+    <select id="findByQuestionnaireId" parameterType="int" resultMap="AnswerResultMap">
+        SELECT * FROM answer WHERE questionnaire_id = #{questionnaireId} ORDER BY submit_time DESC
+    </select>
+
+    <select id="countByQuestionnaireId" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM answer WHERE questionnaire_id = #{questionnaireId}
+    </select>
+
+    <insert id="insert" parameterType="com.questionnaire.model.Answer" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO answer (questionnaire_id, user_id, ip_address, submit_time) 
+        VALUES (#{questionnaireId}, #{userId}, #{ipAddress}, #{submitTime})
+    </insert>
+
+</mapper>

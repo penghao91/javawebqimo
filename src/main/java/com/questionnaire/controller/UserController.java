@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/user")
@@ -21,6 +22,25 @@ public class UserController {
     @GetMapping("/login")
     public String loginPage() {
         return "user/login";
+    }
+
+    @PostMapping("/login")
+    public String login(String username, String password, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+        User user = userService.findByUsername(username);
+
+        if (user == null || !user.getPassword().equals(password)) {
+            redirectAttributes.addFlashAttribute("error", "用户名或密码错误");
+            return "redirect:/user/login";
+        }
+
+        request.getSession().setAttribute("user", user);
+        return "redirect:/questionnaire/list";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        request.getSession().invalidate(); // 清除session
+        return "redirect:/user/login";
     }
 
     @GetMapping("/register")

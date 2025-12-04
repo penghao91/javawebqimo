@@ -1,11 +1,11 @@
 package com.questionnaire.dao;
 
 import com.questionnaire.model.User;
-import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
-@Mapper
-public interface UserMapper {
+@Repository
+public interface UserDao {
     
     User findByUsername(@Param("username") String username);
     

@@ -1,6 +1,6 @@
 package com.questionnaire.service;
 
-import com.questionnaire.dao.QuestionOptionMapper;
+import com.questionnaire.dao.QuestionOptionDao;
 import com.questionnaire.model.QuestionOption;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,33 +12,33 @@ import java.util.List;
 public class QuestionOptionService {
 
     @Resource
-    private QuestionOptionMapper optionMapper;
+    private QuestionOptionDao optionDao;
 
     public QuestionOption findById(Integer id) {
-        return optionMapper.findById(id);
+        return optionDao.findById(id);
     }
 
     public List<QuestionOption> findByQuestionId(Integer questionId) {
-        return optionMapper.findByQuestionId(questionId);
+        return optionDao.findByQuestionId(questionId);
     }
 
     @Transactional
     public boolean create(QuestionOption option) {
-        return optionMapper.insert(option) > 0;
+        return optionDao.insert(option) > 0;
     }
 
     @Transactional
     public boolean update(QuestionOption option) {
-        return optionMapper.update(option) > 0;
+        return optionDao.update(option) > 0;
     }
 
     @Transactional
     public boolean deleteById(Integer id) {
-        return optionMapper.deleteById(id) > 0;
+        return optionDao.deleteById(id) > 0;
     }
 
     @Transactional
     public boolean deleteByQuestionId(Integer questionId) {
-        return optionMapper.deleteByQuestionId(questionId) > 0;
+        return optionDao.deleteByQuestionId(questionId) > 0;
     }
 }

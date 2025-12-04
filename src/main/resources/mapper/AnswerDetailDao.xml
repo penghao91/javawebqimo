@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.questionnaire.dao.AnswerDetailDao">
+
+    <resultMap id="AnswerDetailResultMap" type="com.questionnaire.model.AnswerDetail">
+        <id property="id" column="id"/>
+        <result property="answerId" column="answer_id"/>
+        <result property="questionId" column="question_id"/>
+        <result property="answerText" column="answer_text"/>
+        <association property="question" column="question_id" javaType="com.questionnaire.model.Question" select="com.questionnaire.dao.QuestionDao.findById"/>
+    </resultMap>
+
+    <select id="findById" parameterType="int" resultMap="AnswerDetailResultMap">
+        SELECT * FROM answer_detail WHERE id = #{id}
+    </select>
+
+    <select id="findByAnswerId" parameterType="int" resultMap="AnswerDetailResultMap">
+        SELECT * FROM answer_detail WHERE answer_id = #{answerId}
+    </select>
+
+    <insert id="insert" parameterType="com.questionnaire.model.AnswerDetail" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO answer_detail (answer_id, question_id, answer_text) 
+        VALUES (#{answerId}, #{questionId}, #{answerText})
+    </insert>
+
+    <select id="countByQuestionAndAnswer" resultType="int">
+        SELECT COUNT(*) FROM answer_detail WHERE question_id = #{questionId} AND answer_text = #{answerText}
+    </select>
+
+</mapper>

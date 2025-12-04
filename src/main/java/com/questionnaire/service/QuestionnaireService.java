@@ -1,8 +1,8 @@
 package com.questionnaire.service;
 
-import com.questionnaire.dao.QuestionnaireMapper;
-import com.questionnaire.dao.QuestionMapper;
-import com.questionnaire.dao.QuestionOptionMapper;
+import com.questionnaire.dao.QuestionnaireDao;
+import com.questionnaire.dao.QuestionDao;
+import com.questionnaire.dao.QuestionOptionDao;
 import com.questionnaire.model.Questionnaire;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,50 +16,50 @@ import java.util.Calendar;
 public class QuestionnaireService {
 
     @Resource
-    private QuestionnaireMapper questionnaireMapper;
+    private QuestionnaireDao questionnaireDao;
     
     @Resource
-    private QuestionMapper questionMapper;
+    private QuestionDao questionDao;
     
     @Resource
-    private QuestionOptionMapper optionMapper;
+    private QuestionOptionDao optionDao;
 
     public Questionnaire findById(Integer id) {
-        return questionnaireMapper.findById(id);
+        return questionnaireDao.findById(id);
     }
 
     public List<Questionnaire> findByUserId(Integer userId) {
-        return questionnaireMapper.findByUserId(userId);
+        return questionnaireDao.findByUserId(userId);
     }
 
     public List<Questionnaire> findAll() {
-        return questionnaireMapper.findAll();
+        return questionnaireDao.findAll();
     }
     
     public List<Questionnaire> findActiveByUserId(Integer userId) {
-        return questionnaireMapper.findActiveByUserId(userId);
+        return questionnaireDao.findActiveByUserId(userId);
     }
     
     public List<Questionnaire> findStarredByUserId(Integer userId) {
-        return questionnaireMapper.findStarredByUserId(userId);
+        return questionnaireDao.findStarredByUserId(userId);
     }
     
     public List<Questionnaire> findDeletedByUserId(Integer userId) {
-        return questionnaireMapper.findDeletedByUserId(userId);
+        return questionnaireDao.findDeletedByUserId(userId);
     }
     
     public List<Questionnaire> findByFolderId(Integer folderId) {
-        return questionnaireMapper.findByFolderId(folderId);
+        return questionnaireDao.findByFolderId(folderId);
     }
 
     @Transactional
     public boolean create(Questionnaire questionnaire) {
-        return questionnaireMapper.insert(questionnaire) > 0;
+        return questionnaireDao.insert(questionnaire) > 0;
     }
 
     @Transactional
     public boolean update(Questionnaire questionnaire) {
-        return questionnaireMapper.update(questionnaire) > 0;
+        return questionnaireDao.update(questionnaire) > 0;
     }
 
     @Transactional
@@ -68,8 +68,8 @@ public class QuestionnaireService {
             return false;
         }
         // 级联删除问题和选项
-        questionMapper.deleteByQuestionnaireId(id);
-        return questionnaireMapper.deleteById(id) > 0;
+        questionDao.deleteByQuestionnaireId(id);
+        return questionnaireDao.deleteById(id) > 0;
     }
 
     @Transactional
@@ -77,7 +77,7 @@ public class QuestionnaireService {
         if (!isOwner(id, userId)) {
             return false;
         }
-        return questionnaireMapper.updateStatus(id, 2) > 0;
+        return questionnaireDao.updateStatus(id, 2) > 0;
     }
 
     public boolean isOwner(Integer questionnaireId, Integer userId) {
@@ -90,7 +90,7 @@ public class QuestionnaireService {
         if (!isOwner(id, userId)) {
             return false;
         }
-        return questionnaireMapper.updateStarred(id, 1) > 0;
+        return questionnaireDao.updateStarred(id, 1) > 0;
     }
     
     @Transactional
@@ -98,7 +98,7 @@ public class QuestionnaireService {
         if (!isOwner(id, userId)) {
             return false;
         }
-        return questionnaireMapper.updateStarred(id, 0) > 0;
+        return questionnaireDao.updateStarred(id, 0) > 0;
     }
     
     @Transactional
@@ -106,7 +106,7 @@ public class QuestionnaireService {
         if (!isOwner(id, userId)) {
             return false;
         }
-        return questionnaireMapper.updateDeleted(id, 1, new Date()) > 0;
+        return questionnaireDao.updateDeleted(id, 1, new Date()) > 0;
     }
     
     @Transactional
@@ -114,7 +114,7 @@ public class QuestionnaireService {
         if (!isOwner(id, userId)) {
             return false;
         }
-        return questionnaireMapper.updateDeleted(id, 0, null) > 0;
+        return questionnaireDao.updateDeleted(id, 0, null) > 0;
     }
     
     @Transactional
@@ -125,14 +125,14 @@ public class QuestionnaireService {
         Date expireTime = cal.getTime();
         
         // 查询已过期的已删除问卷
-        List<Questionnaire> expiredQuestionnaires = questionnaireMapper.findExpiredDeleted(expireTime);
+        List<Questionnaire> expiredQuestionnaires = questionnaireDao.findExpiredDeleted(expireTime);
         
         // 永久删除这些问卷
         for (Questionnaire q : expiredQuestionnaires) {
             // 级联删除相关问题
-            questionMapper.deleteByQuestionnaireId(q.getId());
+            questionDao.deleteByQuestionnaireId(q.getId());
             // 永久删除问卷
-            questionnaireMapper.deleteById(q.getId());
+            questionnaireDao.deleteById(q.getId());
         }
     }
 }
