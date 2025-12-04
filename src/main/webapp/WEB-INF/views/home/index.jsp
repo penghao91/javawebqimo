@@ -302,6 +302,48 @@
             font-weight: 600;
         }
 
+        /* 回到顶部按钮样式 */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), #224abe);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-to-top.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .toast-body {
             padding: 1.25rem;
             color: var(--dark-color);
@@ -508,6 +550,52 @@
                 </div>
             </div>
         </section>
+
+        <!-- 关于我们 -->
+        <section class="features-section" id="about" style="background: var(--light-color);">
+            <div class="container">
+                <h2 class="section-title">关于我们</h2>
+                <div class="row align-items-center">
+                    <div class="col-lg-6">
+                        <h3 class="mb-4">问卷星 - 专业的在线调研平台</h3>
+                        <p class="lead text-muted mb-4">
+                            问卷星致力于为用户提供简单、高效、专业的在线问卷调查服务。无论您是企业、学校还是个人，都能轻松创建专业的问卷，收集宝贵的数据。
+                        </p>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <span>10年行业经验</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <span>百万用户信赖</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <span>数据安全保障</span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                    <span>7×24小时支持</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="text-center">
+                            <i class="fas fa-users" style="font-size: 15rem; color: var(--primary-color); opacity: 0.1;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- 页脚 -->
@@ -698,6 +786,31 @@
             if (e.target === this) {
                 hideToast();
             }
+        });
+
+        // 回到顶部功能
+        // 创建回到顶部按钮
+        const backToTopBtn = document.createElement('button');
+        backToTopBtn.className = 'back-to-top';
+        backToTopBtn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+        backToTopBtn.title = '回到顶部';
+        document.body.appendChild(backToTopBtn);
+
+        // 监听滚动事件，显示/隐藏按钮
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+        });
+
+        // 点击按钮回到顶部
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
     </script>
 </body>

@@ -71,8 +71,16 @@
         SELECT * FROM questionnaire WHERE created_by = #{userId} AND is_starred = 1 AND is_deleted = 0 ORDER BY update_time DESC
     </select>
 
+    <select id="findAllStarred" resultMap="QuestionnaireResultMap">
+        SELECT * FROM questionnaire WHERE is_starred = 1 AND is_deleted = 0 ORDER BY update_time DESC
+    </select>
+
     <select id="findDeletedByUserId" parameterType="int" resultMap="QuestionnaireResultMap">
         SELECT * FROM questionnaire WHERE created_by = #{userId} AND is_deleted = 1 ORDER BY update_time DESC
+    </select>
+
+    <select id="findAllDeleted" resultMap="QuestionnaireResultMap">
+        SELECT * FROM questionnaire WHERE is_deleted = 1 ORDER BY update_time DESC
     </select>
 
     <select id="findByFolderId" parameterType="int" resultMap="QuestionnaireResultMap">

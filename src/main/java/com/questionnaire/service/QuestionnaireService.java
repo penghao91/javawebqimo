@@ -44,8 +44,16 @@ public class QuestionnaireService {
         return questionnaireDao.findStarredByUserId(userId);
     }
     
+    public List<Questionnaire> findAllStarred() {
+        return questionnaireDao.findAllStarred();
+    }
+    
     public List<Questionnaire> findDeletedByUserId(Integer userId) {
         return questionnaireDao.findDeletedByUserId(userId);
+    }
+    
+    public List<Questionnaire> findAllDeleted() {
+        return questionnaireDao.findAllDeleted();
     }
     
     public List<Questionnaire> findByFolderId(Integer folderId) {
@@ -134,5 +142,23 @@ public class QuestionnaireService {
             // 永久删除问卷
             questionnaireDao.deleteById(q.getId());
         }
+    }
+    
+    @Transactional
+    public boolean deletePermanently(Integer id, Integer userId) {
+        if (!isOwner(id, userId)) {
+            return false;
+        }
+        
+        Questionnaire q = findById(id);
+        if (q == null || q.getIsDeleted() == 0) {
+            return false; // 只能永久删除已软删除的问卷
+        }
+        
+        // 级联删除相关问题
+        questionDao.deleteByQuestionnaireId(id);
+        
+        // 永久删除问卷
+        return questionnaireDao.deleteById(id) > 0;
     }
 }

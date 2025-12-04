@@ -55,7 +55,16 @@ public class QuestionnaireController {
             return "redirect:/user/login";
         }
         
-        List<Questionnaire> questionnaires = questionnaireService.findStarredByUserId(user.getId());
+        List<Questionnaire> questionnaires;
+        
+        if (user.getRole().equals("admin") || user.getRole().equals("administrator")) {
+            // 管理员查看所有星标问卷
+            questionnaires = questionnaireService.findAllStarred();
+        } else {
+            // 普通用户只查看自己的星标问卷
+            questionnaires = questionnaireService.findStarredByUserId(user.getId());
+        }
+        
         model.addAttribute("questionnaires", questionnaires);
         model.addAttribute("pageTitle", "星标问卷");
         return "questionnaire/list";
@@ -68,7 +77,16 @@ public class QuestionnaireController {
             return "redirect:/user/login";
         }
         
-        List<Questionnaire> questionnaires = questionnaireService.findDeletedByUserId(user.getId());
+        List<Questionnaire> questionnaires;
+        
+        if (user.getRole().equals("admin") || user.getRole().equals("administrator")) {
+            // 管理员查看所有已删除的问卷
+            questionnaires = questionnaireService.findAllDeleted();
+        } else {
+            // 普通用户只查看自己已删除的问卷
+            questionnaires = questionnaireService.findDeletedByUserId(user.getId());
+        }
+        
         model.addAttribute("questionnaires", questionnaires);
         model.addAttribute("pageTitle", "回收站");
         return "questionnaire/list";
@@ -344,6 +362,31 @@ public class QuestionnaireController {
             redirectAttributes.addFlashAttribute("message", "问卷已恢复！");
         } else {
             redirectAttributes.addFlashAttribute("error", "恢复失败！");
+        }
+        
+        return "redirect:/questionnaire/recycle";
+    }
+    
+    @GetMapping("/permanentdelete/{id}")
+    public String permanentDelete(@PathVariable Integer id,
+                                 HttpServletRequest request,
+                                 RedirectAttributes redirectAttributes) {
+        User user = getCurrentUser(request);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
+        
+        if (!questionnaireService.isOwner(id, user.getId()) && 
+            !user.getRole().equals("admin") && 
+            !user.getRole().equals("administrator")) {
+            redirectAttributes.addFlashAttribute("error", "无权永久删除此问卷！");
+            return "redirect:/questionnaire/recycle";
+        }
+        
+        if (questionnaireService.deletePermanently(id, user.getId())) {
+            redirectAttributes.addFlashAttribute("message", "问卷已永久删除！");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "永久删除失败！");
         }
         
         return "redirect:/questionnaire/recycle";

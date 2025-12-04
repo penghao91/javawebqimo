@@ -665,6 +665,9 @@
                                             <a href="<c:url value='/questionnaire/restore/${q.id}'/>" class="action-btn">
                                                 <i class="bi bi-arrow-counterclockwise"></i> 恢复
                                             </a>
+                                            <a href="<c:url value='/questionnaire/permanentdelete/${q.id}'/>" class="action-btn danger" onclick="return confirm('确定要永久删除此问卷吗？此操作不可恢复！')">
+                                                <i class="bi bi-trash-fill"></i> 永久删除
+                                            </a>
                                         </c:when>
                                         <c:otherwise>
                                             <c:choose>

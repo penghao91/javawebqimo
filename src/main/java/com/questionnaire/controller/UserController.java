@@ -40,7 +40,7 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
         request.getSession().invalidate(); // 清除session
-        return "redirect:/user/login";
+        return "redirect:/?logout=success";
     }
 
     @GetMapping("/register")

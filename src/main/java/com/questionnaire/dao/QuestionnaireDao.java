@@ -35,7 +35,11 @@ public interface QuestionnaireDao {
     
     List<Questionnaire> findStarredByUserId(Integer userId);
     
+    List<Questionnaire> findAllStarred();
+    
     List<Questionnaire> findDeletedByUserId(Integer userId);
+    
+    List<Questionnaire> findAllDeleted();
     
     List<Questionnaire> findByFolderId(Integer folderId);
 }
