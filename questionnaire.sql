@@ -170,6 +170,7 @@ CREATE TABLE `user`  (
 -- ----------------------------
 -- Records of user
 -- ----------------------------
-INSERT INTO `user` VALUES (1, 'admin', '123456', 'admin@example.com', 'admin', '2025-12-04 21:03:31', '2025-12-04 21:03:31');
+-- 密码：admin123（BCrypt加密）
+INSERT INTO `user` VALUES (1, 'admin', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBa2jU9zX0G5O2', 'admin@example.com', 'admin', '2025-12-04 21:03:31', '2025-12-04 21:03:31');
 
 SET FOREIGN_KEY_CHECKS = 1;

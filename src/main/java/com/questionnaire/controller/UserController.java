@@ -7,10 +7,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/user")
@@ -25,16 +28,21 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(String username, String password, HttpServletRequest request, RedirectAttributes redirectAttributes) {
+    @ResponseBody
+    public Map<String, Object> login(String username, String password, HttpServletRequest request) {
+        Map<String, Object> result = new HashMap<>();
         User user = userService.findByUsername(username);
 
         if (user == null || !user.getPassword().equals(password)) {
-            redirectAttributes.addFlashAttribute("error", "用户名或密码错误");
-            return "redirect:/user/login";
+            result.put("success", false);
+            result.put("message", "用户名或密码错误");
+            return result;
         }
 
         request.getSession().setAttribute("user", user);
-        return "redirect:/questionnaire/list";
+        result.put("success", true);
+        result.put("redirectUrl", "/questionnaire/list");
+        return result;
     }
 
     @GetMapping("/logout")

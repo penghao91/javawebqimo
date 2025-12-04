@@ -64,53 +64,6 @@
         .footer-text {
             font-size: 0.8rem;
         }
-        /* 登录提示Toast样式 */
-        .login-toast {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-            border: none;
-            overflow: hidden;
-            min-width: 350px;
-            max-width: 500px;
-            animation: slideInRight 0.3s ease-out;
-            z-index: 9999;
-            display: none;
-        }
-        .login-toast.show {
-            display: block;
-        }
-        .login-toast-header {
-            background: linear-gradient(135deg, #4e73df, #224abe);
-            color: white;
-            border-bottom: none;
-            padding: 1rem 1.25rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-        }
-        .login-toast-body {
-            padding: 1.25rem;
-            color: #5a5c69;
-            font-size: 0.95rem;
-        }
-        .toast-close {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 0;
-            margin-left: auto;
-            opacity: 0.8;
-            transition: opacity 0.2s;
-        }
-        .toast-close:hover {
-            opacity: 1;
-        }
         @keyframes slideInRight {
             from {
                 transform: translateX(100%);
@@ -137,13 +90,6 @@
             </div>
             <div class="card-body p-4 p-md-5">
 
-                <c:if test="${param.error != null}">
-                    <div class="alert alert-danger alert-icon d-flex" role="alert">
-                        <i class="bi bi-exclamation-triangle-fill"></i>
-                        <div>用户名或密码错误！</div>
-                    </div>
-                </c:if>
-                
                 <c:if test="${param.logout != null}">
                     <div class="alert alert-success alert-icon d-flex" role="alert">
                         <i class="bi bi-check-circle-fill"></i>
@@ -158,7 +104,7 @@
                     </div>
                 </c:if>
 
-                <form action="<c:url value='/user/login'/>" method="post">
+                <form id="loginForm">
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="username" name="username" placeholder="用户名" required autofocus>
                         <label for="username">用户名</label>
@@ -196,69 +142,143 @@
             </div>
         </div>
     </div>
+
+    <!-- 全局错误提示框 (与登录提示风格统一) -->
+    <div id="globalErrorAlert" class="alert alert-info alert-dismissible fade d-flex align-items-center" role="alert" style="display: none; position: fixed; top: 20px; right: 20px; z-index: 1050; min-width: 350px; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);">
+        <i class="bi bi-info-circle-fill flex-shrink-0 me-2"></i>
+        <div id="globalErrorAlertMessage" class="flex-grow-1"></div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
     
-    <!-- 登录提示Toast -->
-    <div class="login-toast" id="loginToast">
-        <div class="login-toast-header">
-            <i class="bi bi-info-circle-fill me-2"></i>
-            <strong>正在登录</strong>
-            <button type="button" class="toast-close" onclick="hideLoginToast()">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </div>
-        <div class="login-toast-body">
-            正在验证您的账号信息，请稍候...
+    <!-- 登录处理中提示 (风格统一后) -->
+    <div id="loginToast" class="alert alert-info alert-dismissible fade d-flex" role="alert" style="display: none; position: fixed; top: 20px; right: 20px; z-index: 1050; min-width: 350px; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);">
+        <i class="bi bi-info-circle-fill flex-shrink-0 me-2"></i>
+        <div class="flex-grow-1">
+            <strong>正在登录...</strong>
+            <p class="mb-0 small">正在验证您的账号信息，请稍候。</p>
         </div>
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // 清除登录标记，确保从登录页面访问不会显示退出提示
-        document.addEventListener('DOMContentLoaded', function() {
-            localStorage.removeItem('hasLoggedIn');
-        });
+        // 强制不使用缓存（调试用）
+        console.log('Login page loaded at:', new Date().toLocaleString());
         
-        // 登录表单提交简单提示
         document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.querySelector('form');
+            // 清除登录标记
+            localStorage.removeItem('hasLoggedIn');
+
+            // --- 全局错误提示框 ---
+            const globalErrorAlerter = {
+                element: document.getElementById('globalErrorAlert'),
+                messageElement: document.getElementById('globalErrorAlertMessage'),
+                closeButton: document.querySelector('#globalErrorAlert .btn-close'),
+                timeout: null,
+
+                init: function() {
+                    this.closeButton.addEventListener('click', () => this.hide());
+                },
+
+                show: function(message) {
+                    clearTimeout(this.timeout);
+                    this.messageElement.textContent = message;
+                    this.element.style.display = 'flex';
+                    
+                    setTimeout(() => {
+                        this.element.classList.add('show');
+                    }, 20);
+                    
+                    this.timeout = setTimeout(() => this.hide(), 4000);
+                },
+
+                hide: function() {
+                    this.element.classList.remove('show');
+                    const onTransitionEnd = () => {
+                        if (this.element.style.display !== 'none') {
+                           this.element.style.display = 'none';
+                           this.element.removeEventListener('transitionend', onTransitionEnd);
+                        }
+                    };
+                    this.element.addEventListener('transitionend', onTransitionEnd);
+                }
+            };
+            globalErrorAlerter.init();
+            
+            // --- 登录过程中的提示 (Toast) ---
+            const loginToast = {
+                element: document.getElementById('loginToast'),
+                show: function() {
+                    this.element.style.display = 'flex';
+                    setTimeout(() => {
+                        this.element.classList.add('show');
+                    }, 20);
+                },
+                hide: function() {
+                    this.element.classList.remove('show');
+                    const onTransitionEnd = () => {
+                        if (this.element.style.display !== 'none') {
+                            this.element.style.display = 'none';
+                            this.element.removeEventListener('transitionend', onTransitionEnd);
+                        }
+                    };
+                    this.element.addEventListener('transitionend', onTransitionEnd);
+                }
+            };
+            
+            // --- 登录表单AJAX提交 ---
+            const loginForm = document.getElementById('loginForm');
             const submitBtn = document.querySelector('button[type="submit"]');
             
             if (loginForm) {
                 loginForm.addEventListener('submit', function(e) {
-                    // 验证表单
+                    e.preventDefault();
+                    
                     const username = document.getElementById('username').value.trim();
                     const password = document.getElementById('password').value.trim();
                     
                     if (!username || !password) {
-                        return; // 让浏览器处理必填验证
+                        return;
                     }
                     
-                    // 显示简单提示
-                    showLoginToast();
+                    loginToast.show();
+                    submitBtn.disabled = true;
                     submitBtn.classList.add('btn-processing');
                     
-                    // 设置sessionStorage标记，在后台页面显示欢迎动画
-                    sessionStorage.setItem('justLoggedIn', 'true');
+                    const formData = new FormData();
+                    formData.append('username', username);
+                    formData.append('password', password);
+                    
+                    fetch('/user/login', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                           throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            sessionStorage.setItem('justLoggedIn', 'true');
+                            window.location.href = data.redirectUrl;
+                        } else {
+                            const message = data.message || '用户名或密码错误';
+                            globalErrorAlerter.show(message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Login error:', error);
+                        globalErrorAlerter.show('网络或服务器错误，请稍后重试');
+                    })
+                    .finally(() => {
+                        loginToast.hide();
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('btn-processing');
+                    });
                 });
             }
         });
-        
-        // 显示登录提示
-        function showLoginToast() {
-            const toast = document.getElementById('loginToast');
-            toast.classList.add('show');
-            
-            // 5秒后自动隐藏
-            setTimeout(() => {
-                hideLoginToast();
-            }, 5000);
-        }
-        
-        // 隐藏登录提示
-        function hideLoginToast() {
-            const toast = document.getElementById('loginToast');
-            toast.classList.remove('show');
-        }
     </script>
 </body>
 </html>
