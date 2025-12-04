@@ -22,16 +22,19 @@
     </select>
 
     <select id="findByUserId" parameterType="int" resultMap="QuestionnaireResultMap">
-        SELECT * FROM questionnaire WHERE created_by = #{userId} ORDER BY update_time DESC
+        SELECT * FROM questionnaire WHERE created_by = #{userId} AND is_deleted = 0 ORDER BY update_time DESC
     </select>
 
     <select id="findAll" resultMap="QuestionnaireResultMap">
-        SELECT * FROM questionnaire ORDER BY update_time DESC
+        SELECT * FROM questionnaire WHERE is_deleted = 0 ORDER BY update_time DESC
     </select>
 
     <insert id="insert" parameterType="com.questionnaire.model.Questionnaire" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO questionnaire (title, description, created_by, status, is_starred, is_deleted, folder_id) 
-        VALUES (#{title}, #{description}, #{createdBy}, #{status}, #{isStarred}, #{isDeleted}, #{folderId})
+        VALUES (#{title}, #{description}, #{createdBy}, #{status}, 
+                COALESCE(#{isStarred}, 0), 
+                COALESCE(#{isDeleted}, 0), 
+                #{folderId})
     </insert>
 
     <update id="update" parameterType="com.questionnaire.model.Questionnaire">
