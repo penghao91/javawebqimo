@@ -251,15 +251,15 @@
                     </a>
                 </li>
                 <li class="sidebar-menu-item">
-                    <a href="<c:url value='/questionnaire/recycle'/>" class="sidebar-menu-link">
-                        <i class="bi bi-trash"></i>
-                        回收站
-                    </a>
-                </li>
-                <li class="sidebar-menu-item">
                     <a href="<c:url value='/questionnaire/folders'/>" class="sidebar-menu-link">
                         <i class="bi bi-folder"></i>
                         文件夹
+                    </a>
+                </li>
+                <li class="sidebar-menu-item">
+                    <a href="<c:url value='/questionnaire/recycle'/>" class="sidebar-menu-link">
+                        <i class="bi bi-trash"></i>
+                        回收站
                     </a>
                 </li>
             </ul>

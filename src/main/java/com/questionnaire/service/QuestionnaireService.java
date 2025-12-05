@@ -161,4 +161,18 @@ public class QuestionnaireService {
         // 永久删除问卷
         return questionnaireDao.deleteById(id) > 0;
     }
+    
+    @Transactional
+    public boolean moveToFolder(Integer questionnaireId, Integer folderId) {
+        return questionnaireDao.updateFolder(questionnaireId, folderId) > 0;
+    }
+    
+    @Transactional
+    public void moveQuestionnairesToFolder(Integer fromFolderId, Integer toFolderId) {
+        // 将指定文件夹内的所有问卷移动到另一个文件夹
+        List<Questionnaire> questionnaires = questionnaireDao.findByFolderId(fromFolderId);
+        for (Questionnaire q : questionnaires) {
+            questionnaireDao.updateFolder(q.getId(), toFolderId);
+        }
+    }
 }

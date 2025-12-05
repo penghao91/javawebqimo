@@ -1,8 +1,10 @@
 package com.questionnaire.controller;
 
+import com.questionnaire.model.Folder;
 import com.questionnaire.model.Question;
 import com.questionnaire.model.Questionnaire;
 import com.questionnaire.model.User;
+import com.questionnaire.service.FolderService;
 import com.questionnaire.service.QuestionService;
 import com.questionnaire.service.QuestionnaireService;
 import org.springframework.stereotype.Controller;
@@ -12,7 +14,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/questionnaire")
@@ -23,13 +27,17 @@ public class QuestionnaireController {
     
     @Resource
     private QuestionService questionService;
+    
+    @Resource
+    private FolderService folderService;
 
     private User getCurrentUser(HttpServletRequest request) {
         return (User) request.getSession().getAttribute("user");
     }
 
     @GetMapping("/list")
-    public String list(HttpServletRequest request, Model model) {
+    public String list(@RequestParam(required = false) Integer folderId,
+                       HttpServletRequest request, Model model) {
         User user = getCurrentUser(request);
         if (user == null) {
             return "redirect:/user/login";
@@ -37,14 +45,24 @@ public class QuestionnaireController {
         
         List<Questionnaire> questionnaires;
         
-        if (user.getRole().equals("admin") || user.getRole().equals("administrator")) {
+        if (folderId != null) {
+            // 如果指定了folderId，显示该文件夹的问卷
+            questionnaires = questionnaireService.findByFolderId(folderId);
+            Folder folder = folderService.getFolderById(folderId);
+            if (folder != null) {
+                model.addAttribute("pageTitle", folder.getName() + " - 问卷列表");
+            } else {
+                model.addAttribute("pageTitle", "文件夹问卷");
+            }
+        } else if (user.getRole().equals("admin") || user.getRole().equals("administrator")) {
             questionnaires = questionnaireService.findAll();
+            model.addAttribute("pageTitle", "问卷列表");
         } else {
             questionnaires = questionnaireService.findActiveByUserId(user.getId());
+            model.addAttribute("pageTitle", "问卷列表");
         }
         
         model.addAttribute("questionnaires", questionnaires);
-        model.addAttribute("pageTitle", "问卷列表");
         return "questionnaire/list";
     }
     
@@ -390,5 +408,76 @@ public class QuestionnaireController {
         }
         
         return "redirect:/questionnaire/recycle";
+    }
+    
+    // 获取用户的文件夹列表（AJAX接口）
+    @GetMapping("/api/folders")
+    @ResponseBody
+    public Map<String, Object> getUserFolders(HttpServletRequest request) {
+        Map<String, Object> result = new HashMap<>();
+        User user = getCurrentUser(request);
+        
+        if (user == null) {
+            result.put("success", false);
+            result.put("message", "未登录");
+            return result;
+        }
+        
+        try {
+            List<Folder> folders = folderService.getUserFolders(user);
+            result.put("success", true);
+            result.put("folders", folders);
+            result.put("message", "获取成功");
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("message", "获取失败：" + e.getMessage());
+        }
+        
+        return result;
+    }
+    
+    // 移动问卷到文件夹（AJAX接口）
+    @PostMapping("/api/moveToFolder")
+    @ResponseBody
+    public Map<String, Object> moveToFolder(@RequestBody Map<String, Integer> params,
+                                           HttpServletRequest request) {
+        Map<String, Object> result = new HashMap<>();
+        User user = getCurrentUser(request);
+        
+        if (user == null) {
+            result.put("success", false);
+            result.put("message", "未登录");
+            return result;
+        }
+        
+        try {
+            Integer questionnaireId = params.get("questionnaireId");
+            Integer folderId = params.get("folderId");
+            
+            // 验证问卷所有权
+            if (!questionnaireService.isOwner(questionnaireId, user.getId()) && 
+                !user.getRole().equals("admin") && 
+                !user.getRole().equals("administrator")) {
+                result.put("success", false);
+                result.put("message", "无权操作此问卷！");
+                return result;
+            }
+            
+            // 更新问卷的folder_id
+            boolean success = questionnaireService.moveToFolder(questionnaireId, folderId);
+            
+            if (success) {
+                result.put("success", true);
+                result.put("message", "移动成功");
+            } else {
+                result.put("success", false);
+                result.put("message", "移动失败");
+            }
+        } catch (Exception e) {
+            result.put("success", false);
+            result.put("message", "操作失败：" + e.getMessage());
+        }
+        
+        return result;
     }
 }

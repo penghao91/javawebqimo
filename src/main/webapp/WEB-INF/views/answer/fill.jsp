@@ -89,6 +89,54 @@
             box-shadow: 0 -0.15rem 1.75rem 0 rgba(58, 59, 69, 0.05);
             z-index: 1000;
         }
+        
+        /* 预览提示样式 */
+        .preview-alert {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        .preview-alert h5 {
+            color: #856404;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        .preview-alert p {
+            color: #856404;
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+        
+        /* 预览模式按钮样式 */
+        .preview-mode-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        .preview-mode-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #dee2e6;
+            background: white;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .preview-mode-btn.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .preview-mode-btn:hover {
+            background: #e9ecef;
+        }
+        .preview-mode-btn.active:hover {
+            background: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -97,6 +145,23 @@
             <div class="col-lg-8">
                 <div class="questionnaire-card">
                     <div class="card-header text-center">
+                        <c:if test="${param.preview == 'true'}">
+                            <div class="preview-alert">
+                                <h5><i class="bi bi-exclamation-triangle-fill me-2"></i>预览模式</h5>
+                                <p>此为预览页面，不能参与作答！</p>
+                                <div class="preview-mode-buttons">
+                                    <button class="preview-mode-btn active" onclick="switchPreviewMode('mobile')">
+                                        <i class="bi bi-phone me-1"></i>手机预览
+                                    </button>
+                                    <button class="preview-mode-btn" onclick="switchPreviewMode('desktop')">
+                                        <i class="bi bi-laptop me-1"></i>电脑预览
+                                    </button>
+                                    <button class="preview-mode-btn" onclick="closePreview()">
+                                        <i class="bi bi-x-circle me-1"></i>关闭预览
+                                    </button>
+                                </div>
+                            </div>
+                        </c:if>
                         <h3>${questionnaire.title}</h3>
                         <c:if test="${not empty questionnaire.description}">
                             <p class="text-muted mb-0">${questionnaire.description}</p>
@@ -192,10 +257,45 @@
 
     <script src="/resources/js/bootstrap/bootstrap.bundle.min.js"></script>
     <script>
+        // 预览模式相关函数
+        function switchPreviewMode(mode) {
+            const buttons = document.querySelectorAll('.preview-mode-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            const container = document.querySelector('.col-lg-8');
+            if (mode === 'mobile') {
+                container.style.maxWidth = '400px';
+                container.style.margin = '0 auto';
+            } else {
+                container.style.maxWidth = '';
+                container.style.margin = '';
+            }
+        }
+        
+        function closePreview() {
+            window.close();
+            if (window.opener) {
+                window.opener.focus();
+            } else {
+                window.history.back();
+            }
+        }
+        
+        // 表单提交处理
         const form = document.getElementById('questionnaireForm');
         const progressBar = document.getElementById('progressBar');
         const questions = document.querySelectorAll('.question-item');
         const totalQuestions = questions.length;
+        
+        // 预览模式阻止提交
+        const isPreview = new URLSearchParams(window.location.search).get('preview') === 'true';
+        if (isPreview) {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('此问卷为预览状态，不能提交！');
+            });
+        }
 
         function updateProgress() {
             let answeredQuestions = 0;
