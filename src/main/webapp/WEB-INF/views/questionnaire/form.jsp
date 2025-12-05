@@ -220,10 +220,35 @@
                 </a>
             </div>
             <div class="user-info ms-auto">
-                <span class="user-phone">${user.username}</span>
-                <a class="btn btn-outline-light btn-sm" href="<c:url value='/user/logout'/>">
-                    <i class="bi bi-box-arrow-right"></i> 退出
-                </a>
+                <!-- 用户下拉菜单 -->
+                <div class="dropdown me-2">
+                    <button class="btn btn-light btn-sm dropdown-toggle" type="button"
+                            id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle me-1"></i>${user.username}
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li class="dropdown-header small text-muted">
+                            用户名：${user.username}<br>
+                            账号ID：${user.id}<br>
+                            <c:choose>
+                                <c:when test="${empty user.email}">
+                                    邮箱：未设置
+                                </c:when>
+                                <c:otherwise>
+                                    邮箱：${user.email}
+                                </c:otherwise>
+                            </c:choose>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="<c:url value='/user/profile'/>">
+                            <i class="bi bi-person-lines-fill me-1"></i>账号信息
+                        </a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="<c:url value='/user/logout'/>">
+                            <i class="bi bi-box-arrow-right me-1"></i>退出
+                        </a></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </nav>
