@@ -7,14 +7,18 @@ import java.util.List;
 @Mapper
 public interface FolderDao {
     
-    @Select("SELECT * FROM folder WHERE user_id = #{userId} ORDER BY create_time DESC")
+    @Select("SELECT f.*, (SELECT COUNT(*) FROM questionnaire q WHERE q.folder_id = f.id AND q.is_deleted = 0) as questionnaireCount " +
+            "FROM folder f " +
+            "WHERE f.user_id = #{userId} " +
+            "ORDER BY f.create_time DESC")
     @Results({
         @Result(property = "id", column = "id"),
         @Result(property = "name", column = "name"),
         @Result(property = "userId", column = "user_id"),
         @Result(property = "parentId", column = "parent_id"),
         @Result(property = "createTime", column = "create_time"),
-        @Result(property = "updateTime", column = "update_time")
+        @Result(property = "updateTime", column = "update_time"),
+        @Result(property = "questionnaireCount", column = "questionnaireCount")
     })
     List<Folder> findByUserId(Integer userId);
     
@@ -38,4 +42,15 @@ public interface FolderDao {
     
     @Delete("DELETE FROM folder WHERE id = #{id}")
     int delete(Integer id);
+    
+    @Select("SELECT * FROM folder WHERE user_id = #{userId} AND name = #{name} LIMIT 1")
+    @Results({
+        @Result(property = "id", column = "id"),
+        @Result(property = "name", column = "name"),
+        @Result(property = "userId", column = "user_id"),
+        @Result(property = "parentId", column = "parent_id"),
+        @Result(property = "createTime", column = "create_time"),
+        @Result(property = "updateTime", column = "update_time")
+    })
+    Folder findByNameAndUserId(@Param("userId") Integer userId, @Param("name") String name);
 }

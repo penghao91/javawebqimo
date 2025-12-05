@@ -138,6 +138,23 @@ public class QuestionnaireController {
         
         questionnaire.setCreatedBy(user.getId());
         questionnaire.setStatus(1); // 草稿状态
+
+        // 如果问卷没有指定文件夹，自动归类到默认文件夹
+        if (questionnaire.getFolderId() == null) {
+            Folder defaultFolder = folderService.findDefaultFolder(user.getId());
+            // 如果默认文件夹不存在，则创建一个
+            if (defaultFolder == null) {
+                defaultFolder = new Folder();
+                defaultFolder.setName("未分类");
+                defaultFolder.setParentId(null); // 根目录
+                folderService.createFolder(defaultFolder, user);
+                // 再次获取以确保ID被填充
+                defaultFolder = folderService.findDefaultFolder(user.getId());
+            }
+            if (defaultFolder != null) {
+                questionnaire.setFolderId(defaultFolder.getId());
+            }
+        }
         
         if (questionnaireService.create(questionnaire)) {
             redirectAttributes.addFlashAttribute("message", "问卷创建成功！");

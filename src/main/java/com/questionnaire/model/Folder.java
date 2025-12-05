@@ -16,4 +16,7 @@ public class Folder implements Serializable {
     // 关联属性
     private User user;
     private Folder parent;
+    
+    // 非持久化属性，用于统计
+    private Integer questionnaireCount;
 }

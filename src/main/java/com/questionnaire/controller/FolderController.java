@@ -19,7 +19,7 @@ public class FolderController {
 
     @Resource
     private FolderService folderService;
-    
+
     @Resource
     private QuestionnaireService questionnaireService;
 
@@ -33,16 +33,20 @@ public class FolderController {
         if (user == null) {
             return "redirect:/user/login";
         }
+        // 对应 /WEB-INF/jsp/questionnaire/folders.jsp（根据你的视图配置）
         return "questionnaire/folders";
     }
 
+    /**
+     * 新建文件夹
+     */
     @PostMapping("/api/create")
     @ResponseBody
     public Map<String, Object> create(@RequestBody Map<String, String> params,
-                                       HttpServletRequest request) {
+                                      HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>();
         User user = getCurrentUser(request);
-        
+
         if (user == null) {
             result.put("success", false);
             result.put("message", "未登录");
@@ -74,7 +78,7 @@ public class FolderController {
             }
 
             boolean success = folderService.createFolder(folder, user);
-            
+
             if (success) {
                 result.put("success", true);
                 result.put("message", "文件夹创建成功");
@@ -91,12 +95,15 @@ public class FolderController {
         return result;
     }
 
+    /**
+     * 获取当前用户的文件夹列表
+     */
     @GetMapping("/api/list")
     @ResponseBody
     public Map<String, Object> getUserFolders(HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>();
         User user = getCurrentUser(request);
-        
+
         if (user == null) {
             result.put("success", false);
             result.put("message", "未登录");
@@ -105,16 +112,13 @@ public class FolderController {
 
         try {
             List<Folder> folders = folderService.getUserFolders(user);
-            
-            // 如果没有文件夹，创建一个默认的未分类文件夹
+
+            // 如果没有文件夹，创建一个默认的“未分类”文件夹
             if (folders == null || folders.isEmpty()) {
-                Folder defaultFolder = new Folder();
-                defaultFolder.setName("未分类");
-                defaultFolder.setParentId(null);
-                folderService.createFolder(defaultFolder, user);
+                ensureDefaultFolder(user);
                 folders = folderService.getUserFolders(user);
             }
-            
+
             result.put("success", true);
             result.put("folders", folders);
             result.put("message", "获取成功");
@@ -125,15 +129,18 @@ public class FolderController {
 
         return result;
     }
-    
+
+    /**
+     * 重命名文件夹
+     */
     @PutMapping("/api/update/{id}")
     @ResponseBody
     public Map<String, Object> update(@PathVariable Integer id,
-                                       @RequestBody Map<String, String> params,
-                                       HttpServletRequest request) {
+                                      @RequestBody Map<String, String> params,
+                                      HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>();
         User user = getCurrentUser(request);
-        
+
         if (user == null) {
             result.put("success", false);
             result.put("message", "未登录");
@@ -154,11 +161,11 @@ public class FolderController {
                 result.put("message", "文件夹不存在");
                 return result;
             }
-            
-            // 验证所有权
-            if (!folder.getUserId().equals(user.getId()) && 
-                !user.getRole().equals("admin") && 
-                !user.getRole().equals("administrator")) {
+
+            // 验证所有权（允许管理员操作）
+            if (!folder.getUserId().equals(user.getId())
+                    && !"admin".equals(user.getRole())
+                    && !"administrator".equals(user.getRole())) {
                 result.put("success", false);
                 result.put("message", "无权操作此文件夹");
                 return result;
@@ -166,7 +173,7 @@ public class FolderController {
 
             folder.setName(folderName.trim());
             boolean success = folderService.updateFolder(folder);
-            
+
             if (success) {
                 result.put("success", true);
                 result.put("message", "文件夹重命名成功");
@@ -182,14 +189,17 @@ public class FolderController {
 
         return result;
     }
-    
+
+    /**
+     * 删除文件夹：删除前将问卷移动到默认文件夹“未分类”
+     */
     @DeleteMapping("/api/delete/{id}")
     @ResponseBody
     public Map<String, Object> delete(@PathVariable Integer id,
-                                       HttpServletRequest request) {
+                                      HttpServletRequest request) {
         Map<String, Object> result = new HashMap<>();
         User user = getCurrentUser(request);
-        
+
         if (user == null) {
             result.put("success", false);
             result.put("message", "未登录");
@@ -203,28 +213,33 @@ public class FolderController {
                 result.put("message", "文件夹不存在");
                 return result;
             }
-            
-            // 验证所有权
-            if (!folder.getUserId().equals(user.getId()) && 
-                !user.getRole().equals("admin") && 
-                !user.getRole().equals("administrator")) {
+
+            // 验证所有权（允许管理员操作）
+            if (!folder.getUserId().equals(user.getId())
+                    && !"admin".equals(user.getRole())
+                    && !"administrator".equals(user.getRole())) {
                 result.put("success", false);
                 result.put("message", "无权操作此文件夹");
                 return result;
             }
-            
-            // 检查是否是默认文件夹（ID为0或1的通常作为默认）
-            if (id == 0 || id == 1) {
+
+            // 找到当前用户的默认“未分类”文件夹
+            Folder defaultFolder = ensureDefaultFolder(user);
+
+            // 默认文件夹不能删除
+            if (defaultFolder != null && defaultFolder.getId().equals(folder.getId())) {
                 result.put("success", false);
                 result.put("message", "默认文件夹不能删除");
                 return result;
             }
 
-            // 删除文件夹前，将文件夹内的问卷移动到默认文件夹（ID为0）
-            questionnaireService.moveQuestionnairesToFolder(id, 0);
-            
+            // 删除文件夹前，将文件夹内的问卷移动到默认文件夹
+            if (defaultFolder != null) {
+                questionnaireService.moveQuestionnairesToFolder(id, defaultFolder.getId());
+            }
+
             boolean success = folderService.deleteFolder(id);
-            
+
             if (success) {
                 result.put("success", true);
                 result.put("message", "文件夹删除成功");
@@ -238,5 +253,19 @@ public class FolderController {
         }
 
         return result;
+    }
+
+    /**
+     * 确保当前用户有一个名为“未分类”的默认文件夹，没有则创建
+     */
+    private Folder ensureDefaultFolder(User user) {
+        Folder defaultFolder = folderService.findDefaultFolder(user.getId());
+        if (defaultFolder == null) {
+            defaultFolder = new Folder();
+            defaultFolder.setName("未分类");
+            defaultFolder.setParentId(null);
+            folderService.createFolder(defaultFolder, user);
+        }
+        return defaultFolder;
     }
 }

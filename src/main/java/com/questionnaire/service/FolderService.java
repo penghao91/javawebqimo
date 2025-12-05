@@ -33,4 +33,8 @@ public class FolderService {
     public boolean deleteFolder(Integer id) {
         return folderDao.delete(id) > 0;
     }
+    
+    public Folder findDefaultFolder(Integer userId) {
+        return folderDao.findByNameAndUserId(userId, "未分类");
+    }
 }
