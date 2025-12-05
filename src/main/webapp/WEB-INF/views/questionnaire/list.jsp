@@ -7,8 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的问卷 - 问卷系统</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="/resources/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="/resources/css/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <style>
         :root {
             --bs-primary-rgb: 78, 115, 223;
@@ -748,7 +748,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/resources/js/bootstrap/bootstrap.bundle.min.js"></script>
     <script>
         // 设置登录标记，表示用户已经登录过
         document.addEventListener('DOMContentLoaded', function() {
