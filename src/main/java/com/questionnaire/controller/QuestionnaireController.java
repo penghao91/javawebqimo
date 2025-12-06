@@ -157,8 +157,9 @@ public class QuestionnaireController {
         }
         
         if (questionnaireService.create(questionnaire)) {
-            redirectAttributes.addFlashAttribute("message", "问卷创建成功！");
-            return "redirect:/questionnaire/list";
+            // 创建成功后，重定向到设计页面
+            redirectAttributes.addFlashAttribute("message", "问卷创建成功！现在您可以开始设计问卷内容。");
+            return "redirect:/questionnaire/design/" + questionnaire.getId();
         } else {
             redirectAttributes.addFlashAttribute("error", "问卷创建失败！");
             return "redirect:/questionnaire/create";

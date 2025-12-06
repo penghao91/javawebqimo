@@ -73,6 +73,223 @@
             border: 2px dashed var(--border-color);
             border-radius: 0.5rem;
         }
+
+        /* ===== 用户下拉菜单美化 ===== */
+        .user-menu-dropdown {
+            border-radius: 16px;
+            padding: 0;
+            border: 1px solid rgba(226,232,240,0.95);
+            box-shadow: 0 18px 40px rgba(15,23,42,0.18);
+            min-width: 260px;
+            overflow: hidden;
+        }
+
+        /* 顶部用户信息区域 */
+        .user-menu-header {
+            padding: .75rem 1rem .8rem;
+            background: linear-gradient(135deg, #4e73df, #224abe);
+            color: #fff;
+            font-size: .85rem;
+        }
+
+        .user-menu-title {
+            font-weight: 600;
+            margin-bottom: .2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .user-menu-title i {
+            font-size: 1rem;
+        }
+
+        .user-menu-sub {
+            opacity: .92;
+            line-height: 1.5;
+        }
+
+        /* 分割线 */
+        .user-menu-divider {
+            margin: .3rem 0;
+            border-color: rgba(226,232,240,0.9);
+        }
+
+        /* 菜单项 */
+        .user-menu-item {
+            padding: .55rem 1rem;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            color: #4b4d63;
+        }
+
+        .user-menu-item i {
+            font-size: 1rem;
+        }
+
+        .user-menu-item:hover {
+            background-color: #f3f4ff;
+            color: #111827;
+        }
+
+        .user-menu-item.text-danger {
+            color: #e74a3b;
+        }
+
+        .user-menu-item.text-danger:hover {
+            background-color: #fee2e2;
+            color: #b91c1c;
+        }
+
+        /* ===== 移动端导航折叠样式修复 ===== */
+        @media (max-width: 991.98px) {
+
+            /* 折叠后的整体区域做成一个白色卡片 */
+            .navbar-collapse {
+                background: transparent;
+                padding: 0.75rem 1rem 1rem;
+            }
+
+            .navbar-collapse.show {
+                /* bootstrap 会显示 block，这里只补充样式 */
+            }
+
+            .navbar-collapse .navbar-nav,
+            .navbar-collapse > .d-flex {
+                background: #ffffff;
+                border-radius: 18px;
+                box-shadow: 0 18px 40px rgba(15,23,42,0.18);
+                padding: 1rem 1.1rem;
+            }
+
+            /* 菜单项纵向排列，左右留白 */
+            .navbar-nav .nav-link {
+                display: block;
+                padding-left: 0;
+                padding-right: 0;
+                margin-bottom: .25rem;
+            }
+
+            /* 关闭移动端那条小蓝条 */
+            .navbar-nav .nav-link::after {
+                display: none;
+                width: 0;
+            }
+
+            /* 用户信息放在卡片底部，和菜单有一点分隔 */
+            .navbar-collapse > .d-flex {
+                margin-top: .5rem;
+                border-top: 1px solid #e5e7eb;
+                padding-top: .7rem;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .navbar-collapse > .d-flex .user-pill {
+                margin-top: 0;
+            }
+
+            .navbar-collapse > .d-flex .btn-logout {
+                margin-left: .5rem;
+            }
+        }
+
+        /* 1. 去掉移动端的那条蓝色下划线 */
+        @media (max-width: 991.98px) {
+            .navbar-nav .nav-link::after {
+                content: none !important;
+                display: none !important;
+                width: 0 !important;
+                height: 0 !important;
+            }
+        }
+
+        /* 2. 移动端折叠导航改成白色卡片 */
+        @media (max-width: 991.98px) {
+
+            /* 折叠区域整体留出一些内边距 */
+            .navbar-collapse {
+                background: transparent;
+                padding: .75rem 1rem 1.2rem;
+            }
+
+            /* 菜单部分变成卡片 */
+            .navbar-collapse .navbar-nav {
+                background: #ffffff;
+                border-radius: 18px;
+                box-shadow: 0 18px 40px rgba(15,23,42,0.18);
+                padding: .9rem 1.1rem;
+                margin-bottom: .6rem;
+            }
+
+            .navbar-nav .nav-link {
+                display: block;
+                padding-left: 0;
+                padding-right: 0;
+                margin-bottom: .25rem;
+                font-size: .95rem;
+            }
+
+            /* 底部账号区域也放进卡片里 */
+            .navbar-collapse > .d-flex {
+                background: #ffffff;
+                border-radius: 18px;
+                box-shadow: 0 18px 40px rgba(15,23,42,0.18);
+                padding: .6rem 1.1rem .7rem;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .navbar-collapse > .d-flex .user-pill {
+                margin-top: 0;
+            }
+
+            .navbar-collapse > .d-flex .btn-logout {
+                margin-left: .5rem;
+            }
+        }
+
+        /* 3.1 手机端 admin 按钮铺满一行，像输入框 */
+        @media (max-width: 991.98px) {
+            .navbar .dropdown {
+                width: 100%;
+            }
+
+            .navbar .user-dropdown-btn {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                text-align: left;
+                padding: .45rem .9rem;
+                border-radius: 999px;
+                border: 1px solid rgba(78,115,223,.35);
+                background: #ffffff;
+                color: #4b4d63 !important;
+            }
+
+            .navbar .user-dropdown-btn i {
+                color: #4e73df;
+            }
+        }
+
+        /* 3.2 手机端下拉菜单：不再绝对定位，宽度跟随卡片 */
+        @media (max-width: 991.98px) {
+            .navbar .user-menu-dropdown {
+                position: static !important;          /* 不用绝对定位 */
+                transform: none !important;           /* 取消 translate3d */
+                inset: auto !important;               /* 清掉 top/left 等 */
+                margin-top: .55rem;
+                width: 100%;
+                max-width: 100%;
+                border-radius: 16px;
+                box-shadow: 0 14px 32px rgba(15,23,42,0.16);
+                overflow: hidden;
+            }
+        }
     </style>
 </head>
 <body>
@@ -89,27 +306,40 @@
                             id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-person-circle me-1"></i>${user.username}
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li class="dropdown-header small text-muted">
-                            用户名：${user.username}<br>
-                            账号ID：${user.id}<br>
-                            <c:choose>
-                                <c:when test="${empty user.email}">
-                                    邮箱：未设置
-                                </c:when>
-                                <c:otherwise>
-                                    邮箱：${user.email}
-                                </c:otherwise>
-                            </c:choose>
+                    <ul class="dropdown-menu dropdown-menu-end user-menu-dropdown" aria-labelledby="userDropdown">
+                        <li class="user-menu-header">
+                            <div class="user-menu-title">
+                                <i class="bi bi-person-circle me-2"></i> 账号中心
+                            </div>
+                            <div class="user-menu-sub">
+                                用户名：${user.username}<br/>
+                                账号ID：${user.id}<br/>
+                                <c:choose>
+                                    <c:when test="${empty user.email}">
+                                        邮箱：未设置
+                                    </c:when>
+                                    <c:otherwise>
+                                        邮箱：${user.email}
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
                         </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="<c:url value='/user/profile'/>">
-                            <i class="bi bi-person-lines-fill me-1"></i>账号信息
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item text-danger" href="<c:url value='/user/logout'/>">
-                            <i class="bi bi-box-arrow-right me-1"></i>退出
-                        </a></li>
+
+                        <li><hr class="dropdown-divider user-menu-divider"></li>
+
+                        <li>
+                            <a class="dropdown-item user-menu-item" href="<c:url value='/user/profile'/>">
+                                <i class="bi bi-person-lines-fill"></i> 账号信息
+                            </a>
+                        </li>
+
+                        <li><hr class="dropdown-divider user-menu-divider"></li>
+
+                        <li>
+                            <a class="dropdown-item user-menu-item text-danger" href="<c:url value='/user/logout'/>">
+                                <i class="bi bi-box-arrow-right"></i> 退出登录
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
