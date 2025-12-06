@@ -59,14 +59,41 @@
         <div class="collapse navbar-collapse">
             <ul class="navbar-nav me-auto"></ul>
             <div class="d-flex align-items-center">
-                <div class="dropdown">
-                    <button class="btn btn-link user-dropdown-btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle me-1"></i>${user.username}
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="<c:url value='/user/logout'/>">退出</a></li>
-                    </ul>
-                </div>
+                <c:if test="${not empty user}">
+                    <div class="dropdown">
+                        <button class="btn btn-link user-dropdown-btn dropdown-toggle"
+                                type="button" id="userDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle me-1"></i>${user.username}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li class="dropdown-header small text-muted px-3 py-2">
+                                用户名：${user.username}<br>
+                                账号ID：${user.id}<br>
+                                <c:if test="${not empty user.email}">
+                                    邮箱：${user.email}
+                                </c:if>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="<c:url value='/user/profile'/>">
+                                    <i class="bi bi-person-lines-fill me-1"></i>账号信息
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="<c:url value='/user/logout'/>">
+                                    <i class="bi bi-box-arrow-right me-1"></i>退出
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </c:if>
+                <c:if test="${empty user}">
+                    <a href="<c:url value='/user/login'/>" class="btn btn-outline-primary btn-sm">
+                        登录
+                    </a>
+                </c:if>
             </div>
         </div>
     </div>
