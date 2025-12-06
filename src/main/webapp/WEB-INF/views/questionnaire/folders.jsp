@@ -79,27 +79,9 @@
             padding-right: 0.9rem !important;
         }
 
-        .navbar-nav .nav-link::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            bottom: 0.2rem;
-            width: 0;
-            height: 2px;
-            border-radius: 999px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            transform: translateX(-50%);
-            transition: width 0.2s ease;
-        }
-
         .navbar-nav .nav-link:hover {
             color: var(--primary-color) !important;
             transform: translateY(-1px);
-        }
-
-        .navbar-nav .nav-link:hover::after,
-        .navbar-nav .nav-link.active::after {
-            width: 60%;
         }
 
         /* 保留你原来的下拉按钮，只是改一下颜色适配浅色背景 */

@@ -8,10 +8,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>我的问卷 - 问卷星</title>
 
-    <!-- 依赖，与创建页保持一致 -->
-    <link href="/resources/css/bootstrap/bootstrap.min.css" rel="stylesheet">
-    <link href="/resources/css/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-    <link href="/resources/css/font-awesome/all.min.css" rel="stylesheet">
+    <!-- 和创建页保持一致的资源引用 -->
+    <link href="<c:url value='/resources/css/bootstrap/bootstrap.min.css'/>" rel="stylesheet">
+    <link href="<c:url value='/resources/css/bootstrap-icons/bootstrap-icons.css'/>" rel="stylesheet">
 
     <style>
         :root {
@@ -30,21 +29,21 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--dark-color);
             background: radial-gradient(circle at top left, #f0f4ff 0, #f8f9fc 45%, #fdfdfd 100%);
+            color: var(--dark-color);
+            line-height: 1.6;
         }
 
         a { text-decoration: none; }
 
-        /* 顶部导航，和创建页一致 */
+        /* 顶部导航：与创建页统一 */
         .navbar {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(16px);
             box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
             transition: all 0.3s ease;
-            padding-top: 0.8rem;
-            padding-bottom: 0.8rem;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
         }
 
         .navbar.scrolled {
@@ -56,9 +55,8 @@
 
         .navbar-brand {
             font-weight: 800;
-            font-size: 1.5rem;
+            font-size: 1.45rem;
             color: var(--primary-color) !important;
-            letter-spacing: 0.04em;
             display: flex;
             align-items: center;
             gap: .4rem;
@@ -69,107 +67,33 @@
             color: var(--primary-dark);
         }
 
-        .navbar-nav .nav-link {
-            font-weight: 600;
+        .navbar-collapse {
+            flex-grow: 0;
+        }
+
+        .user-dropdown-btn {
+            text-decoration: none;
+            font-weight: 500;
             color: var(--secondary-color) !important;
-            transition: color 0.2s ease, transform 0.2s ease;
-            position: relative;
-            padding-left: 0.9rem !important;
-            padding-right: 0.9rem !important;
         }
 
-        .navbar-nav .nav-link::after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            bottom: 0.2rem;
-            width: 0;
-            height: 2px;
-            border-radius: 999px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            transform: translateX(-50%);
-            transition: width 0.2s ease;
-        }
+        .user-dropdown-btn i { color: var(--primary-color); }
 
-        .navbar-nav .nav-link:hover {
+        .user-dropdown-btn:hover {
             color: var(--primary-color) !important;
-            transform: translateY(-1px);
-        }
-
-        .navbar-nav .nav-link:hover::after,
-        .navbar-nav .nav-link.active::after {
-            width: 60%;
-        }
-
-        /* 汉堡按钮 */
-        .custom-toggler {
-            border: none;
-            padding: 0.25rem 0.25rem;
-            outline: none;
-            box-shadow: none;
-        }
-
-        .custom-toggler:focus { box-shadow: none; }
-
-        .custom-toggler .toggler-lines {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            width: 22px;
-            height: 16px;
-        }
-
-        .custom-toggler .toggler-lines span {
-            display: block;
-            width: 100%;
-            height: 2px;
-            border-radius: 999px;
-            background: #111827;
-            transition: all 0.25s ease;
-        }
-
-        .custom-toggler[aria-expanded="true"] .toggler-lines span:nth-child(1) {
-            transform: translateY(7px) rotate(45deg);
-        }
-        .custom-toggler[aria-expanded="true"] .toggler-lines span:nth-child(2) {
-            opacity: 0;
-        }
-        .custom-toggler[aria-expanded="true"] .toggler-lines span:nth-child(3) {
-            transform: translateY(-7px) rotate(-45deg);
-        }
-
-        /* 右上角用户信息 pill */
-        .user-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: .35rem;
-            padding: 0.35rem 0.9rem;
-            border-radius: 999px;
-            border: 1px solid var(--border-soft);
-            background: #f9fafb;
-            color: var(--secondary-color);
-            font-size: .9rem;
-        }
-        .user-pill i { color: var(--primary-color); }
-
-        .btn-logout {
-            border-radius: 999px;
-            padding: 0.35rem 0.9rem;
-            font-size: .9rem;
-            margin-left: .6rem;
         }
 
         .page-wrapper {
             padding-top: 88px;
-            padding-bottom: 48px;
+            padding-bottom: 40px;
         }
 
-        /* 子页面头部（hero） */
-        .subpage-hero {
-            padding: 28px 0 14px;
+        /* 顶部大卡片（子页面头部）——与创建页统一 */
+        .design-header {
+            margin-bottom: 18px;
         }
 
-        .subpage-hero-inner {
+        .design-header-inner {
             background: linear-gradient(135deg, #4f46e5 0, #1d4ed8 40%, #2563eb 100%);
             border-radius: 20px;
             padding: 18px 22px;
@@ -181,115 +105,129 @@
             gap: 1rem;
         }
 
-        .subpage-hero-title {
+        .design-header-title {
             margin: 0;
             font-size: 1.5rem;
             font-weight: 700;
         }
 
-        .subpage-hero-sub {
+        .design-header-subtitle {
             margin: .25rem 0 0;
             font-size: .96rem;
-            opacity: .92;
-        }
-
-        .subpage-hero-breadcrumb {
-            font-size: .85rem;
             opacity: .9;
         }
 
-        .subpage-hero-breadcrumb a {
-            color: #e0f2fe;
-        }
-
-        .subpage-hero-badge {
+        .badge-step {
             display: inline-flex;
             align-items: center;
-            gap: .3rem;
-            padding: .2rem .7rem;
+            gap: .25rem;
+            padding: .25rem .8rem;
             border-radius: 999px;
-            border: 1px solid rgba(248,250,252,.9);
+            border: 1px solid rgba(248, 250, 252, 0.9);
             background: rgba(15,23,42,.15);
             font-size: .8rem;
         }
 
-        /* 布局：左菜单 + 右列表卡片 */
-        .content-layout { padding-top: 20px; }
+        .folder-layout { margin-top: 10px; }
 
-        .side-nav-card {
+        /* 左侧导航卡片：与创建页 nav-card 统一 */
+        .nav-card {
             background: #ffffff;
             border-radius: 18px;
-            padding: 16px 16px 14px;
-            box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+            padding: 14px 14px 10px;
+            box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
             border: 1px solid rgba(226, 232, 240, 0.9);
         }
-        .side-nav-title {
-            font-size: .95rem;
+
+        .nav-card-title {
             font-weight: 700;
-            margin-bottom: 4px;
-            color: #111827;
+            font-size: .95rem;
+            display: flex;
+            align-items: center;
+            gap: .35rem;
+            margin-bottom: 8px;
         }
-        .side-nav-sub {
+
+        .nav-card-title i { color: var(--primary-color); }
+
+        .nav-card-sub {
             font-size: .8rem;
             color: var(--muted-color);
-            margin-bottom: 10px;
+            margin-bottom: .6rem;
         }
-        .side-nav-menu {
+
+        .nav-card-menu {
             list-style: none;
             padding-left: 0;
             margin: 0;
         }
-        .side-nav-item + .side-nav-item { margin-top: 4px; }
-        .side-nav-link {
+
+        .nav-card-menu li + li { margin-top: .25rem; }
+
+        .nav-link-chip {
+            text-decoration: none;
             display: flex;
             align-items: center;
-            padding: 0.45rem 0.65rem;
-            border-radius: 10px;
-            font-size: .9rem;
-            color: var(--secondary-color);
-            transition: all 0.18s ease;
+            gap: .35rem;
+            padding: .42rem .75rem;
+            border-radius: 999px;
+            font-size: .86rem;
+            color: #4b5563;
+            border: 1px solid transparent;
+            background: #f9fafb;
+            transition: all .15s ease;
         }
-        .side-nav-link i {
+
+        .nav-link-chip i {
             font-size: 1rem;
-            margin-right: .5rem;
             width: 18px;
             text-align: center;
-        }
-        .side-nav-link:hover {
-            background: #f1f5ff;
             color: var(--primary-color);
-            transform: translateX(2px);
         }
-        .side-nav-link.active {
-            background: linear-gradient(135deg, rgba(78,115,223,0.1), rgba(78,115,223,0.2));
-            color: var(--primary-dark);
-            font-weight: 600;
-        }
-        .side-nav-link.active i { color: var(--primary-dark); }
 
-        .form-card {
+        .nav-link-chip:hover {
+            background: #eef2ff;
+            border-color: rgba(78, 115, 223, 0.45);
+            color: var(--primary-color);
+            transform: translateY(-1px);
+        }
+
+        .nav-link-chip.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 10px 24px rgba(78,115,223,0.55);
+        }
+
+        .nav-link-chip.active i { color: #fff; }
+
+        /* 右侧主内容卡片，与创建页 content-card 统一 */
+        .content-card {
             background: #ffffff;
             border-radius: 18px;
             padding: 22px 24px 20px;
             box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
             border: 1px solid rgba(226, 232, 240, 0.9);
         }
+
         @media (max-width: 576px) {
-            .form-card { padding: 18px 16px; }
+            .content-card { padding: 18px 16px; }
         }
 
-        .form-card-header {
+        .content-card-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
             margin-bottom: 14px;
         }
-        .form-card-title {
+
+        .content-card-title {
             display: flex;
             align-items: center;
             gap: .5rem;
         }
-        .form-card-title-icon {
+
+        .content-card-title-icon {
             width: 36px;
             height: 36px;
             border-radius: 12px;
@@ -299,33 +237,26 @@
             justify-content: center;
             color: #fff;
         }
-        .form-card-title-text {
+
+        .content-card-title-text {
             font-size: 1rem;
             font-weight: 700;
         }
-        .form-card-subtitle {
+
+        .content-card-subtitle {
             font-size: .86rem;
             color: var(--muted-color);
             margin-top: 2px;
         }
-        .badge-step {
-            border-radius: 999px;
-            padding: .25rem .8rem;
-            font-size: .78rem;
-            background: #eef2ff;
-            color: #4f46e5;
-            display: inline-flex;
-            align-items: center;
-            gap: .25rem;
-        }
 
-        /* Toast 通知，和创建页一致 */
+        /* Toast 通知（与创建页保持一致风格） */
         .toast-container {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 9999;
         }
+
         .toast-custom {
             background: white;
             border-radius: 16px;
@@ -337,6 +268,7 @@
             animation: slideInRight 0.3s ease-out;
             position: relative;
         }
+
         .toast-custom-header {
             display: flex;
             align-items: center;
@@ -344,22 +276,28 @@
             padding: .65rem .9rem;
             color: #fff;
         }
+
         .toast-custom-header.success {
             background: linear-gradient(135deg, var(--success-color), #17a673);
         }
+
         .toast-custom-header.error {
             background: linear-gradient(135deg, var(--danger-color), #b91c1c);
         }
+
         .toast-custom-header i { font-size: 1.1rem; }
+
         .toast-custom-title {
             font-weight: 600;
             font-size: .95rem;
         }
+
         .toast-custom-body {
             padding: .9rem .95rem .85rem;
             font-size: .9rem;
             color: var(--dark-color);
         }
+
         .toast-custom-progress {
             position: absolute;
             bottom: 0;
@@ -368,6 +306,7 @@
             background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.9));
             animation: toastProgress 3s linear forwards;
         }
+
         .toast-custom-close {
             margin-left: auto;
             background: none;
@@ -377,18 +316,20 @@
             cursor: pointer;
             opacity: .85;
         }
+
         .toast-custom-close:hover { opacity: 1; }
 
         @keyframes slideInRight {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
+
         @keyframes toastProgress {
             from { width: 100%; }
             to { width: 0%; }
         }
 
-        /* 筛选栏 + 列表样式（从你原来的列表页改成适配 card 内） */
+        /* 筛选栏 + 列表样式（沿用你原来的逻辑但换到 content-card 内） */
         .filter-bar {
             background: #f9fafb;
             border-radius: 12px;
@@ -399,6 +340,7 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .filter-group {
             display: flex;
             align-items: center;
@@ -406,6 +348,7 @@
             font-size: .9rem;
             color: var(--secondary-color);
         }
+
         .filter-select {
             border: 1px solid var(--border-soft);
             border-radius: 999px;
@@ -424,29 +367,35 @@
             border-left: 4px solid transparent;
             transition: all .16s ease;
         }
+
         .questionnaire-card:hover {
             transform: translateY(-1px);
             box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
             border-left-color: rgba(78,115,223,.6);
         }
+
         .questionnaire-card.status-published {
             border-left-color: #28a745;
         }
+
         .questionnaire-card.status-draft {
             border-left-color: #6c757d;
         }
+
         .questionnaire-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: .55rem;
         }
+
         .questionnaire-title {
             font-size: 1.05rem;
             font-weight: 600;
             color: #111827;
             margin: 0 0 .15rem;
         }
+
         .questionnaire-id {
             color: #9ca3af;
             font-size: .82rem;
@@ -459,13 +408,16 @@
             flex-wrap: wrap;
             font-size: .86rem;
         }
+
         .stat-item {
             display: inline-flex;
             align-items: center;
             gap: .35rem;
             color: #6b7280;
         }
+
         .stat-item i { font-size: .95rem; }
+
         .stat-value {
             font-weight: 600;
             color: var(--primary-color);
@@ -476,6 +428,7 @@
             gap: .4rem;
             flex-wrap: wrap;
         }
+
         .action-btn {
             padding: .32rem .85rem;
             border: 1px solid var(--border-soft);
@@ -489,25 +442,31 @@
             align-items: center;
             gap: .25rem;
         }
+
         .action-btn i { font-size: .9rem; }
+
         .action-btn:hover {
             background-color: #f3f4ff;
             color: var(--primary-color);
             border-color: rgba(78,115,223,.7);
         }
+
         .action-btn.primary {
             background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             color: #fff;
             border-color: transparent;
         }
+
         .action-btn.primary:hover {
             background: linear-gradient(135deg, #4663ce, #1f3fa6);
             box-shadow: 0 10px 24px rgba(78, 115, 223, 0.4);
         }
+
         .action-btn.danger {
             color: #dc3545;
             border-color: rgba(220,53,69,.7);
         }
+
         .action-btn.danger:hover {
             background-color: #dc3545;
             color: #fff;
@@ -519,10 +478,12 @@
             font-size: .78rem;
             font-weight: 500;
         }
+
         .status-published {
             background-color: #d4edda;
             color: #155724;
         }
+
         .status-draft {
             background-color: #e2e3e5;
             color: #6c757d;
@@ -537,16 +498,16 @@
             color: #6c757d;
             margin-top: .4rem;
         }
+
         .empty-state .icon {
             font-size: 3rem;
             color: #e5e7eb;
             margin-bottom: .7rem;
         }
 
-        /* 样本服务推广模块（右侧下方） */
-        .sample-service-promo {
-            margin-top: 1rem;
-        }
+        /* 样本服务推广模块（右侧下方，风格不变） */
+        .sample-service-promo { margin-top: 1rem; }
+
         .promo-card {
             background: linear-gradient(135deg, #e3f2fd, #bbdefb);
             border-radius: 18px;
@@ -555,144 +516,130 @@
             position: relative;
             overflow: hidden;
         }
+
         .promo-card::before {
-            content:'';
-            position:absolute;
-            top:-45%;
-            right:-8%;
-            width:260px;
-            height:260px;
-            background:rgba(255,255,255,0.25);
-            border-radius:50%;
+            content: '';
+            position: absolute;
+            top: -45%;
+            right: -8%;
+            width: 260px;
+            height: 260px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 50%;
         }
+
         .promo-icon {
-            position:absolute;
-            top:1.5rem;
-            right:1.6rem;
-            font-size:2.8rem;
-            color:#1976d2;
-            opacity:.28;
+            position: absolute;
+            top: 1.5rem;
+            right: 1.6rem;
+            font-size: 2.8rem;
+            color: #1976d2;
+            opacity: .28;
         }
-        .promo-content { position:relative; z-index:1; }
+
+        .promo-content { position: relative; z-index: 1; }
+
         .promo-title {
-            font-size:1.25rem;
-            font-weight:600;
-            color:#1565c0;
-            margin-bottom:.4rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1565c0;
+            margin-bottom: .4rem;
         }
+
         .promo-desc {
-            color:#424242;
-            margin-bottom:1.1rem;
-            font-size:.95rem;
+            color: #424242;
+            margin-bottom: 1.1rem;
+            font-size: .95rem;
         }
+
         .promo-stats {
-            display:flex;
-            gap:1.1rem;
-            margin-bottom:1.15rem;
-            flex-wrap:wrap;
+            display: flex;
+            gap: 1.1rem;
+            margin-bottom: 1.15rem;
+            flex-wrap: wrap;
         }
+
         .promo-stats .stat-item {
-            text-align:center;
-            background:rgba(255,255,255,.8);
-            padding:.75rem 1.1rem;
-            border-radius:12px;
-            min-width:110px;
+            text-align: center;
+            background: rgba(255,255,255,.8);
+            padding: .75rem 1.1rem;
+            border-radius: 12px;
+            min-width: 110px;
         }
+
         .promo-stats .stat-number {
-            display:block;
-            font-size:1.35rem;
-            font-weight:700;
-            color:#1565c0;
+            display: block;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #1565c0;
         }
+
         .promo-stats .stat-label {
-            font-size:.8rem;
-            color:#546e7a;
-            font-weight:500;
+            font-size: .8rem;
+            color: #546e7a;
+            font-weight: 500;
         }
+
         .promo-btn {
-            background:linear-gradient(135deg,#1976d2,#0d47a1);
-            border:none;
-            padding:.5rem 1.3rem;
-            font-weight:600;
-            border-radius:999px;
-            font-size:.88rem;
-            color:#fff;
+            background: linear-gradient(135deg,#1976d2,#0d47a1);
+            border: none;
+            padding: .5rem 1.3rem;
+            font-weight: 600;
+            border-radius: 999px;
+            font-size: .88rem;
+            color: #fff;
         }
-        .promo-btn i { margin-right:.3rem; }
+
+        .promo-btn i { margin-right: .3rem; }
+
         .promo-btn:hover {
-            box-shadow:0 5px 16px rgba(25,118,210,.45);
+            box-shadow: 0 5px 16px rgba(25,118,210,.45);
         }
 
-        /* 发送问卷下拉菜单 */
-        .action-dropdown .dropdown-menu {
-            border-radius:10px;
-            border:1px solid var(--border-soft);
-            box-shadow:0 6px 18px rgba(0,0,0,.12);
-            padding:.35rem 0;
-            min-width:150px;
-            font-size:.85rem;
-            z-index: 2500;
-        }
-        .action-dropdown .dropdown-item {
-            padding:.4rem .9rem;
-            color:var(--dark-color);
-            display:flex;
-            align-items:center;
-        }
-        .action-dropdown .dropdown-item i {
-            font-size:.95rem;
-            margin-right:.45rem;
-        }
-        .action-dropdown .dropdown-item:hover {
-            background:#f8f9fc;
-            color:var(--primary-color);
-        }
-        .action-dropdown .action-btn::after {
-            display:inline-block;
-            margin-left:.3rem;
-            content:"";
-            border-top:.3em solid;
-            border-right:.3em solid transparent;
-            border-left:.3em solid透明;
-        }
-
-        /* 删除模态框样式（和你原来的一致） */
+        /* 删除模态框样式 */
         .delete-modal .modal-content {
-            border-radius:12px;
-            border:none;
-            box-shadow:0 10px 30px rgba(0,0,0,.15);
-            overflow:hidden;
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,.15);
+            overflow: hidden;
         }
+
         .delete-modal .modal-header {
-            background:linear-gradient(135deg,#ff6b6b,#ff5252);
+            background: linear-gradient(135deg,#ff6b6b,#ff5252);
             color:#fff;
             border-bottom:none;
             padding:1rem 1.3rem;
         }
+
         .delete-modal .modal-body {
             padding:1.8rem 1.4rem;
             text-align:center;
         }
+
         .delete-modal .warning-icon {
             font-size:2.6rem;
             color:#ff6b6b;
             margin-bottom:.6rem;
         }
+
         .delete-modal .delete-message {
             font-size:1.05rem;
             color:#2c3e50;
             margin-bottom:.4rem;
             font-weight:500;
         }
+
         .delete-modal .delete-hint {
             color:#6c757d;
             font-size:.88rem;
         }
+
         .delete-modal .modal-footer {
             border-top:1px solid #e9ecef;
             padding:.75rem 1.3rem;
             gap:.6rem;
         }
+
         .delete-modal .btn-cancel {
             background:#f8f9fa;
             border:1px solid #dee2e6;
@@ -701,6 +648,7 @@
             border-radius:999px;
             font-weight:500;
         }
+
         .delete-modal .btn-delete {
             background:linear-gradient(135deg,#ff6b6b,#ff5252);
             border:none;
@@ -717,235 +665,66 @@
             margin: 0 auto;
         }
 
-        @media (max-width: 991.98px) {
-            .navbar-collapse {
-                background: #ffffff;
-                padding: 0.8rem 0 1rem;
-            }
-            .toast-custom {
-                min-width: 260px;
-                max-width: 90vw;
-            }
-            .subpage-hero-inner {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+        /* 文件夹选择弹窗的小卡片样式（供 moveToFolder 使用） */
+        .folder-select-grid {
+            display: flex;
+            flex-direction: column;
+            gap: .6rem;
         }
 
-        /* 1. 去掉移动端的那条蓝色下划线 */
-        @media (max-width: 991.98px) {
-            .navbar-nav .nav-link::after {
-                content: none !important;
-                display: none !important;
-                width: 0 !important;
-                height: 0 !important;
-            }
+        .folder-select-card {
+            display: flex;
+            align-items: center;
+            padding: .6rem .75rem;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: all .16s ease;
         }
 
-        /* 2. 移动端折叠导航改成白色卡片 */
-        @media (max-width: 991.98px) {
-
-            /* 折叠区域整体留出一些内边距 */
-            .navbar-collapse {
-                background: transparent;
-                padding: .75rem 1rem 1.2rem;
-            }
-
-            /* 菜单部分变成卡片 */
-            .navbar-collapse .navbar-nav {
-                background: #ffffff;
-                border-radius: 18px;
-                box-shadow: 0 18px 40px rgba(15,23,42,0.18);
-                padding: .9rem 1.1rem;
-                margin-bottom: .6rem;
-            }
-
-            .navbar-nav .nav-link {
-                display: block;
-                padding-left: 0;
-                padding-right: 0;
-                margin-bottom: .25rem;
-                font-size: .95rem;
-            }
-
-            /* 底部账号区域也放进卡片里 */
-            .navbar-collapse > .d-flex {
-                background: #ffffff;
-                border-radius: 18px;
-                box-shadow: 0 18px 40px rgba(15,23,42,0.18);
-                padding: .6rem 1.1rem .7rem;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            .navbar-collapse > .d-flex .user-pill {
-                margin-top: 0;
-            }
-
-            .navbar-collapse > .d-flex .btn-logout {
-                margin-left: .5rem;
-            }
+        .folder-select-card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            background: #eff6ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: .6rem;
+            color: var(--primary-color);
         }
 
-        /* 3.1 手机端 admin 按钮铺满一行，像输入框 */
-        @media (max-width: 991.98px) {
-            .navbar .dropdown {
-                width: 100%;
-            }
-
-            .navbar .user-dropdown-btn {
-                width: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                text-align: left;
-                padding: .45rem .9rem;
-                border-radius: 999px;
-                border: 1px solid rgba(78,115,223,.35);
-                background: #ffffff;
-                color: #4b4d63 !important;
-            }
-
-            .navbar .user-dropdown-btn i {
-                color: #4e73df;
-            }
-        }
-
-        /* 3.2 手机端下拉菜单：不再绝对定位，宽度跟随卡片 */
-        @media (max-width: 991.98px) {
-            .navbar .user-menu-dropdown {
-                position: static !important;          /* 不用绝对定位 */
-                transform: none !important;           /* 取消 translate3d */
-                inset: auto !important;               /* 清掉 top/left 等 */
-                margin-top: .55rem;
-                width: 100%;
-                max-width: 100%;
-                border-radius: 16px;
-                box-shadow: 0 14px 32px rgba(15,23,42,0.16);
-                overflow: hidden;
-            }
-        }
-
-        /* ===== 用户下拉菜单美化 ===== */
-        .user-menu-dropdown {
-            border-radius: 16px;
-            padding: 0;
-            border: 1px solid rgba(226,232,240,0.95);
-            box-shadow: 0 18px 40px rgba(15,23,42,0.18);
-            min-width: 260px;
-            overflow: hidden;
-        }
-
-        /* 顶部用户信息区域 */
-        .user-menu-header {
-            padding: .75rem 1rem .8rem;
-            background: linear-gradient(135deg, #4e73df, #224abe);
-            color: #fff;
-            font-size: .85rem;
-        }
-
-        .user-menu-title {
+        .folder-select-card-title {
+            font-size: .95rem;
             font-weight: 600;
-            margin-bottom: .2rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .user-menu-title i {
-            font-size: 1rem;
-        }
-
-        .user-menu-sub {
-            opacity: .92;
-            line-height: 1.5;
-        }
-
-        /* 分割线 */
-        .user-menu-divider {
-            margin: .3rem 0;
-            border-color: rgba(226,232,240,0.9);
-        }
-
-        /* 菜单项 */
-        .user-menu-item {
-            padding: .55rem 1rem;
-            font-size: .9rem;
-            display: flex;
-            align-items: center;
-            gap: .5rem;
-            color: #4b4d63;
-        }
-
-        .user-menu-item i {
-            font-size: 1rem;
-        }
-
-        .user-menu-item:hover {
-            background-color: #f3f4ff;
             color: #111827;
         }
 
-        .user-menu-item.text-danger {
-            color: #e74a3b;
+        .folder-select-card-desc {
+            font-size: .82rem;
+            color: #6b7280;
         }
 
-        .user-menu-item.text-danger:hover {
-            background-color: #fee2e2;
-            color: #b91c1c;
+        .folder-select-card-check {
+            margin-left: auto;
+            color: var(--primary-color);
+            opacity: 0;
+            transition: opacity .16s ease;
         }
 
-        /* ===== 移动端导航折叠样式修复 ===== */
+        .folder-select-card.active {
+            border-color: rgba(78,115,223,.9);
+            background: #eef2ff;
+        }
+
+        .folder-select-card.active .folder-select-card-check {
+            opacity: 1;
+        }
+
         @media (max-width: 991.98px) {
-
-            /* 折叠后的整体区域做成一个白色卡片 */
-            .navbar-collapse {
-                background: transparent;
-                padding: 0.75rem 1rem 1rem;
-            }
-
-            .navbar-collapse.show {
-                /* bootstrap 会显示 block，这里只补充样式 */
-            }
-
-            .navbar-collapse .navbar-nav,
-            .navbar-collapse > .d-flex {
-                background: #ffffff;
-                border-radius: 18px;
-                box-shadow: 0 18px 40px rgba(15,23,42,0.18);
-                padding: 1rem 1.1rem;
-            }
-
-            /* 菜单项纵向排列，左右留白 */
-            .navbar-nav .nav-link {
-                display: block;
-                padding-left: 0;
-                padding-right: 0;
-                margin-bottom: .25rem;
-            }
-
-            /* 关闭移动端那条小蓝条 */
-            .navbar-nav .nav-link::after {
-                display: none;
-                width: 0;
-            }
-
-            /* 用户信息放在卡片底部，和菜单有一点分隔 */
-            .navbar-collapse > .d-flex {
-                margin-top: .5rem;
-                border-top: 1px solid #e5e7eb;
-                padding-top: .7rem;
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            .navbar-collapse > .d-flex .user-pill {
-                margin-top: 0;
-            }
-
-            .navbar-collapse > .d-flex .btn-logout {
-                margin-left: .5rem;
+            .toast-custom {
+                min-width: 260px;
+                max-width: 90vw;
             }
         }
     </style>
@@ -955,85 +734,48 @@
 <!-- Toast 容器 -->
 <div class="toast-container" id="toastContainer" style="display:none;"></div>
 
-<!-- 顶部导航 -->
+<!-- 顶部导航（和创建页保持一致） -->
 <nav class="navbar navbar-expand-lg navbar-light fixed-top">
     <div class="container">
-        <a class="navbar-brand" href="<c:url value='/'/>">
-            <i class="fas fa-poll"></i> 问卷星
+        <a class="navbar-brand" href="<c:url value='/questionnaire/list'/>">
+            <i class="bi bi-card-checklist"></i> 问卷星
         </a>
 
-        <button class="navbar-toggler custom-toggler collapsed"
-                type="button"
-                aria-controls="navbarNav"
-                aria-expanded="false"
-                aria-label="切换导航">
-            <span class="toggler-lines">
-                <span></span>
-                <span></span>
-                <span></span>
-            </span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="<c:url value='/'/>">首页</a>
-                </li>
-                <li class="nav-item">
-                    <!-- 整个问卷模块都用这一个高亮 -->
-                    <a class="nav-link active" href="<c:url value='/questionnaire/list'/>">我的问卷</a>
-                </li>
-            </ul>
-
-            <div class="d-flex align-items-center mt-3 mt-lg-0">
+        <div class="navbar-collapse">
+            <ul class="navbar-nav me-auto"></ul>
+            <div class="d-flex align-items-center">
                 <c:if test="${not empty user}">
                     <div class="dropdown">
                         <button class="btn btn-link user-dropdown-btn dropdown-toggle"
-                                type="button"
-                                id="userDropdown"
-                                data-bs-toggle="dropdown"
-                                aria-expanded="false">
+                                type="button" id="userDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-person-circle me-1"></i>${user.username}
                         </button>
-                        <ul class="dropdown-menu dropdown-menu-end user-menu-dropdown" aria-labelledby="userDropdown">
-                            <li class="user-menu-header">
-                                <div class="user-menu-title">
-                                    <i class="bi bi-person-circle me-2"></i> 账号中心
-                                </div>
-                                <div class="user-menu-sub">
-                                    用户名：${user.username}<br/>
-                                    账号ID：${user.id}<br/>
-                                    <c:choose>
-                                        <c:when test="${empty user.email}">
-                                            邮箱：未设置
-                                        </c:when>
-                                        <c:otherwise>
-                                            邮箱：${user.email}
-                                        </c:otherwise>
-                                    </c:choose>
-                                </div>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li class="dropdown-header small text-muted px-3 py-2">
+                                用户名：${user.username}<br>
+                                账号ID：${user.id}<br>
+                                <c:if test="${not empty user.email}">
+                                    邮箱：${user.email}
+                                </c:if>
                             </li>
-
-                            <li><hr class="dropdown-divider user-menu-divider"></li>
-
+                            <li><hr class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item user-menu-item" href="<c:url value='/user/profile'/>">
-                                    <i class="bi bi-person-lines-fill"></i> 账号信息
+                                <a class="dropdown-item" href="<c:url value='/user/profile'/>">
+                                    <i class="bi bi-person-lines-fill me-1"></i>账号信息
                                 </a>
                             </li>
-
-                            <li><hr class="dropdown-divider user-menu-divider"></li>
-
+                            <li><hr class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item user-menu-item text-danger" href="<c:url value='/user/logout'/>">
-                                    <i class="bi bi-box-arrow-right"></i> 退出登录
+                                <a class="dropdown-item text-danger" href="<c:url value='/user/logout'/>">
+                                    <i class="bi bi-box-arrow-right me-1"></i>退出
                                 </a>
                             </li>
                         </ul>
                     </div>
                 </c:if>
                 <c:if test="${empty user}">
-                    <a href="<c:url value='/user/login'/>" class="btn btn-outline-primary btn-logout">
+                    <a href="<c:url value='/user/login'/>" class="btn btn-outline-primary btn-sm">
                         登录
                     </a>
                 </c:if>
@@ -1044,92 +786,99 @@
 
 <div class="page-wrapper">
     <div class="container">
-        <!-- 子页面头部：我的问卷 -->
-        <section class="subpage-hero">
-            <div class="subpage-hero-inner">
+        <!-- 顶部大卡片：我的问卷 -->
+        <section class="design-header">
+            <div class="design-header-inner">
                 <div>
-                    <p class="subpage-hero-breadcrumb mb-1">
-                        <a href="<c:url value='/'/>">首页</a>
-                        <span> / </span>
-                        <span>我的问卷</span>
-                    </p>
-                    <h1 class="subpage-hero-title">
-                        我的问卷
-                    </h1>
-                    <p class="subpage-hero-sub">
-                        统一管理你创建的所有问卷，快速预览、发布、分类与统计分析。
+                    <h1 class="design-header-title">我的问卷</h1>
+                    <p class="design-header-subtitle mb-1">
+                        统一管理你创建的所有问卷，支持状态筛选、排序、预览与统计分析。
                     </p>
                 </div>
-                <div>
-                    <span class="subpage-hero-badge">
-                        <i class="bi bi-collection"></i>
-                        问卷管理中心
+                <div class="text-end">
+                    <span class="badge-step mb-2 d-inline-flex">
+                        <i class="bi bi-collection"></i> 问卷管理中心
                     </span>
+                    <div>
+                        <a href="<c:url value='/questionnaire/create'/>"
+                           class="btn btn-sm btn-light mt-2" style="border-radius:999px;">
+                            <i class="bi bi-plus-lg me-1"></i> 创建问卷
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- 左菜单 + 右列表 -->
-        <section class="content-layout">
-            <div class="row g-3">
+        <!-- 左侧导航 + 右侧列表 -->
+        <section class="folder-layout">
+            <div class="row g-4">
                 <!-- 左侧导航卡片 -->
-                <aside class="col-lg-3">
-                    <div class="side-nav-card">
-                        <div class="side-nav-title">问卷导航</div>
-                        <div class="side-nav-sub">快速切换不同功能模块</div>
-                        <ul class="side-nav-menu">
-                            <li class="side-nav-item">
-                                <a href="<c:url value='/questionnaire/create'/>" class="side-nav-link">
+                <div class="col-lg-3">
+                    <div class="nav-card">
+                        <div class="nav-card-title">
+                            <i class="bi bi-compass"></i>
+                            <span>快速导航</span>
+                        </div>
+                        <div class="nav-card-sub">切换不同的问卷视图</div>
+                        <ul class="nav-card-menu">
+                            <li>
+                                <a href="<c:url value='/questionnaire/create'/>"
+                                   class="nav-link-chip">
                                     <i class="bi bi-plus-circle"></i> 创建问卷
                                 </a>
                             </li>
-                            <li class="side-nav-item">
-                                <a href="<c:url value='/questionnaire/list'/>" class="side-nav-link active">
+                            <li>
+                                <a href="<c:url value='/questionnaire/list'/>"
+                                   class="nav-link-chip active">
                                     <i class="bi bi-list-ul"></i> 全部问卷
                                 </a>
                             </li>
-                            <li class="side-nav-item">
-                                <a href="<c:url value='/questionnaire/starred'/>" class="side-nav-link">
+                            <li>
+                                <a href="<c:url value='/questionnaire/starred'/>"
+                                   class="nav-link-chip">
                                     <i class="bi bi-star"></i> 星标问卷
                                 </a>
                             </li>
-                            <li class="side-nav-item">
-                                <a href="<c:url value='/questionnaire/folders'/>" class="side-nav-link">
+                            <li>
+                                <a href="<c:url value='/questionnaire/folders'/>"
+                                   class="nav-link-chip">
                                     <i class="bi bi-folder"></i> 文件夹
                                 </a>
                             </li>
-                            <li class="side-nav-item">
-                                <a href="<c:url value='/questionnaire/recycle'/>" class="side-nav-link">
+                            <li>
+                                <a href="<c:url value='/questionnaire/recycle'/>"
+                                   class="nav-link-chip">
                                     <i class="bi bi-trash"></i> 回收站
                                 </a>
                             </li>
                         </ul>
                     </div>
-                </aside>
+                </div>
 
-                <!-- 右侧列表卡片 -->
-                <section class="col-lg-9">
-                    <div class="form-card">
-                        <div class="form-card-header">
-                            <div class="form-card-title">
-                                <div class="form-card-title-icon">
+                <!-- 右侧内容区域 -->
+                <div class="col-lg-9">
+                    <div class="content-card">
+                        <div class="content-card-header">
+                            <div class="content-card-title">
+                                <div class="content-card-title-icon">
                                     <i class="bi bi-card-checklist"></i>
                                 </div>
                                 <div>
-                                    <div class="form-card-title-text">问卷列表</div>
-                                    <div class="form-card-subtitle">
-                                        支持按照状态筛选和排序，也可以快速预览、发送和分类管理。
+                                    <div class="content-card-title-text">问卷列表</div>
+                                    <div class="content-card-subtitle">
+                                        按状态筛选和排序，支持预览、发送、分析、星标与分类管理。
                                     </div>
                                 </div>
                             </div>
                             <div class="d-none d-md-block">
-                                <a href="<c:url value='/questionnaire/create'/>" class="btn btn-sm btn-primary" style="border-radius:999px;">
+                                <a href="<c:url value='/questionnaire/create'/>"
+                                   class="btn btn-sm btn-primary" style="border-radius:999px;">
                                     <i class="bi bi-plus-lg me-1"></i> 创建问卷
                                 </a>
                             </div>
                         </div>
 
-                        <!-- Spring 消息：用 Toast 提示 -->
+                        <!-- Spring 消息改为 Toast 提示 -->
                         <c:if test="${not empty message}">
                             <script>
                                 window.addEventListener('load', function () {
@@ -1167,7 +916,7 @@
                             </div>
                         </div>
 
-                        <!-- 问卷列表容器 -->
+                        <!-- 问卷列表 -->
                         <div id="questionnaireListContainer">
                             <c:choose>
                                 <c:when test="${not empty questionnaires}">
@@ -1205,7 +954,8 @@
                                             <div class="questionnaire-actions">
                                                 <c:choose>
                                                     <c:when test="${pageTitle == '回收站'}">
-                                                        <a href="<c:url value='/questionnaire/restore/${q.id}'/>" class="action-btn">
+                                                        <a href="<c:url value='/questionnaire/restore/${q.id}'/>"
+                                                           class="action-btn">
                                                             <i class="bi bi-arrow-counterclockwise"></i> 恢复
                                                         </a>
                                                         <a href="<c:url value='/questionnaire/permanentdelete/${q.id}'/>"
@@ -1216,11 +966,13 @@
                                                     </c:when>
                                                     <c:otherwise>
                                                         <c:if test="${q.status == 2}">
-                                                            <a href="${fillUrl}?preview=true" class="action-btn" target="_blank">
+                                                            <a href="${fillUrl}?preview=true"
+                                                               class="action-btn" target="_blank">
                                                                 <i class="bi bi-eye"></i> 预览问卷
                                                             </a>
-                                                            <div class="dropdown action-dropdown">
-                                                                <button class="action-btn" type="button" data-bs-toggle="dropdown">
+                                                            <div class="dropdown">
+                                                                <button class="action-btn" type="button"
+                                                                        data-bs-toggle="dropdown">
                                                                     <i class="bi bi-send"></i> 发送问卷
                                                                 </button>
                                                                 <ul class="dropdown-menu">
@@ -1247,10 +999,12 @@
                                                             </a>
                                                         </c:if>
 
-                                                        <a href="<c:url value='/questionnaire/design/${q.id}'/>" class="action-btn">
+                                                        <a href="<c:url value='/questionnaire/design/${q.id}'/>"
+                                                           class="action-btn">
                                                             <i class="bi bi-gear"></i> 设计问卷
                                                         </a>
-                                                        <a href="<c:url value='/statistics/view/${q.id}'/>" class="action-btn">
+                                                        <a href="<c:url value='/statistics/view/${q.id}'/>"
+                                                           class="action-btn">
                                                             <i class="bi bi-pie-chart"></i> 分析&下载
                                                         </a>
 
@@ -1270,7 +1024,8 @@
                                                                 </c:otherwise>
                                                             </c:choose>
 
-                                                            <a href="<c:url value='/questionnaire/edit/${q.id}'/>" class="action-btn">
+                                                            <a href="<c:url value='/questionnaire/edit/${q.id}'/>"
+                                                               class="action-btn">
                                                                 <i class="bi bi-pencil"></i> 编辑
                                                             </a>
                                                             <a href="javascript:void(0);" class="action-btn"
@@ -1300,7 +1055,8 @@
                                         <p class="text-muted mb-3">
                                             点击右上角「创建问卷」按钮，开始你的第一次创建吧！
                                         </p>
-                                        <a href="<c:url value='/questionnaire/create'/>" class="btn btn-primary" style="border-radius:999px;">
+                                        <a href="<c:url value='/questionnaire/create'/>"
+                                           class="btn btn-primary" style="border-radius:999px;">
                                             <i class="bi bi-plus-lg me-1"></i> 创建问卷
                                         </a>
                                     </div>
@@ -1309,7 +1065,7 @@
                         </div>
                     </div>
 
-                    <!-- 样本服务推广模块 -->
+                    <!-- 样本服务推广模块（保留原样，只是跟整体风格统一） -->
                     <div class="sample-service-promo">
                         <div class="promo-card">
                             <div class="promo-icon">
@@ -1338,7 +1094,7 @@
                             </div>
                         </div>
                     </div>
-                </section>
+                </div>
             </div>
         </section>
     </div>
@@ -1444,46 +1200,14 @@
     </div>
 </div>
 
-<script src="/resources/js/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="<c:url value='/resources/js/bootstrap/bootstrap.bundle.min.js'/>"></script>
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
 <script>
-    // 导航展开/收起
+    // 顶部导航滚动效果（与创建页相同）
     const navbar = document.querySelector('.navbar');
-    const navbarCollapseEl = document.getElementById('navbarNav');
-    const navbarToggler = document.querySelector('.navbar-toggler');
-
-    let collapseInstance = null;
-    if (navbarCollapseEl) {
-        collapseInstance = new bootstrap.Collapse(navbarCollapseEl, {toggle: false});
-    }
-
-    if (navbarToggler && collapseInstance) {
-        navbarToggler.addEventListener('click', function () {
-            const isShown = navbarCollapseEl.classList.contains('show');
-            if (isShown) {
-                collapseInstance.hide();
-            } else {
-                collapseInstance.show();
-            }
-        });
-
-        navbarCollapseEl.addEventListener('shown.bs.collapse', function () {
-            navbarToggler.setAttribute('aria-expanded', 'true');
-            navbarToggler.classList.remove('collapsed');
-        });
-        navbarCollapseEl.addEventListener('hidden.bs.collapse', function () {
-            navbarToggler.setAttribute('aria-expanded', 'false');
-            navbarToggler.classList.add('collapsed');
-        });
-    }
-
     window.addEventListener('scroll', function () {
-        const currentY = window.scrollY || 0;
-        if (currentY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
+        if (window.scrollY > 50) navbar.classList.add('scrolled');
+        else navbar.classList.remove('scrolled');
     });
 
     // Toast 显示
@@ -1529,6 +1253,7 @@
 
     // 分享相关
     let currentShareLink = '';
+
     function openShareModal(link) {
         currentShareLink = link || '';
         const input = document.getElementById('shareLinkInput');
@@ -1549,11 +1274,13 @@
         const modalEl = document.getElementById('shareModal');
         if (modalEl) bootstrap.Modal.getOrCreateInstance(modalEl).show();
     }
+
     function showQRCode(link) { openShareModal(link); }
 
     function copyLink(link) {
         if (link) currentShareLink = link;
         if (!currentShareLink) return;
+
         const doCopy = (text) => {
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 return navigator.clipboard.writeText(text);
@@ -1567,6 +1294,7 @@
                 return Promise.resolve();
             }
         };
+
         doCopy(currentShareLink).then(() => {
             const modalEl = document.getElementById('shareModal');
             if (modalEl && !modalEl.classList.contains('show')) {
@@ -1623,14 +1351,13 @@
         }
     }
 
-    // 复制问卷：按你后端接口改，这里先占位
     function copyQuestionnaire(id) {
         if (confirm('确定要复制这份问卷吗？')) {
             alert('复制问卷功能开发中，问卷ID: ' + id);
         }
     }
 
-    // 分类：打开选择文件夹弹窗
+    // 文件夹分类相关
     function moveToFolder(questionnaireId) {
         const old = document.getElementById('folderSelectModal');
         if (old) old.remove();
@@ -1731,7 +1458,7 @@
                 if (grid) {
                     const cards = grid.querySelectorAll('.folder-select-card');
                     cards.forEach(c => {
-                        c.addEventListener('click', function() {
+                        c.addEventListener('click', function () {
                             cards.forEach(x => x.classList.remove('active'));
                             this.classList.add('active');
                         });
@@ -1865,7 +1592,7 @@
         if (!statusFilter || !sortFilter || !listContainer) return;
 
         const cards = Array.from(listContainer.querySelectorAll('.questionnaire-card'));
-        if (cards.length === 0) return; // 没有问卷，直接返回
+        if (cards.length === 0) return;
 
         const statusValue = statusFilter.value;
         const sortValue = sortFilter.value;
@@ -1880,7 +1607,6 @@
 
         const visible = cards.filter(card => card.style.display !== 'none');
 
-        // 排序（只对可见的卡片排序）
         visible.sort((a, b) => {
             switch (sortValue) {
                 case 'time-desc': {
@@ -1903,11 +1629,9 @@
             }
         });
 
-        // 删除已有 empty-state
         const oldEmpty = document.getElementById('filterEmptyState');
         if (oldEmpty) oldEmpty.remove();
 
-        // 重新按顺序追加可见卡片
         visible.forEach(card => listContainer.appendChild(card));
 
         if (visible.length === 0) {
@@ -1958,11 +1682,9 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        // 分享复制按钮
         const copyBtn = document.getElementById('shareCopyBtn');
         if (copyBtn) copyBtn.addEventListener('click', () => copyLink(currentShareLink));
 
-        // 筛选与排序
         const statusFilter = document.getElementById('statusFilter');
         const sortFilter = document.getElementById('sortFilter');
         if (statusFilter && sortFilter) {
@@ -1970,7 +1692,6 @@
             sortFilter.addEventListener('change', filterAndSortQuestionnaires);
         }
 
-        // 创建时间人性化显示
         document.querySelectorAll('[data-create-time]').forEach(function(span) {
             const t = span.getAttribute('data-create-time');
             if (t && t !== 'Invalid Date') {
@@ -1978,7 +1699,6 @@
             }
         });
 
-        // 软删除确认
         const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
         if (confirmDeleteBtn) {
             confirmDeleteBtn.addEventListener('click', function () {
@@ -1988,7 +1708,6 @@
             });
         }
 
-        // 永久删除验证
         const permanentConfirmBtn = document.getElementById('permanentConfirmBtn');
         if (permanentConfirmBtn) {
             permanentConfirmBtn.addEventListener('click', function () {

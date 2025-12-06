@@ -302,8 +302,12 @@
             <div class="d-flex align-items-center">
                 <!-- 用户下拉菜单 -->
                 <div class="dropdown me-2">
-                    <button class="btn btn-light btn-sm dropdown-toggle" type="button"
-                            id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <!-- 这里保留 id / data-bs-toggle 等结构，方便你之前的逻辑复用 -->
+                    <button class="btn btn-link user-dropdown-btn dropdown-toggle"
+                            type="button"
+                            id="userDropdown"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false">
                         <i class="bi bi-person-circle me-1"></i>${user.username}
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end user-menu-dropdown" aria-labelledby="userDropdown">
