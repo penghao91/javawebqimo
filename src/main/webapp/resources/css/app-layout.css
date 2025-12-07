@@ -1,0 +1,220 @@
+:root {
+    --primary-color: #4e73df;
+    --primary-dark: #224abe;
+    --secondary-color: #858796;
+    --success-color: #1cc88a;
+    --danger-color: #e74a3b;
+    --light-color: #f8f9fc;
+    --dark-color: #4b4d63;
+    --muted-color: #a0a3b1;
+    --border-soft: #e1e5f2;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    background: radial-gradient(circle at top left, #f0f4ff 0, #f8f9fc 45%, #fdfdfd 100%);
+    color: var(--dark-color);
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* ===================================
+   1. Top Navigation
+   =================================== */
+.navbar {
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease; /* Added for scroll effect */
+}
+
+.navbar.scrolled {
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.14);
+}
+
+.navbar-brand {
+    font-weight: 800;
+    font-size: 1.45rem;
+    color: var(--primary-color) !important;
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+}
+
+.navbar-brand i {
+    font-size: 1.4rem;
+    color: var(--primary-dark);
+}
+
+.navbar-collapse {
+    flex-grow: 0;
+}
+
+.user-dropdown-btn {
+    text-decoration: none;
+    font-weight: 500;
+    color: var(--secondary-color) !important;
+}
+
+.user-dropdown-btn i {
+    color: var(--primary-color);
+}
+
+.user-dropdown-btn:hover {
+    color: var(--primary-color) !important;
+}
+
+
+/* ===================================
+   Page Wrapper
+   =================================== */
+.page-wrapper {
+    padding-top: 88px;
+    padding-bottom: 40px;
+}
+
+
+/* ===================================
+   2. Page Header
+   =================================== */
+.design-header {
+    margin-bottom: 18px;
+}
+
+.design-header-inner {
+    background: linear-gradient(135deg, #4f46e5 0, #1d4ed8 40%, #2563eb 100%);
+    border-radius: 20px;
+    padding: 18px 22px;
+    color: #fff;
+    box-shadow: 0 14px 36px rgba(37, 99, 235, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: 130px; /* For consistent height */
+}
+
+.design-header-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.design-header-subtitle {
+    font-size: .9rem;
+    opacity: .92;
+    margin: .25rem 0 0;
+}
+
+.badge-step {
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+    padding: .25rem .8rem;
+    border-radius: 999px;
+    border: 1px solid rgba(248, 250, 252, 0.9);
+    background: rgba(15,23,42,.15);
+    font-size: .8rem;
+}
+
+
+/* ===================================
+   3. Main Layout & Left Nav
+   =================================== */
+.folder-layout {
+    margin-top: 10px;
+}
+
+.nav-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 16px 16px 14px;
+    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.nav-card-title {
+    font-weight: 700;
+    font-size: .95rem;
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    margin-bottom: 8px;
+}
+
+.nav-card-title i {
+    color: var(--primary-color);
+}
+
+.nav-card-sub {
+    font-size: .8rem;
+    color: var(--muted-color);
+    margin-bottom: .6rem;
+}
+
+.nav-card-menu {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.nav-card-menu li + li {
+    margin-top: .25rem;
+}
+
+.nav-link-chip {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: .35rem;
+    padding: .42rem .75rem;
+    border-radius: 999px;
+    font-size: .86rem;
+    color: #4b5563;
+    border: 1px solid transparent;
+    background: transparent;
+}
+
+.nav-link-chip i {
+    font-size: .9rem;
+    color: var(--primary-color);
+}
+
+.nav-link-chip:hover,
+.nav-link-chip.active {
+    background: rgba(79, 70, 229, 0.08);
+    border-color: rgba(79, 70, 229, 0.35);
+    color: var(--primary-color);
+}
+
+
+/* ===================================
+   4. Right Content Cards (Base)
+   =================================== */
+.content-card,
+.folders-card,
+.questions-card,
+.add-question-card {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 16px 16px 14px;
+    box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+/* Specific paddings can be added back if needed */
+.content-card {
+    padding: 22px 24px 20px;
+}
+.questions-card,
+.add-question-card {
+    padding: 18px 18px 16px;
+}

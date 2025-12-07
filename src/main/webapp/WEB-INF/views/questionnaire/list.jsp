@@ -36,15 +36,56 @@
 
         a { text-decoration: none; }
 
-        /* 顶部导航：与创建页统一 */
+        /* --- 顶部导航栏统一修复开始 --- */
         .navbar {
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(16px);
             box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
             transition: all 0.3s ease;
-            padding-top: 0.75rem;
-            padding-bottom: 0.75rem;
+            
+            /* 【核心修复】固定高度，杜绝抖动 */
+            height: 76px; 
+            padding: 0; /* 重置 padding，改用 Flex 布局垂直居中 */
         }
+
+        /* 确保内容在 76px 高度内垂直居中 */
+        .navbar > .container {
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.45rem;
+            color: var(--primary-color) !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            height: 100%; /* 继承高度 */
+            padding: 0;   /* 移除默认 padding */
+            margin-right: 2rem;
+        }
+
+        .navbar-brand i {
+            font-size: 1.4rem;
+            color: var(--primary-dark);
+            transform: translateY(-1px); /* 微调图标视觉中心 */
+        }
+
+        .navbar-nav .nav-link {
+            font-weight: 600;
+            color: var(--secondary-color) !important;
+            padding: 0.5rem 1rem !important;
+            transition: all 0.2s ease;
+        }
+        
+        /* 配合固定 Header 的页面顶部间距调整 */
+        .page-wrapper {
+            padding-top: 96px; /* 增加到 96px (76px Header + 20px 间距)，防止内容被遮挡 */
+            padding-bottom: 40px;
+        }
+        /* --- 顶部导航栏统一修复结束 --- */
 
         .navbar.scrolled {
             padding-top: 0.4rem;
@@ -83,39 +124,55 @@
             color: var(--primary-color) !important;
         }
 
+        /* --- 头部区域统一修复开始 --- */
         .page-wrapper {
-            padding-top: 88px;
+            padding-top: 88px; /* 保持各页面顶部避让导航的高度一致 */
             padding-bottom: 40px;
         }
-
-        /* 顶部大卡片（子页面头部）——与创建页统一 */
+        
         .design-header {
-            margin-bottom: 18px;
+            margin-bottom: 24px; /* 统一底部间距，原代码中有 18px 也有 10px */
         }
 
         .design-header-inner {
             background: linear-gradient(135deg, #4f46e5 0, #1d4ed8 40%, #2563eb 100%);
             border-radius: 20px;
-            padding: 18px 22px;
+            /* 统一内边距：上下增加到 24px，左右 28px */
+            padding: 24px 28px; 
             color: #fff;
             box-shadow: 0 14px 36px rgba(37, 99, 235, 0.35);
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 1rem;
+            
+            /* 【核心修复】强制最小高度 */
+            /* 设置为 136px 可以完美容纳文件夹页面的三行文字，同时让其他页面保持一致高度 */
+            min-height: 136px; 
+            box-sizing: border-box;
         }
 
         .design-header-title {
             margin: 0;
             font-size: 1.5rem;
             font-weight: 700;
+            line-height: 1.3; /* 统一行高，防止字体差异导致微小位移 */
         }
 
         .design-header-subtitle {
-            margin: .25rem 0 0;
-            font-size: .96rem;
-            opacity: .9;
+            margin: 0.35rem 0 0;
+            font-size: 0.96rem;
+            opacity: 0.9;
+            line-height: 1.5;
         }
+        
+        /* 文件夹页面特有的 meta 标签样式也需要统一定义，防止在其他页面报错（虽然没用到） */
+        .design-header-meta {
+            font-size: 0.85rem;
+            opacity: 0.85;
+            margin-top: 0.25rem;
+        }
+        /* --- 头部区域统一修复结束 --- */
 
         .badge-step {
             display: inline-flex;
@@ -130,30 +187,41 @@
 
         .folder-layout { margin-top: 10px; }
 
-        /* 左侧导航卡片：与创建页 nav-card 统一 */
+        /* --- 左侧导航卡片统一修复开始 --- */
         .nav-card {
             background: #ffffff;
             border-radius: 18px;
-            padding: 14px 14px 10px;
             box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
             border: 1px solid rgba(226, 232, 240, 0.9);
+            
+            /* 【核心修复】统一内边距 */
+            padding: 24px 20px; 
+            
+            /* 【核心修复】强制最小高度，防止因内容行数不同导致的侧边栏高度跳动 */
+            min-height: 360px; 
+            box-sizing: border-box;
         }
 
         .nav-card-title {
             font-weight: 700;
-            font-size: .95rem;
+            font-size: 1rem; /* 统一字体大小 */
             display: flex;
             align-items: center;
-            gap: .35rem;
-            margin-bottom: 8px;
+            gap: 0.6rem;
+            margin-bottom: 0.5rem;
+            color: #111827;
         }
 
-        .nav-card-title i { color: var(--primary-color); }
+        .nav-card-title i {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
 
         .nav-card-sub {
-            font-size: .8rem;
+            font-size: 0.82rem;
             color: var(--muted-color);
-            margin-bottom: .6rem;
+            margin-bottom: 1.4rem; /* 增加与列表的间距 */
+            line-height: 1.4;
         }
 
         .nav-card-menu {
@@ -162,25 +230,27 @@
             margin: 0;
         }
 
-        .nav-card-menu li + li { margin-top: .25rem; }
+        .nav-card-menu li + li {
+            margin-top: 0.6rem; /* 统一列表间距 */
+        }
 
         .nav-link-chip {
             text-decoration: none;
             display: flex;
             align-items: center;
-            gap: .35rem;
-            padding: .42rem .75rem;
-            border-radius: 999px;
-            font-size: .86rem;
+            gap: 0.6rem;
+            padding: 0.65rem 1rem; /* 增大点击区域 */
+            border-radius: 12px;
+            font-size: 0.9rem;
             color: #4b5563;
             border: 1px solid transparent;
             background: #f9fafb;
-            transition: all .15s ease;
+            transition: all 0.2s ease;
         }
 
         .nav-link-chip i {
-            font-size: 1rem;
-            width: 18px;
+            font-size: 1.1rem;
+            width: 22px;
             text-align: center;
             color: var(--primary-color);
         }
@@ -196,10 +266,13 @@
             background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
             color: #fff;
             border-color: transparent;
-            box-shadow: 0 10px 24px rgba(78,115,223,0.55);
+            box-shadow: 0 8px 20px rgba(78,115,223,0.4);
         }
 
-        .nav-link-chip.active i { color: #fff; }
+        .nav-link-chip.active i {
+            color: #fff;
+        }
+        /* --- 左侧导航卡片统一修复结束 --- */
 
         /* 右侧主内容卡片，与创建页 content-card 统一 */
         .content-card {
