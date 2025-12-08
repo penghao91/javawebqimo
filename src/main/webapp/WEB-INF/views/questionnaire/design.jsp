@@ -5,130 +5,11 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <jsp:include page="_head.jsp"/>
     <title>设计问卷: ${questionnaire.title}</title>
-    <link href="<c:url value='/resources/css/bootstrap/bootstrap.min.css'/>" rel="stylesheet">
-    <link href="<c:url value='/resources/css/bootstrap-icons/bootstrap-icons.css'/>" rel="stylesheet">
+
     <style>
-        :root {
-            --primary-color: #4e73df; --primary-dark: #224abe; --secondary-color: #858796;
-            --success-color: #1cc88a; --danger-color: #e74a3b; --light-color: #f8f9fc;
-            --dark-color: #4b4d63; --muted-color: #a0a3b1; --border-soft: #e1e5f2;
-        }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-            background: radial-gradient(circle at top left, #f0f4ff 0, #f8f9fc 45%, #fdfdfd 100%);
-            color: var(--dark-color);
-        }
-        /* --- 顶部导航栏统一修复 --- */
-        .navbar {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(16px);
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-            transition: all 0.3s ease;
-            height: 76px;            /* 固定高度，防止抖动 */
-            padding: 0;
-        }
-        .navbar > .container {
-            height: 100%;
-            display: flex;
-            align-items: center;
-        }
-        .navbar.scrolled {
-            /* 不再调整 padding，仅调整背景和阴影，避免高度变化 */
-            background: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.14);
-        }
-        .navbar-brand {
-            font-weight: 800;
-            font-size: 1.45rem;
-            color: var(--primary-color) !important;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            height: 100%;
-            padding: 0;
-            margin-right: 2rem;
-        }
-        .navbar-brand i {
-            font-size: 1.4rem;
-            color: var(--primary-dark);
-            transform: translateY(-1px);
-        }
-        .navbar-nav .nav-link {
-            font-weight: 600;
-            color: var(--secondary-color) !important;
-            padding: 0.5rem 1rem !important;
-            transition: color 0.2s ease, transform 0.2s ease;
-            position: relative;
-        }
-        .navbar-nav .nav-link:hover {
-            color: var(--primary-color) !important;
-            transform: translateY(-1px);
-        }
-        .user-dropdown-btn {
-            text-decoration: none;
-            font-weight: 500;
-            color: var(--secondary-color) !important;
-        }
-        .user-dropdown-btn i { color: var(--primary-color); }
-        .user-dropdown-btn:hover { color: var(--primary-color) !important; }
-
-        /* 页面整体内边距（统一一处定义） */
-        .page-wrapper {
-            padding-top: 96px; /* 76px 导航 + 20px 间距 */
-            padding-bottom: 40px;
-        }
-
-        /* --- 头部区域 --- */
-        .design-header {
-            margin-bottom: 24px;
-        }
-        .design-header-inner {
-            background: linear-gradient(135deg, #4f46e5 0, #1d4ed8 40%, #2563eb 100%);
-            border-radius: 20px;
-            padding: 24px 28px;
-            color: #fff;
-            box-shadow: 0 14px 36px rgba(37, 99, 235, 0.35);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            min-height: 136px;
-            box-sizing: border-box;
-        }
-        .design-header-title {
-            margin: 0;
-            font-size: 1.5rem;
-            font-weight: 700;
-            line-height: 1.3;
-        }
-        .design-header-subtitle {
-            margin: 0.35rem 0 0;
-            font-size: 0.96rem;
-            opacity: 0.9;
-            line-height: 1.5;
-        }
-        .design-header-meta {
-            font-size: 0.85rem;
-            opacity: 0.85;
-            margin-top: 0.25rem;
-        }
-
-        .badge-step { display: inline-flex; align-items: center; gap: .25rem; padding: .25rem .8rem; border-radius: 999px; border: 1px solid rgba(248, 250, 252, 0.9); background: rgba(15,23,42,.15); font-size: .8rem; }
-        .btn-outline-light.btn-sm { border-radius: 999px; font-size: .85rem; padding: .3rem .9rem; }
-        .design-layout { margin-top: 10px; }
-        .add-question-card, .questions-card { background: #ffffff; border-radius: 18px; padding: 18px 18px 16px; box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08); border: 1px solid rgba(226, 232, 240, 0.9); }
-        .add-question-header, .questions-header-title { font-weight: 700; font-size: .95rem; display: flex; align-items: center; gap: .4rem; margin-bottom: 10px; }
-        .add-question-header i, .questions-header-title i { color: var(--primary-color); }
-        .form-control, .form-select { border-radius: 12px; border: 1px solid var(--border-soft); font-size: .9rem; padding: .5rem .75rem; }
-        .form-control:focus, .form-select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 1px rgba(78,115,223,0.35); outline: none; }
-        .question-card { border-radius: 14px; border: 1px solid var(--border-soft); padding: 12px 12px 10px; margin-bottom: 10px; background: #ffffff; }
-        .question-title { font-weight: 600; font-size: .95rem; }
-        .empty-state { padding: 3rem 1rem; text-align: center; color: #858796; border: 2px dashed var(--border-soft); border-radius: 0.75rem; background: #f9fafb; }
-
-        /* 草稿题目高亮 */
+        /* 页面特有样式：草稿题目高亮 */
         .question-card.draft {
             border-color: var(--primary-color);
             box-shadow: 0 0 0 1px rgba(78,115,223,0.18);
@@ -139,24 +20,9 @@
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="<c:url value='/questionnaire/list'/>"><i class="bi bi-card-checklist"></i> 问卷星</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav me-auto"></ul>
-            <div class="d-flex align-items-center">
-                <div class="dropdown">
-                    <button class="btn btn-link user-dropdown-btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-person-circle me-1"></i>${user.username}
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                        <li><a class="dropdown-item" href="<c:url value='/user/logout'/>">退出</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</nav>
+<%-- 使用公共导航栏组件 --%>
+<c:set var="pageName" value="design" scope="request"/>
+<jsp:include page="_navbar.jsp"/>
 
 <div class="page-wrapper">
     <div class="container">
@@ -330,18 +196,12 @@
     </div>
 </div>
 
-<script src="<c:url value='/resources/js/bootstrap/bootstrap.bundle.min.js'/>"></script>
-<script>
-    const navbar = document.querySelector('.navbar');
-    window.addEventListener('scroll', function () {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    });
 
-    // ===== 全局弹窗封装（替代 alert/confirm） =====
+<%-- 使用公共脚本 --%>
+<jsp:include page="_scripts.jsp"/>
+
+<script>
+    // ===== 页面特有功能：全局弹窗封装（替代 alert/confirm） =====
     function showNiceAlert(message) {
         const modalEl = document.getElementById('alertModal');
         if (!modalEl) {
