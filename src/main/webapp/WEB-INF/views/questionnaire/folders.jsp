@@ -912,14 +912,38 @@
         });
     }
 
-    window.addEventListener('scroll', function () {
-        const currentY = window.scrollY || 0;
-        if (currentY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
+    // 优化滚动处理，使用 requestAnimationFrame 防止抖动
+    (function() {
+        if (!navbar) return;
+        
+        let ticking = false;
+        let lastScrollY = 0;
+        
+        function updateNavbar() {
+            const scrollY = window.scrollY || window.pageYOffset;
+            
+            if (scrollY !== lastScrollY) {
+                if (scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+                lastScrollY = scrollY;
+            }
+            
+            ticking = false;
         }
-    });
+        
+        function onScroll() {
+            if (!ticking) {
+                window.requestAnimationFrame(updateNavbar);
+                ticking = true;
+            }
+        }
+        
+        window.addEventListener('scroll', onScroll, { passive: true });
+        updateNavbar();
+    })();
 
     document.addEventListener('DOMContentLoaded', function () {
         loadFolders();
