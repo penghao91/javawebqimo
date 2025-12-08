@@ -8,7 +8,454 @@
     <title>我的问卷 - 问卷星</title>
 
     <style>
-        :root {
+        /* Toast 通知（页面特有样式） */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+        }
+
+        .toast-custom {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            overflow: hidden;
+            min-width: 320px;
+            max-width: 420px;
+            animation: slideInRight 0.3s ease-out;
+            position: relative;
+        }
+
+        .toast-custom-header {
+            display: flex;
+            align-items: center;
+            gap: .45rem;
+            padding: .65rem .9rem;
+            color: #fff;
+        }
+
+        .toast-custom-header.success {
+            background: linear-gradient(135deg, var(--success-color), #17a673);
+        }
+
+        .toast-custom-header.error {
+            background: linear-gradient(135deg, var(--danger-color), #b91c1c);
+        }
+
+        .toast-custom-header i { font-size: 1.1rem; }
+
+        .toast-custom-title {
+            font-weight: 600;
+            font-size: .95rem;
+        }
+
+        .toast-custom-body {
+            padding: .9rem .95rem .85rem;
+            font-size: .9rem;
+            color: var(--dark-color);
+        }
+
+        .toast-custom-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.9));
+            animation: toastProgress 3s linear forwards;
+        }
+
+        .toast-custom-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            opacity: .85;
+        }
+
+        .toast-custom-close:hover { opacity: 1; }
+
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes toastProgress {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        /* 筛选栏样式（页面特有） */
+        .filter-bar {
+            background: #f9fafb;
+            border-radius: 12px;
+            border: 1px solid var(--border-soft);
+            padding: .65rem 1rem;
+            margin-bottom: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            font-size: .9rem;
+            color: var(--secondary-color);
+        }
+
+        .filter-select {
+            border: 1px solid var(--border-soft);
+            border-radius: 999px;
+            padding: .35rem .9rem;
+            background: #fff;
+            color: var(--dark-color);
+            font-size: .9rem;
+        }
+
+        /* 问卷卡片样式（页面特有） */
+        .questionnaire-card.status-published {
+            border-left-color: #28a745;
+        }
+
+        .questionnaire-card.status-draft {
+            border-left-color: #6c757d;
+        }
+
+        .questionnaire-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: .55rem;
+        }
+
+        .questionnaire-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #111827;
+            margin: 0 0 .15rem;
+        }
+
+        .questionnaire-id {
+            color: #9ca3af;
+            font-size: .82rem;
+        }
+
+        .questionnaire-stats {
+            display: flex;
+            gap: 1.2rem;
+            margin: .35rem 0 .55rem;
+            flex-wrap: wrap;
+            font-size: .86rem;
+        }
+
+        .stat-item {
+            display: inline-flex;
+            align-items: center;
+            gap: .35rem;
+            color: #6b7280;
+        }
+
+        .stat-item i { font-size: .95rem; }
+
+        .stat-value {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .questionnaire-actions {
+            display: flex;
+            gap: .4rem;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: .32rem .85rem;
+            border: 1px solid var(--border-soft);
+            background: #fff;
+            color: var(--dark-color);
+            text-decoration: none;
+            border-radius: 999px;
+            font-size: .82rem;
+            transition: all .16s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: .25rem;
+        }
+
+        .action-btn i { font-size: .9rem; }
+
+        .action-btn:hover {
+            background-color: #f3f4ff;
+            color: var(--primary-color);
+            border-color: rgba(78,115,223,.7);
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: #fff;
+            border-color: transparent;
+        }
+
+        .action-btn.primary:hover {
+            background: linear-gradient(135deg, #4663ce, #1f3fa6);
+            box-shadow: 0 10px 24px rgba(78, 115, 223, 0.4);
+        }
+
+        .action-btn.danger {
+            color: #dc3545;
+            border-color: rgba(220,53,69,.7);
+        }
+
+        .action-btn.danger:hover {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        .status-badge {
+            padding: .15rem .65rem;
+            border-radius: 999px;
+            font-size: .78rem;
+            font-weight: 500;
+        }
+
+        .status-published {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-draft {
+            background-color: #e2e3e5;
+            color: #6c757d;
+        }
+
+        /* 样本服务推广模块样式（页面特有） */
+        .sample-service-promo { margin-top: 1rem; }
+
+        .promo-card {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            border-radius: 18px;
+            padding: 1.8rem 1.6rem;
+            border: 1px solid #90caf9;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .promo-card::before {
+            content: '';
+            position: absolute;
+            top: -45%;
+            right: -8%;
+            width: 260px;
+            height: 260px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 50%;
+        }
+
+        .promo-icon {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.6rem;
+            font-size: 2.8rem;
+            color: #1976d2;
+            opacity: .28;
+        }
+
+        .promo-content { position: relative; z-index: 1; }
+
+        .promo-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1565c0;
+            margin-bottom: .4rem;
+        }
+
+        .promo-desc {
+            color: #424242;
+            margin-bottom: 1.1rem;
+            font-size: .95rem;
+        }
+
+        .promo-stats {
+            display: flex;
+            gap: 1.1rem;
+            margin-bottom: 1.15rem;
+            flex-wrap: wrap;
+        }
+
+        .promo-stats .stat-item {
+            text-align: center;
+            background: rgba(255,255,255,.8);
+            padding: .75rem 1.1rem;
+            border-radius: 12px;
+            min-width: 110px;
+        }
+
+        .promo-stats .stat-number {
+            display: block;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #1565c0;
+        }
+
+        .promo-stats .stat-label {
+            font-size: .8rem;
+            color: #546e7a;
+            font-weight: 500;
+        }
+
+        .promo-btn {
+            background: linear-gradient(135deg,#1976d2,#0d47a1);
+            border: none;
+            padding: .5rem 1.3rem;
+            font-weight: 600;
+            border-radius: 999px;
+            font-size: .88rem;
+            color: #fff;
+        }
+
+        .promo-btn i { margin-right: .3rem; }
+
+        .promo-btn:hover {
+            box-shadow: 0 5px 16px rgba(25,118,210,.45);
+        }
+
+        /* 删除模态框样式（页面特有） */
+        .delete-modal .modal-content {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,.15);
+            overflow: hidden;
+        }
+
+        .delete-modal .modal-header {
+            background: linear-gradient(135deg,#ff6b6b,#ff5252);
+            color:#fff;
+            border-bottom:none;
+            padding:1rem 1.3rem;
+        }
+
+        .delete-modal .modal-body {
+            padding:1.8rem 1.4rem;
+            text-align:center;
+        }
+
+        .delete-modal .warning-icon {
+            font-size:2.6rem;
+            color:#ff6b6b;
+            margin-bottom:.6rem;
+        }
+
+        .delete-modal .delete-message {
+            font-size:1.05rem;
+            color:#2c3e50;
+            margin-bottom:.4rem;
+            font-weight:500;
+        }
+
+        .delete-modal .delete-hint {
+            color:#6c757d;
+            font-size:.88rem;
+        }
+
+        .delete-modal .modal-footer {
+            border-top:1px solid #e9ecef;
+            padding:.75rem 1.3rem;
+            gap:.6rem;
+        }
+
+        .delete-modal .btn-cancel {
+            background:#f8f9fa;
+            border:1px solid #dee2e6;
+            color:#6c757d;
+            padding:.4rem 1.4rem;
+            border-radius:999px;
+            font-weight:500;
+        }
+
+        .delete-modal .btn-delete {
+            background:linear-gradient(135deg,#ff6b6b,#ff5252);
+            border:none;
+            color:#fff;
+            padding:.4rem 1.4rem;
+            border-radius:999px;
+            font-weight:500;
+        }
+
+        /* 分享模态框样式（页面特有） */
+        #qrContainer {
+            width: 170px;
+            height: 170px;
+            margin: 0 auto;
+        }
+
+        /* 文件夹选择弹窗样式（页面特有） */
+        .folder-select-grid {
+            display: flex;
+            flex-direction: column;
+            gap: .6rem;
+        }
+
+        .folder-select-card {
+            display: flex;
+            align-items: center;
+            padding: .6rem .75rem;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: all .16s ease;
+        }
+
+        .folder-select-card-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            background: #eff6ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: .6rem;
+            color: var(--primary-color);
+        }
+
+        .folder-select-card-title {
+            font-size: .95rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .folder-select-card-desc {
+            font-size: .82rem;
+            color: #6b7280;
+        }
+
+        .folder-select-card-check {
+            margin-left: auto;
+            color: var(--primary-color);
+            opacity: 0;
+            transition: opacity .16s ease;
+        }
+
+        .folder-select-card.active {
+            border-color: rgba(78,115,223,.9);
+            background: #eef2ff;
+        }
+
+        .folder-select-card.active .folder-select-card-check {
+            opacity: 1;
+        }
+
+        @media (max-width: 991.98px) {
+            .toast-custom {
+                min-width: 260px;
+                max-width: 90vw;
+            }
+        }
+    </style>
             --primary-color: #4e73df;
             --primary-dark: #224abe;
             --secondary-color: #858796;
@@ -799,58 +1246,13 @@
 </head>
 <body>
 
+
 <!-- Toast 容器 -->
 <div class="toast-container" id="toastContainer" style="display:none;"></div>
 
-<!-- 顶部导航（和创建页保持一致） -->
-<nav class="navbar navbar-expand-lg navbar-light fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="<c:url value='/questionnaire/list'/>">
-            <i class="bi bi-card-checklist"></i> 问卷星
-        </a>
-
-        <div class="navbar-collapse">
-            <ul class="navbar-nav me-auto"></ul>
-            <div class="d-flex align-items-center">
-                <c:if test="${not empty user}">
-                    <div class="dropdown">
-                        <button class="btn btn-link user-dropdown-btn dropdown-toggle"
-                                type="button" id="userDropdown"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle me-1"></i>${user.username}
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li class="dropdown-header small text-muted px-3 py-2">
-                                用户名：${user.username}<br>
-                                账号ID：${user.id}<br>
-                                <c:if test="${not empty user.email}">
-                                    邮箱：${user.email}
-                                </c:if>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item" href="<c:url value='/user/profile'/>">
-                                    <i class="bi bi-person-lines-fill me-1"></i>账号信息
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item text-danger" href="<c:url value='/user/logout'/>">
-                                    <i class="bi bi-box-arrow-right me-1"></i>退出
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </c:if>
-                <c:if test="${empty user}">
-                    <a href="<c:url value='/user/login'/>" class="btn btn-outline-primary btn-sm">
-                        登录
-                    </a>
-                </c:if>
-            </div>
-        </div>
-    </div>
-</nav>
+<%-- 使用公共导航栏组件 --%>
+<c:set var="pageName" value="list" scope="request"/>
+<jsp:include page="_navbar.jsp"/>
 
 <div class="page-wrapper">
     <div class="container">
@@ -880,48 +1282,8 @@
         <!-- 左侧导航 + 右侧列表 -->
         <section class="folder-layout">
             <div class="row g-4">
-                <!-- 左侧导航卡片 -->
-                <div class="col-lg-3">
-                    <div class="nav-card">
-                        <div class="nav-card-title">
-                            <i class="bi bi-compass"></i>
-                            <span>快速导航</span>
-                        </div>
-                        <div class="nav-card-sub">切换不同的问卷视图</div>
-                        <ul class="nav-card-menu">
-                            <li>
-                                <a href="<c:url value='/questionnaire/create'/>"
-                                   class="nav-link-chip">
-                                    <i class="bi bi-plus-circle"></i> 创建问卷
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<c:url value='/questionnaire/list'/>"
-                                   class="nav-link-chip active">
-                                    <i class="bi bi-list-ul"></i> 全部问卷
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<c:url value='/questionnaire/starred'/>"
-                                   class="nav-link-chip">
-                                    <i class="bi bi-star"></i> 星标问卷
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<c:url value='/questionnaire/folders'/>"
-                                   class="nav-link-chip">
-                                    <i class="bi bi-folder"></i> 文件夹
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<c:url value='/questionnaire/recycle'/>"
-                                   class="nav-link-chip">
-                                    <i class="bi bi-trash"></i> 回收站
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                <%-- 使用公共左侧导航组件 --%>
+                <jsp:include page="_leftnav.jsp"/>
 
                 <!-- 右侧内容区域 -->
                 <div class="col-lg-9">
@@ -1268,17 +1630,13 @@
     </div>
 </div>
 
-<script src="<c:url value='/resources/js/bootstrap/bootstrap.bundle.min.js'/>"></script>
+
+<%-- 使用公共脚本 --%>
+<jsp:include page="_scripts.jsp"/>
+
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
 <script>
-    // 顶部导航滚动效果（与创建页相同）
-    const navbar = document.querySelector('.navbar');
-    window.addEventListener('scroll', function () {
-        if (window.scrollY > 50) navbar.classList.add('scrolled');
-        else navbar.classList.remove('scrolled');
-    });
-
-    // Toast 显示
+    // Toast 显示（页面特有功能）
     function showToast(type, message, duration = 3000) {
         const container = document.getElementById('toastContainer');
         if (!container) return;
