@@ -4,13 +4,8 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <jsp:include page="_head.jsp"/>
     <title>我的问卷 - 问卷星</title>
-
-    <!-- 和创建页保持一致的资源引用 -->
-    <link href="<c:url value='/resources/css/bootstrap/bootstrap.min.css'/>" rel="stylesheet">
-    <link href="<c:url value='/resources/css/bootstrap-icons/bootstrap-icons.css'/>" rel="stylesheet">
 
     <style>
         :root {
