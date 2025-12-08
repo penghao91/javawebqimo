@@ -4,325 +4,11 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <jsp:include page="_head.jsp"/>
     <title>我的问卷 - 问卷星</title>
 
-    <!-- 和创建页保持一致的资源引用 -->
-    <link href="<c:url value='/resources/css/bootstrap/bootstrap.min.css'/>" rel="stylesheet">
-    <link href="<c:url value='/resources/css/bootstrap-icons/bootstrap-icons.css'/>" rel="stylesheet">
-
     <style>
-        :root {
-            --primary-color: #4e73df;
-            --primary-dark: #224abe;
-            --secondary-color: #858796;
-            --success-color: #1cc88a;
-            --danger-color: #e74a3b;
-            --light-color: #f8f9fc;
-            --dark-color: #4b4d63;
-            --muted-color: #a0a3b1;
-            --border-soft: #e1e5f2;
-        }
-
-        * { box-sizing: border-box; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
-            background: radial-gradient(circle at top left, #f0f4ff 0, #f8f9fc 45%, #fdfdfd 100%);
-            color: var(--dark-color);
-            line-height: 1.6;
-        }
-
-        a { text-decoration: none; }
-
-        /* --- 顶部导航栏统一修复开始 --- */
-        .navbar {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(16px);
-            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-            transition: all 0.3s ease;
-            
-            /* 【核心修复】固定高度，杜绝抖动 */
-            height: 76px; 
-            padding: 0; /* 重置 padding，改用 Flex 布局垂直居中 */
-        }
-
-        /* 确保内容在 76px 高度内垂直居中 */
-        .navbar > .container {
-            height: 100%;
-            display: flex;
-            align-items: center;
-        }
-
-        .navbar-brand {
-            font-weight: 800;
-            font-size: 1.45rem;
-            color: var(--primary-color) !important;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            height: 100%; /* 继承高度 */
-            padding: 0;   /* 移除默认 padding */
-            margin-right: 2rem;
-        }
-
-        .navbar-brand i {
-            font-size: 1.4rem;
-            color: var(--primary-dark);
-            transform: translateY(-1px); /* 微调图标视觉中心 */
-        }
-
-        .navbar-nav .nav-link {
-            font-weight: 600;
-            color: var(--secondary-color) !important;
-            padding: 0.5rem 1rem !important;
-            transition: all 0.2s ease;
-        }
-        
-        /* 配合固定 Header 的页面顶部间距调整 */
-        .page-wrapper {
-            padding-top: 96px; /* 增加到 96px (76px Header + 20px 间距)，防止内容被遮挡 */
-            padding-bottom: 40px;
-        }
-        /* --- 顶部导航栏统一修复结束 --- */
-
-        .navbar.scrolled {
-            padding-top: 0.4rem;
-            padding-bottom: 0.4rem;
-            background: rgba(255, 255, 255, 0.98);
-            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.14);
-        }
-
-        .navbar-brand {
-            font-weight: 800;
-            font-size: 1.45rem;
-            color: var(--primary-color) !important;
-            display: flex;
-            align-items: center;
-            gap: .4rem;
-        }
-
-        .navbar-brand i {
-            font-size: 1.4rem;
-            color: var(--primary-dark);
-        }
-
-        .navbar-collapse {
-            flex-grow: 0;
-        }
-
-        .user-dropdown-btn {
-            text-decoration: none;
-            font-weight: 500;
-            color: var(--secondary-color) !important;
-        }
-
-        .user-dropdown-btn i { color: var(--primary-color); }
-
-        .user-dropdown-btn:hover {
-            color: var(--primary-color) !important;
-        }
-
-        /* --- 头部区域统一修复开始 --- */
-        .page-wrapper {
-            padding-top: 88px; /* 保持各页面顶部避让导航的高度一致 */
-            padding-bottom: 40px;
-        }
-        
-        .design-header {
-            margin-bottom: 24px; /* 统一底部间距，原代码中有 18px 也有 10px */
-        }
-
-        .design-header-inner {
-            background: linear-gradient(135deg, #4f46e5 0, #1d4ed8 40%, #2563eb 100%);
-            border-radius: 20px;
-            /* 统一内边距：上下增加到 24px，左右 28px */
-            padding: 24px 28px; 
-            color: #fff;
-            box-shadow: 0 14px 36px rgba(37, 99, 235, 0.35);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            
-            /* 【核心修复】强制最小高度 */
-            /* 设置为 136px 可以完美容纳文件夹页面的三行文字，同时让其他页面保持一致高度 */
-            min-height: 136px; 
-            box-sizing: border-box;
-        }
-
-        .design-header-title {
-            margin: 0;
-            font-size: 1.5rem;
-            font-weight: 700;
-            line-height: 1.3; /* 统一行高，防止字体差异导致微小位移 */
-        }
-
-        .design-header-subtitle {
-            margin: 0.35rem 0 0;
-            font-size: 0.96rem;
-            opacity: 0.9;
-            line-height: 1.5;
-        }
-        
-        /* 文件夹页面特有的 meta 标签样式也需要统一定义，防止在其他页面报错（虽然没用到） */
-        .design-header-meta {
-            font-size: 0.85rem;
-            opacity: 0.85;
-            margin-top: 0.25rem;
-        }
-        /* --- 头部区域统一修复结束 --- */
-
-        .badge-step {
-            display: inline-flex;
-            align-items: center;
-            gap: .25rem;
-            padding: .25rem .8rem;
-            border-radius: 999px;
-            border: 1px solid rgba(248, 250, 252, 0.9);
-            background: rgba(15,23,42,.15);
-            font-size: .8rem;
-        }
-
-        .folder-layout { margin-top: 10px; }
-
-        /* --- 左侧导航卡片统一修复开始 --- */
-        .nav-card {
-            background: #ffffff;
-            border-radius: 18px;
-            box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
-            border: 1px solid rgba(226, 232, 240, 0.9);
-            
-            /* 【核心修复】统一内边距 */
-            padding: 24px 20px; 
-            
-            /* 【核心修复】强制最小高度，防止因内容行数不同导致的侧边栏高度跳动 */
-            min-height: 360px; 
-            box-sizing: border-box;
-        }
-
-        .nav-card-title {
-            font-weight: 700;
-            font-size: 1rem; /* 统一字体大小 */
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            margin-bottom: 0.5rem;
-            color: #111827;
-        }
-
-        .nav-card-title i {
-            color: var(--primary-color);
-            font-size: 1.1rem;
-        }
-
-        .nav-card-sub {
-            font-size: 0.82rem;
-            color: var(--muted-color);
-            margin-bottom: 1.4rem; /* 增加与列表的间距 */
-            line-height: 1.4;
-        }
-
-        .nav-card-menu {
-            list-style: none;
-            padding-left: 0;
-            margin: 0;
-        }
-
-        .nav-card-menu li + li {
-            margin-top: 0.6rem; /* 统一列表间距 */
-        }
-
-        .nav-link-chip {
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            padding: 0.65rem 1rem; /* 增大点击区域 */
-            border-radius: 12px;
-            font-size: 0.9rem;
-            color: #4b5563;
-            border: 1px solid transparent;
-            background: #f9fafb;
-            transition: all 0.2s ease;
-        }
-
-        .nav-link-chip i {
-            font-size: 1.1rem;
-            width: 22px;
-            text-align: center;
-            color: var(--primary-color);
-        }
-
-        .nav-link-chip:hover {
-            background: #eef2ff;
-            border-color: rgba(78, 115, 223, 0.45);
-            color: var(--primary-color);
-            transform: translateY(-1px);
-        }
-
-        .nav-link-chip.active {
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            color: #fff;
-            border-color: transparent;
-            box-shadow: 0 8px 20px rgba(78,115,223,0.4);
-        }
-
-        .nav-link-chip.active i {
-            color: #fff;
-        }
-        /* --- 左侧导航卡片统一修复结束 --- */
-
-        /* 右侧主内容卡片，与创建页 content-card 统一 */
-        .content-card {
-            background: #ffffff;
-            border-radius: 18px;
-            padding: 22px 24px 20px;
-            box-shadow: 0 14px 40px rgba(15, 23, 42, 0.08);
-            border: 1px solid rgba(226, 232, 240, 0.9);
-        }
-
-        @media (max-width: 576px) {
-            .content-card { padding: 18px 16px; }
-        }
-
-        .content-card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 14px;
-        }
-
-        .content-card-title {
-            display: flex;
-            align-items: center;
-            gap: .5rem;
-        }
-
-        .content-card-title-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-        }
-
-        .content-card-title-text {
-            font-size: 1rem;
-            font-weight: 700;
-        }
-
-        .content-card-subtitle {
-            font-size: .86rem;
-            color: var(--muted-color);
-            margin-top: 2px;
-        }
-
-        /* Toast 通知（与创建页保持一致风格） */
+        /* Toast 通知（页面特有样式） */
         .toast-container {
             position: fixed;
             top: 20px;
@@ -402,7 +88,7 @@
             to { width: 0%; }
         }
 
-        /* 筛选栏 + 列表样式（沿用你原来的逻辑但换到 content-card 内） */
+        /* 筛选栏样式（页面特有） */
         .filter-bar {
             background: #f9fafb;
             border-radius: 12px;
@@ -431,22 +117,7 @@
             font-size: .9rem;
         }
 
-        .questionnaire-card {
-            background: #fff;
-            border-radius: 12px;
-            border: 1px solid #e5e7eb;
-            margin-bottom: .7rem;
-            padding: 1rem 1.1rem .9rem;
-            border-left: 4px solid transparent;
-            transition: all .16s ease;
-        }
-
-        .questionnaire-card:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
-            border-left-color: rgba(78,115,223,.6);
-        }
-
+        /* 问卷卡片样式（页面特有） */
         .questionnaire-card.status-published {
             border-left-color: #28a745;
         }
@@ -562,23 +233,7 @@
             color: #6c757d;
         }
 
-        .empty-state {
-            background: #f9fafb;
-            border-radius: 14px;
-            border: 1px dashed #d1d5db;
-            padding: 2.2rem 1.6rem;
-            text-align: center;
-            color: #6c757d;
-            margin-top: .4rem;
-        }
-
-        .empty-state .icon {
-            font-size: 3rem;
-            color: #e5e7eb;
-            margin-bottom: .7rem;
-        }
-
-        /* 样本服务推广模块（右侧下方，风格不变） */
+        /* 样本服务推广模块样式（页面特有） */
         .sample-service-promo { margin-top: 1rem; }
 
         .promo-card {
@@ -669,7 +324,7 @@
             box-shadow: 0 5px 16px rgba(25,118,210,.45);
         }
 
-        /* 删除模态框样式 */
+        /* 删除模态框样式（页面特有） */
         .delete-modal .modal-content {
             border-radius: 12px;
             border: none;
@@ -731,14 +386,14 @@
             font-weight:500;
         }
 
-        /* 分享模态框二维码容器 */
+        /* 分享模态框样式（页面特有） */
         #qrContainer {
             width: 170px;
             height: 170px;
             margin: 0 auto;
         }
 
-        /* 文件夹选择弹窗的小卡片样式（供 moveToFolder 使用） */
+        /* 文件夹选择弹窗样式（页面特有） */
         .folder-select-grid {
             display: flex;
             flex-direction: column;
@@ -807,55 +462,10 @@
 <!-- Toast 容器 -->
 <div class="toast-container" id="toastContainer" style="display:none;"></div>
 
-<!-- 顶部导航（和创建页保持一致） -->
-<nav class="navbar navbar-expand-lg navbar-light fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="<c:url value='/questionnaire/list'/>">
-            <i class="bi bi-card-checklist"></i> 问卷星
-        </a>
 
-        <div class="navbar-collapse">
-            <ul class="navbar-nav me-auto"></ul>
-            <div class="d-flex align-items-center">
-                <c:if test="${not empty user}">
-                    <div class="dropdown">
-                        <button class="btn btn-link user-dropdown-btn dropdown-toggle"
-                                type="button" id="userDropdown"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-person-circle me-1"></i>${user.username}
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li class="dropdown-header small text-muted px-3 py-2">
-                                用户名：${user.username}<br>
-                                账号ID：${user.id}<br>
-                                <c:if test="${not empty user.email}">
-                                    邮箱：${user.email}
-                                </c:if>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item" href="<c:url value='/user/profile'/>">
-                                    <i class="bi bi-person-lines-fill me-1"></i>账号信息
-                                </a>
-                            </li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li>
-                                <a class="dropdown-item text-danger" href="<c:url value='/user/logout'/>">
-                                    <i class="bi bi-box-arrow-right me-1"></i>退出
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </c:if>
-                <c:if test="${empty user}">
-                    <a href="<c:url value='/user/login'/>" class="btn btn-outline-primary btn-sm">
-                        登录
-                    </a>
-                </c:if>
-            </div>
-        </div>
-    </div>
-</nav>
+<%-- 设置当前页面名称，用于左侧导航高亮显示 --%>
+<c:set var="pageName" value="list" scope="request"/>
+<jsp:include page="_navbar.jsp"/>
 
 <div class="page-wrapper">
     <div class="container">
@@ -885,48 +495,8 @@
         <!-- 左侧导航 + 右侧列表 -->
         <section class="folder-layout">
             <div class="row g-4">
-                <!-- 左侧导航卡片 -->
-                <div class="col-lg-3">
-                    <div class="nav-card">
-                        <div class="nav-card-title">
-                            <i class="bi bi-compass"></i>
-                            <span>快速导航</span>
-                        </div>
-                        <div class="nav-card-sub">切换不同的问卷视图</div>
-                        <ul class="nav-card-menu">
-                            <li>
-                                <a href="<c:url value='/questionnaire/create'/>"
-                                   class="nav-link-chip">
-                                    <i class="bi bi-plus-circle"></i> 创建问卷
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<c:url value='/questionnaire/list'/>"
-                                   class="nav-link-chip active">
-                                    <i class="bi bi-list-ul"></i> 全部问卷
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<c:url value='/questionnaire/starred'/>"
-                                   class="nav-link-chip">
-                                    <i class="bi bi-star"></i> 星标问卷
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<c:url value='/questionnaire/folders'/>"
-                                   class="nav-link-chip">
-                                    <i class="bi bi-folder"></i> 文件夹
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<c:url value='/questionnaire/recycle'/>"
-                                   class="nav-link-chip">
-                                    <i class="bi bi-trash"></i> 回收站
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                <%-- 使用公共左侧导航组件 --%>
+                <jsp:include page="_leftnav.jsp"/>
 
                 <!-- 右侧内容区域 -->
                 <div class="col-lg-9">
@@ -1273,17 +843,13 @@
     </div>
 </div>
 
-<script src="<c:url value='/resources/js/bootstrap/bootstrap.bundle.min.js'/>"></script>
+
+<%-- 使用公共脚本 --%>
+<jsp:include page="_scripts.jsp"/>
+
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
 <script>
-    // 顶部导航滚动效果（与创建页相同）
-    const navbar = document.querySelector('.navbar');
-    window.addEventListener('scroll', function () {
-        if (window.scrollY > 50) navbar.classList.add('scrolled');
-        else navbar.classList.remove('scrolled');
-    });
-
-    // Toast 显示
+    // Toast 显示（页面特有功能）
     function showToast(type, message, duration = 3000) {
         const container = document.getElementById('toastContainer');
         if (!container) return;

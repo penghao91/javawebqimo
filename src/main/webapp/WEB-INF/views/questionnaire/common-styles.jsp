@@ -488,14 +488,63 @@
     }
 
     /* ===========================================
+       用户下拉菜单 - 美化样式
+       =========================================== */
+    .dropdown-menu {
+        border-radius: 16px;
+        padding: 0;
+        border: 1px solid rgba(226, 232, 240, 0.95);
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
+        min-width: 260px;
+        overflow: hidden;
+    }
+
+    .dropdown-header {
+        padding: 0.75rem 1rem 0.8rem;
+        background: linear-gradient(135deg, #4e73df, #224abe);
+        color: #fff;
+        font-size: 0.85rem;
+        border-bottom: none;
+    }
+
+    .dropdown-item {
+        padding: 0.55rem 1rem;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #4b4d63;
+    }
+
+    .dropdown-item i {
+        font-size: 1rem;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f3f4ff;
+        color: #111827;
+    }
+
+    .dropdown-item.text-danger {
+        color: #e74a3b;
+    }
+
+    .dropdown-item.text-danger:hover {
+        background-color: #fee2e2;
+        color: #b91c1c;
+    }
+
+    /* ===========================================
        响应式设计
        =========================================== */
     @media (max-width: 991.98px) {
+        /* 折叠后的导航区域 */
         .navbar-collapse {
             background: transparent;
             padding: 0.75rem 1rem 1.2rem;
         }
 
+        /* 菜单部分变成白色卡片 */
         .navbar-collapse .navbar-nav {
             background: #ffffff;
             border-radius: 18px;
@@ -511,18 +560,24 @@
             margin-bottom: 0.25rem;
         }
 
+        /* 底部用户区域也放进白色卡片 */
         .navbar-collapse > .d-flex {
             background: #ffffff;
             border-radius: 18px;
             box-shadow: 0 18px 40px rgba(15, 23, 42, 0.18);
             padding: 0.6rem 1.1rem 0.7rem;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .design-header-inner {
             flex-direction: column;
             align-items: flex-start;
+            gap: 1.5rem;
         }
 
+        /* 移动端用户下拉按钮样式优化 */
         .navbar .dropdown {
             width: 100%;
         }
@@ -532,11 +587,29 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            text-align: left;
             padding: 0.45rem 0.9rem;
             border-radius: 999px;
             border: 1px solid rgba(78, 115, 223, 0.35);
             background: #ffffff;
             color: #4b4d63 !important;
+        }
+
+        .navbar .user-dropdown-btn i {
+            color: #4e73df;
+        }
+
+        /* 移动端下拉菜单定位修复 */
+        .navbar .dropdown-menu {
+            position: static !important;
+            transform: none !important;
+            inset: auto !important;
+            margin-top: 0.55rem;
+            width: 100%;
+            max-width: 100%;
+            border-radius: 16px;
+            box-shadow: 0 14px 32px rgba(15, 23, 42, 0.16);
+            overflow: hidden;
         }
     }
 

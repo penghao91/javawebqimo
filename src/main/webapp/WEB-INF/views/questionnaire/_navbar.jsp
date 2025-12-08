@@ -45,7 +45,7 @@
                             <i class="bi bi-person-circle me-1"></i>${user.username}
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                            <li class="dropdown-header small text-muted px-3 py-2">
+                            <li class="dropdown-header">
                                 用户名：${user.username}<br>
                                 账号ID：${user.id}<br>
                                 <c:if test="${not empty user.email}">
@@ -55,13 +55,13 @@
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <a class="dropdown-item" href="<c:url value='/user/profile'/>">
-                                    <i class="bi bi-person-lines-fill me-1"></i>账号信息
+                                    <i class="bi bi-person-lines-fill"></i>账号信息
                                 </a>
                             </li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <a class="dropdown-item text-danger" href="<c:url value='/user/logout'/>">
-                                    <i class="bi bi-box-arrow-right me-1"></i>退出
+                                    <i class="bi bi-box-arrow-right"></i>退出
                                 </a>
                             </li>
                         </ul>
