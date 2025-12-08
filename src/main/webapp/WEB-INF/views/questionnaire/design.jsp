@@ -20,7 +20,8 @@
 </head>
 <body>
 
-<%-- 使用公共导航栏组件 --%>
+
+<%-- 设置当前页面名称，用于左侧导航高亮显示 --%>
 <c:set var="pageName" value="design" scope="request"/>
 <jsp:include page="_navbar.jsp"/>
 

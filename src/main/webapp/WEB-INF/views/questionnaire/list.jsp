@@ -462,7 +462,8 @@
 <!-- Toast 容器 -->
 <div class="toast-container" id="toastContainer" style="display:none;"></div>
 
-<%-- 使用公共导航栏组件 --%>
+
+<%-- 设置当前页面名称，用于左侧导航高亮显示 --%>
 <c:set var="pageName" value="list" scope="request"/>
 <jsp:include page="_navbar.jsp"/>
 
