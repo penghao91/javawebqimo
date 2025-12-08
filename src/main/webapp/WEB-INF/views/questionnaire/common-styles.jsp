@@ -17,11 +17,19 @@
         box-sizing: border-box;
     }
 
+    /* 核心修复：启用平滑滚动 */
+    html {
+        scroll-behavior: smooth;
+    }
+
     body {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
         background: radial-gradient(circle at top left, #f0f4ff 0, #f8f9fc 45%, #fdfdfd 100%);
         color: var(--dark-color);
         line-height: 1.6;
+        /* 核心修复：防止滚动时的抖动 */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
     }
 
     a {
@@ -35,10 +43,15 @@
         background: rgba(255, 255, 255, 0.9);
         backdrop-filter: blur(16px);
         box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
-        transition: all 0.3s ease;
+        transition: background 0.2s ease, box-shadow 0.2s ease;
         /* 核心修复：固定高度，防止抖动 */
         height: 76px;
         padding: 0;
+        /* 核心修复：使用GPU加速，减少重绘 */
+        will-change: background, box-shadow;
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
     }
 
     .navbar > .container {
@@ -108,6 +121,9 @@
         /* 核心修复：统一顶部间距 = 76px 导航 + 20px 留白 */
         padding-top: 96px;
         padding-bottom: 40px;
+        /* 核心修复：优化滚动性能 */
+        position: relative;
+        z-index: 1;
     }
 
     /* ===========================================
@@ -477,14 +493,19 @@
     /* ===========================================
        平滑过渡 - 减少抖动感
        =========================================== */
-    .navbar,
     .design-header,
     .nav-card,
     .content-card,
     .folders-card,
     .folder-card,
     .questionnaire-card {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                    box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        /* 核心修复：使用GPU加速，减少重绘 */
+        will-change: transform, box-shadow;
+        transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
     }
 
     /* ===========================================
