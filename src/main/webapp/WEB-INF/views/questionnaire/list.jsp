@@ -464,7 +464,8 @@
 
 
 <%-- 设置当前页面名称，用于左侧导航高亮显示 --%>
-<c:set var="pageName" value="list" scope="request"/>
+<c:set var="isRecyclePage" value="${pageTitle == '回收站'}" scope="page"/>
+<c:set var="pageName" value="${isRecyclePage ? 'recycle' : 'list'}" scope="request"/>
 <jsp:include page="_navbar.jsp"/>
 
 <div class="page-wrapper">
@@ -473,21 +474,39 @@
         <section class="design-header">
             <div class="design-header-inner">
                 <div>
-                    <h1 class="design-header-title">我的问卷</h1>
-                    <p class="design-header-subtitle mb-1">
-                        统一管理你创建的所有问卷，支持状态筛选、排序、预览与统计分析。
-                    </p>
+                    <h1 class="design-header-title">${empty pageTitle ? '我的问卷' : pageTitle}</h1>
+                    <c:choose>
+                        <c:when test="${isRecyclePage}">
+                            <p class="design-header-subtitle mb-1">
+                                查看和管理已删除的问卷，支持恢复或永久删除操作。
+                            </p>
+                        </c:when>
+                        <c:otherwise>
+                            <p class="design-header-subtitle mb-1">
+                                统一管理你创建的所有问卷，支持状态筛选、排序、预览与统计分析。
+                            </p>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
                 <div class="text-end">
-                    <span class="badge-step mb-2 d-inline-flex">
-                        <i class="bi bi-collection"></i> 问卷管理中心
-                    </span>
-                    <div>
-                        <a href="<c:url value='/questionnaire/create'/>"
-                           class="btn btn-sm btn-light mt-2" style="border-radius:999px;">
-                            <i class="bi bi-plus-lg me-1"></i> 创建问卷
-                        </a>
-                    </div>
+                    <c:choose>
+                        <c:when test="${isRecyclePage}">
+                            <span class="badge-step mb-2 d-inline-flex">
+                                <i class="bi bi-trash"></i> 回收站
+                            </span>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="badge-step mb-2 d-inline-flex">
+                                <i class="bi bi-collection"></i> 问卷管理中心
+                            </span>
+                            <div>
+                                <a href="<c:url value='/questionnaire/create'/>"
+                                   class="btn btn-sm btn-light mt-2" style="border-radius:999px;">
+                                    <i class="bi bi-plus-lg me-1"></i> 创建问卷
+                                </a>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
         </section>
@@ -504,21 +523,40 @@
                         <div class="content-card-header">
                             <div class="content-card-title">
                                 <div class="content-card-title-icon">
-                                    <i class="bi bi-card-checklist"></i>
+                                    <c:choose>
+                                        <c:when test="${isRecyclePage}">
+                                            <i class="bi bi-trash"></i>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <i class="bi bi-card-checklist"></i>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                                 <div>
-                                    <div class="content-card-title-text">问卷列表</div>
-                                    <div class="content-card-subtitle">
-                                        按状态筛选和排序，支持预览、发送、分析、星标与分类管理。
-                                    </div>
+                                    <c:choose>
+                                        <c:when test="${isRecyclePage}">
+                                            <div class="content-card-title-text">回收站</div>
+                                            <div class="content-card-subtitle">
+                                                已删除的问卷将在此保留30天，可以恢复或永久删除。
+                                            </div>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="content-card-title-text">问卷列表</div>
+                                            <div class="content-card-subtitle">
+                                                按状态筛选和排序，支持预览、发送、分析、星标与分类管理。
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                             </div>
-                            <div class="d-none d-md-block">
-                                <a href="<c:url value='/questionnaire/create'/>"
-                                   class="btn btn-sm btn-primary" style="border-radius:999px;">
-                                    <i class="bi bi-plus-lg me-1"></i> 创建问卷
-                                </a>
-                            </div>
+                            <c:if test="${!isRecyclePage}">
+                                <div class="d-none d-md-block">
+                                    <a href="<c:url value='/questionnaire/create'/>"
+                                       class="btn btn-sm btn-primary" style="border-radius:999px;">
+                                        <i class="bi bi-plus-lg me-1"></i> 创建问卷
+                                    </a>
+                                </div>
+                            </c:if>
                         </div>
 
                         <!-- Spring 消息改为 Toast 提示 -->
@@ -540,24 +578,26 @@
                         <hr class="mb-3"/>
 
                         <!-- 筛选栏 -->
-                        <div class="filter-bar">
-                            <div class="filter-group">
-                                <span>状态：</span>
-                                <select class="filter-select" id="statusFilter">
-                                    <option value="">全部状态</option>
-                                    <option value="draft">未发布</option>
-                                    <option value="published">已发布</option>
-                                </select>
+                        <c:if test="${!isRecyclePage}">
+                            <div class="filter-bar">
+                                <div class="filter-group">
+                                    <span>状态：</span>
+                                    <select class="filter-select" id="statusFilter">
+                                        <option value="">全部状态</option>
+                                        <option value="draft">未发布</option>
+                                        <option value="published">已发布</option>
+                                    </select>
+                                </div>
+                                <div class="filter-group">
+                                    <span>排序：</span>
+                                    <select class="filter-select" id="sortFilter">
+                                        <option value="time-desc">时间倒序</option>
+                                        <option value="time-asc">时间正序</option>
+                                        <option value="title">标题排序</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="filter-group">
-                                <span>排序：</span>
-                                <select class="filter-select" id="sortFilter">
-                                    <option value="time-desc">时间倒序</option>
-                                    <option value="time-asc">时间正序</option>
-                                    <option value="title">标题排序</option>
-                                </select>
-                            </div>
-                        </div>
+                        </c:if>
 
                         <!-- 问卷列表 -->
                         <div id="questionnaireListContainer">
@@ -596,7 +636,7 @@
 
                                             <div class="questionnaire-actions">
                                                 <c:choose>
-                                                    <c:when test="${pageTitle == '回收站'}">
+                                                    <c:when test="${isRecyclePage}">
                                                         <a href="<c:url value='/questionnaire/restore/${q.id}'/>"
                                                            class="action-btn">
                                                             <i class="bi bi-arrow-counterclockwise"></i> 恢复
@@ -694,14 +734,24 @@
                                 <c:otherwise>
                                     <div class="empty-state" id="filterEmptyState">
                                         <div class="icon"><i class="bi bi-journal-x"></i></div>
-                                        <h4>暂无问卷</h4>
-                                        <p class="text-muted mb-3">
-                                            点击右上角「创建问卷」按钮，开始你的第一次创建吧！
-                                        </p>
-                                        <a href="<c:url value='/questionnaire/create'/>"
-                                           class="btn btn-primary" style="border-radius:999px;">
-                                            <i class="bi bi-plus-lg me-1"></i> 创建问卷
-                                        </a>
+                                        <c:choose>
+                                            <c:when test="${isRecyclePage}">
+                                                <h4>回收站为空</h4>
+                                                <p class="text-muted mb-3">
+                                                    回收站中暂时没有已删除的问卷。
+                                                </p>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <h4>暂无问卷</h4>
+                                                <p class="text-muted mb-3">
+                                                    点击右上角「创建问卷」按钮，开始你的第一次创建吧！
+                                                </p>
+                                                <a href="<c:url value='/questionnaire/create'/>"
+                                                   class="btn btn-primary" style="border-radius:999px;">
+                                                    <i class="bi bi-plus-lg me-1"></i> 创建问卷
+                                                </a>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </div>
                                 </c:otherwise>
                             </c:choose>

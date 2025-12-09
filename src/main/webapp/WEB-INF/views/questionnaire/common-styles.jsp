@@ -20,6 +20,8 @@
     /* 核心修复：启用平滑滚动 */
     html {
         scroll-behavior: smooth;
+        /* 核心修复：强制显示垂直滚动条，防止页面切换时的抖动 */
+        overflow-y: scroll;
     }
 
     body {
