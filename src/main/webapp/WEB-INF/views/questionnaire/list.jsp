@@ -464,7 +464,8 @@
 
 
 <%-- 设置当前页面名称，用于左侧导航高亮显示 --%>
-<c:set var="pageName" value="${pageTitle == '回收站' ? 'recycle' : 'list'}" scope="request"/>
+<c:set var="isRecyclePage" value="${pageTitle == '回收站'}" scope="page"/>
+<c:set var="pageName" value="${isRecyclePage ? 'recycle' : 'list'}" scope="request"/>
 <jsp:include page="_navbar.jsp"/>
 
 <div class="page-wrapper">
@@ -475,7 +476,7 @@
                 <div>
                     <h1 class="design-header-title">${empty pageTitle ? '我的问卷' : pageTitle}</h1>
                     <c:choose>
-                        <c:when test="${pageTitle == '回收站'}">
+                        <c:when test="${isRecyclePage}">
                             <p class="design-header-subtitle mb-1">
                                 查看和管理已删除的问卷，支持恢复或永久删除操作。
                             </p>
@@ -489,7 +490,7 @@
                 </div>
                 <div class="text-end">
                     <c:choose>
-                        <c:when test="${pageTitle == '回收站'}">
+                        <c:when test="${isRecyclePage}">
                             <span class="badge-step mb-2 d-inline-flex">
                                 <i class="bi bi-trash"></i> 回收站
                             </span>
@@ -523,7 +524,7 @@
                             <div class="content-card-title">
                                 <div class="content-card-title-icon">
                                     <c:choose>
-                                        <c:when test="${pageTitle == '回收站'}">
+                                        <c:when test="${isRecyclePage}">
                                             <i class="bi bi-trash"></i>
                                         </c:when>
                                         <c:otherwise>
@@ -533,7 +534,7 @@
                                 </div>
                                 <div>
                                     <c:choose>
-                                        <c:when test="${pageTitle == '回收站'}">
+                                        <c:when test="${isRecyclePage}">
                                             <div class="content-card-title-text">回收站</div>
                                             <div class="content-card-subtitle">
                                                 已删除的问卷将在此保留30天，可以恢复或永久删除。
@@ -548,7 +549,7 @@
                                     </c:choose>
                                 </div>
                             </div>
-                            <c:if test="${pageTitle != '回收站'}">
+                            <c:if test="${!isRecyclePage}">
                                 <div class="d-none d-md-block">
                                     <a href="<c:url value='/questionnaire/create'/>"
                                        class="btn btn-sm btn-primary" style="border-radius:999px;">
@@ -577,7 +578,7 @@
                         <hr class="mb-3"/>
 
                         <!-- 筛选栏 -->
-                        <c:if test="${pageTitle != '回收站'}">
+                        <c:if test="${!isRecyclePage}">
                             <div class="filter-bar">
                                 <div class="filter-group">
                                     <span>状态：</span>
@@ -635,7 +636,7 @@
 
                                             <div class="questionnaire-actions">
                                                 <c:choose>
-                                                    <c:when test="${pageTitle == '回收站'}">
+                                                    <c:when test="${isRecyclePage}">
                                                         <a href="<c:url value='/questionnaire/restore/${q.id}'/>"
                                                            class="action-btn">
                                                             <i class="bi bi-arrow-counterclockwise"></i> 恢复
@@ -734,7 +735,7 @@
                                     <div class="empty-state" id="filterEmptyState">
                                         <div class="icon"><i class="bi bi-journal-x"></i></div>
                                         <c:choose>
-                                            <c:when test="${pageTitle == '回收站'}">
+                                            <c:when test="${isRecyclePage}">
                                                 <h4>回收站为空</h4>
                                                 <p class="text-muted mb-3">
                                                     回收站中暂时没有已删除的问卷。
